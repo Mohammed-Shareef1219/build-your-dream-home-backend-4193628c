@@ -48,10 +48,12 @@ export function Footer() {
             <h3 className="font-semibold mb-4">Contact</h3>
             <ul className="space-y-2 text-sm text-primary-foreground/70">
               <li className="flex items-center gap-2">
-                <Mail className="h-4 w-4" /> hello@buildyourhome.com
+                <Mail className="h-4 w-4" />
+                <span>hello@buildyourhome.com</span>
               </li>
               <li className="flex items-center gap-2">
-                <Phone className="h-4 w-4" /> +971 000 0000
+                <Phone className="h-4 w-4" />
+                <span>+971 000 0000</span>
               </li>
             </ul>
           </div>
