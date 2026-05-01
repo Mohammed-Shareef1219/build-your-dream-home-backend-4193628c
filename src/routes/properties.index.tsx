@@ -11,7 +11,7 @@ import type { Database } from "@/integrations/supabase/types";
 type Property = Database["public"]["Tables"]["properties"]["Row"];
 
 export const Route = createFileRoute("/properties/")({
-  validateSearch: (s: Record<string, unknown>) => ({
+  validateSearch: (s: Record<string, unknown>): { type?: string; q?: string } => ({
     type: (s.type as string) || "all",
     q: (s.q as string) || "",
   }),
