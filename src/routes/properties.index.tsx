@@ -11,7 +11,7 @@ import type { Database } from "@/integrations/supabase/types";
 type Property = Database["public"]["Tables"]["properties"]["Row"];
 
 export const Route = createFileRoute("/properties/")({
-  validateSearch: (s: Record<string, unknown>) => ({
+  validateSearch: (s: Record<string, unknown>): { type?: string; q?: string } => ({
     type: (s.type as string) || "all",
     q: (s.q as string) || "",
   }),
@@ -57,9 +57,9 @@ function ListingsPage() {
   }, [user]);
 
   const filtered = useMemo(() => {
-    const qLower = q.toLowerCase().trim();
+    const qLower = (q ?? "").toLowerCase().trim();
     return items.filter((p) => {
-      if (type !== "all" && p.type !== type) return false;
+      if (type && type !== "all" && p.type !== type) return false;
       if (qLower && !`${p.title} ${p.location ?? ""}`.toLowerCase().includes(qLower)) return false;
       return true;
     });
@@ -78,11 +78,11 @@ function ListingsPage() {
         <Input
             placeholder="Search by title or location..."
             value={q}
-            onChange={(e) => navigate({ search: (prev: { type: string; q: string }) => ({ ...prev, q: e.target.value }) })}
+            onChange={(e) => navigate({ search: (prev) => ({ ...prev, q: e.target.value }) })}
             className="pl-9"
           />
         </div>
-        <Select value={type} onValueChange={(v) => navigate({ search: (prev: { type: string; q: string }) => ({ ...prev, type: v }) })}>
+        <Select value={type} onValueChange={(v) => navigate({ search: (prev) => ({ ...prev, type: v }) })}>
           <SelectTrigger className="w-full sm:w-52">
             <SelectValue />
           </SelectTrigger>
