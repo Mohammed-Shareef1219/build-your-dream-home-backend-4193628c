@@ -429,7 +429,7 @@ function FloorPlansSection() {
                 ))}
               </div>
               <Button asChild variant="brand" size="lg">
-                <Link to="/properties" search={{ type: t.slug }}>
+                <Link to="/properties" search={{ type: t.slug, q: "" }}>
                   Explore {t.name} listings <ArrowRight />
                 </Link>
               </Button>
@@ -741,7 +741,7 @@ function CTASection() {
               <Link to="/consultation">Book consultation <ArrowRight /></Link>
             </Button>
             <Button asChild variant="outlineHero" size="xl">
-              <Link to="/properties">Browse properties</Link>
+              <Link to="/properties" search={{ type: "all", q: "" }}>Browse properties</Link>
             </Button>
           </div>
         </div>
