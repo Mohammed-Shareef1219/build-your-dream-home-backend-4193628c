@@ -239,6 +239,7 @@ function PropertyTypesPage() {
       <Hero />
       <ConceptStrip />
       <ComparisonSection />
+      <ShowcaseSection />
       <FloorPlansSection />
       <CalculatorSection />
       <InvestmentSection />
@@ -375,6 +376,221 @@ function ComparisonSection() {
         </table>
       </div>
     </section>
+  );
+}
+
+/* ---------------- Showcase (visual property type cards) ---------------- */
+
+interface ShowcaseCard {
+  slug: TypeKey | "custom";
+  badge: string;
+  title: string;
+  description: string;
+  image: string;
+  features: string[];
+  price: string;
+  rating: number;
+  properties: number;
+  builder: string;
+  seller: string;
+  contact: string;
+  custom?: boolean;
+}
+
+const SHOWCASE: ShowcaseCard[] = [
+  {
+    slug: "apartment",
+    badge: "Apartment",
+    title: "Smart Apartments",
+    description: "Innovative solutions for small spaces with integrated technology",
+    image: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=900&auto=format&fit=crop",
+    features: ["Smart lighting and energy control", "Multi-functional design", "Integrated security systems"],
+    price: "Starting from 250,000 AED",
+    rating: 4.7,
+    properties: 38,
+    builder: "Aurora Developments",
+    seller: "Lina Haddad",
+    contact: "+971 50 123 4567",
+  },
+  {
+    slug: "villa",
+    badge: "Villa",
+    title: "Luxury Villas",
+    description: "Elegant homes with innovative designs and spacious areas",
+    image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=900&auto=format&fit=crop",
+    features: ["Private outdoor spaces", "Integrated entertainment systems", "Sustainable designs"],
+    price: "Starting from 1,200,000 AED",
+    rating: 4.9,
+    properties: 21,
+    builder: "Palm Crown Builders",
+    seller: "Omar Al-Faris",
+    contact: "+971 52 988 7710",
+  },
+  {
+    slug: "duplex",
+    badge: "Duplex",
+    title: "Duplex Designs",
+    description: "Practical family spaces with perfect privacy",
+    image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=900&auto=format&fit=crop",
+    features: ["Multi-floor design", "Shared family spaces", "Perfect privacy"],
+    price: "Starting from 450,000 AED",
+    rating: 4.6,
+    properties: 27,
+    builder: "Skyline Residences",
+    seller: "Yasmin Karimi",
+    contact: "+971 55 660 4422",
+  },
+  {
+    slug: "country_house",
+    badge: "Country House",
+    title: "Country Houses",
+    description: "Connection with nature with modern living luxury",
+    image: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=900&auto=format&fit=crop",
+    features: ["Natural building materials", "Sustainable energy systems", "Nature-harmonious design"],
+    price: "Starting from 350,000 AED",
+    rating: 4.8,
+    properties: 14,
+    builder: "EarthForm Studio",
+    seller: "Hassan Noor",
+    contact: "+971 56 230 1188",
+  },
+  {
+    slug: "studio",
+    badge: "Studio",
+    title: "Studios",
+    description: "Compact spaces with smart and innovative designs",
+    image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=900&auto=format&fit=crop",
+    features: ["Multi-functional furniture", "Innovative storage solutions", "Space-expanding designs"],
+    price: "Starting from 180,000 AED",
+    rating: 4.5,
+    properties: 52,
+    builder: "Nest Micro Homes",
+    seller: "Reem Saleh",
+    contact: "+971 50 774 9931",
+  },
+  {
+    slug: "custom",
+    badge: "Custom",
+    title: "Custom Design",
+    description: "Design your own home from scratch according to your vision and needs",
+    image: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=900&auto=format&fit=crop",
+    features: ["Unique and innovative design", "Material and finishing selection", "Complete design flexibility"],
+    price: "Custom Pricing",
+    rating: 5.0,
+    properties: 0,
+    builder: "BuildYourHome Atelier",
+    seller: "Design Concierge",
+    contact: "+971 50 000 1010",
+    custom: true,
+  },
+];
+
+function ShowcaseSection() {
+  return (
+    <section className="bg-muted/20 border-y">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
+        <SectionHeader
+          eyebrow="Discover by Type"
+          title="Explore every property style"
+          subtitle="Tap Explore to view real listings, prices, ratings and the team behind each project."
+        />
+        <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {SHOWCASE.map((c) => (
+            <ShowcaseCardView key={c.title} card={c} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ShowcaseCardView({ card }: { card: ShowcaseCard }) {
+  const isCustom = card.custom;
+  return (
+    <article
+      className={`group rounded-2xl overflow-hidden shadow-soft hover:shadow-elegant transition-all duration-300 hover:-translate-y-1 flex flex-col ${
+        isCustom ? "bg-secondary text-secondary-foreground" : "bg-card"
+      }`}
+    >
+      <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+        <img
+          src={card.image}
+          alt={card.title}
+          loading="lazy"
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        <span className="absolute top-4 right-4 bg-accent text-accent-foreground text-xs font-semibold px-4 py-1.5 rounded-full shadow-soft">
+          {card.badge}
+        </span>
+      </div>
+      <div className="p-6 flex flex-col flex-1">
+        <h3 className="text-xl font-bold">{card.title}</h3>
+        <p className={`mt-2 text-sm ${isCustom ? "text-secondary-foreground/85" : "text-muted-foreground"}`}>
+          {card.description}
+        </p>
+
+        <ul className="mt-5 space-y-2.5">
+          {card.features.map((f) => (
+            <li key={f} className="flex items-center gap-2 text-sm">
+              <CheckCircle2
+                className={`size-4 shrink-0 ${isCustom ? "text-accent" : "text-secondary"}`}
+              />
+              <span>{f}</span>
+            </li>
+          ))}
+        </ul>
+
+        {/* Meta strip */}
+        <div
+          className={`mt-5 grid grid-cols-3 gap-2 text-center text-xs rounded-xl py-3 ${
+            isCustom ? "bg-white/10" : "bg-muted/60"
+          }`}
+        >
+          <div>
+            <div className="font-bold text-base">★ {card.rating.toFixed(1)}</div>
+            <div className={isCustom ? "text-secondary-foreground/70" : "text-muted-foreground"}>Rating</div>
+          </div>
+          <div>
+            <div className="font-bold text-base">{card.properties || "—"}</div>
+            <div className={isCustom ? "text-secondary-foreground/70" : "text-muted-foreground"}>Listings</div>
+          </div>
+          <div>
+            <div className={`font-bold text-base ${isCustom ? "text-accent" : "text-secondary"}`}>Verified</div>
+            <div className={isCustom ? "text-secondary-foreground/70" : "text-muted-foreground"}>Builder</div>
+          </div>
+        </div>
+
+        {/* Builder / seller / contact */}
+        <div
+          className={`mt-4 text-xs space-y-1 ${
+            isCustom ? "text-secondary-foreground/85" : "text-muted-foreground"
+          }`}
+        >
+          <div><span className="font-semibold">Builder:</span> {card.builder}</div>
+          <div><span className="font-semibold">Seller:</span> {card.seller}</div>
+          <div><span className="font-semibold">Contact:</span> {card.contact}</div>
+        </div>
+
+        <div className="mt-6 flex items-end justify-between gap-3 pt-4 border-t border-foreground/10">
+          <div className={`font-bold text-base ${isCustom ? "" : "text-primary"}`}>
+            {card.price}
+          </div>
+          {isCustom ? (
+            <Button asChild variant="outline" className="bg-white text-secondary hover:bg-white/90 border-white">
+              <Link to="/consultation">
+                Start Designing <ArrowRight />
+              </Link>
+            </Button>
+          ) : (
+            <Button asChild variant="brand" size="sm">
+              <Link to="/properties" search={{ type: card.slug as TypeKey, q: "" }}>
+                Explore <ArrowRight />
+              </Link>
+            </Button>
+          )}
+        </div>
+      </div>
+    </article>
   );
 }
 
