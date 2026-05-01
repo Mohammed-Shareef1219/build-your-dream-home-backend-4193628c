@@ -239,6 +239,7 @@ function PropertyTypesPage() {
       <Hero />
       <ConceptStrip />
       <ComparisonSection />
+      <ShowcaseSection />
       <FloorPlansSection />
       <CalculatorSection />
       <InvestmentSection />
