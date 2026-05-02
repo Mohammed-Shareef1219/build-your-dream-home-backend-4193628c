@@ -583,7 +583,7 @@ function ShowcaseCardView({ card }: { card: ShowcaseCard }) {
             </Button>
           ) : (
             <Button asChild variant="brand" size="sm">
-              <Link to="/properties" search={{ type: card.slug as TypeKey, q: "" }}>
+              <Link to="/catalog/$slug" params={{ slug: card.slug as string }}>
                 Explore <ArrowRight />
               </Link>
             </Button>

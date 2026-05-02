@@ -18,6 +18,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PropertiesIndexRouteImport } from './routes/properties.index'
 import { Route as PropertiesIdRouteImport } from './routes/properties.$id'
+import { Route as CatalogSlugRouteImport } from './routes/catalog.$slug'
 
 const PropertyTypesRoute = PropertyTypesRouteImport.update({
   id: '/property-types',
@@ -64,6 +65,11 @@ const PropertiesIdRoute = PropertiesIdRouteImport.update({
   path: '/properties/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CatalogSlugRoute = CatalogSlugRouteImport.update({
+  id: '/catalog/$slug',
+  path: '/catalog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -73,6 +79,7 @@ export interface FileRoutesByFullPath {
   '/favorites': typeof FavoritesRoute
   '/gallery': typeof GalleryRoute
   '/property-types': typeof PropertyTypesRoute
+  '/catalog/$slug': typeof CatalogSlugRoute
   '/properties/$id': typeof PropertiesIdRoute
   '/properties/': typeof PropertiesIndexRoute
 }
@@ -84,6 +91,7 @@ export interface FileRoutesByTo {
   '/favorites': typeof FavoritesRoute
   '/gallery': typeof GalleryRoute
   '/property-types': typeof PropertyTypesRoute
+  '/catalog/$slug': typeof CatalogSlugRoute
   '/properties/$id': typeof PropertiesIdRoute
   '/properties': typeof PropertiesIndexRoute
 }
@@ -96,6 +104,7 @@ export interface FileRoutesById {
   '/favorites': typeof FavoritesRoute
   '/gallery': typeof GalleryRoute
   '/property-types': typeof PropertyTypesRoute
+  '/catalog/$slug': typeof CatalogSlugRoute
   '/properties/$id': typeof PropertiesIdRoute
   '/properties/': typeof PropertiesIndexRoute
 }
@@ -109,6 +118,7 @@ export interface FileRouteTypes {
     | '/favorites'
     | '/gallery'
     | '/property-types'
+    | '/catalog/$slug'
     | '/properties/$id'
     | '/properties/'
   fileRoutesByTo: FileRoutesByTo
@@ -120,6 +130,7 @@ export interface FileRouteTypes {
     | '/favorites'
     | '/gallery'
     | '/property-types'
+    | '/catalog/$slug'
     | '/properties/$id'
     | '/properties'
   id:
@@ -131,6 +142,7 @@ export interface FileRouteTypes {
     | '/favorites'
     | '/gallery'
     | '/property-types'
+    | '/catalog/$slug'
     | '/properties/$id'
     | '/properties/'
   fileRoutesById: FileRoutesById
@@ -143,6 +155,7 @@ export interface RootRouteChildren {
   FavoritesRoute: typeof FavoritesRoute
   GalleryRoute: typeof GalleryRoute
   PropertyTypesRoute: typeof PropertyTypesRoute
+  CatalogSlugRoute: typeof CatalogSlugRoute
   PropertiesIdRoute: typeof PropertiesIdRoute
   PropertiesIndexRoute: typeof PropertiesIndexRoute
 }
@@ -212,6 +225,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PropertiesIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/catalog/$slug': {
+      id: '/catalog/$slug'
+      path: '/catalog/$slug'
+      fullPath: '/catalog/$slug'
+      preLoaderRoute: typeof CatalogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -223,6 +243,7 @@ const rootRouteChildren: RootRouteChildren = {
   FavoritesRoute: FavoritesRoute,
   GalleryRoute: GalleryRoute,
   PropertyTypesRoute: PropertyTypesRoute,
+  CatalogSlugRoute: CatalogSlugRoute,
   PropertiesIdRoute: PropertiesIdRoute,
   PropertiesIndexRoute: PropertiesIndexRoute,
 }
