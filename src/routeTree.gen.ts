@@ -19,6 +19,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as PropertiesIndexRouteImport } from './routes/properties.index'
 import { Route as PropertiesIdRouteImport } from './routes/properties.$id'
 import { Route as CatalogSlugRouteImport } from './routes/catalog.$slug'
+import { Route as CatalogSlugCodeRouteImport } from './routes/catalog.$slug.$code'
 
 const PropertyTypesRoute = PropertyTypesRouteImport.update({
   id: '/property-types',
@@ -70,6 +71,11 @@ const CatalogSlugRoute = CatalogSlugRouteImport.update({
   path: '/catalog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CatalogSlugCodeRoute = CatalogSlugCodeRouteImport.update({
+  id: '/$code',
+  path: '/$code',
+  getParentRoute: () => CatalogSlugRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -79,9 +85,10 @@ export interface FileRoutesByFullPath {
   '/favorites': typeof FavoritesRoute
   '/gallery': typeof GalleryRoute
   '/property-types': typeof PropertyTypesRoute
-  '/catalog/$slug': typeof CatalogSlugRoute
+  '/catalog/$slug': typeof CatalogSlugRouteWithChildren
   '/properties/$id': typeof PropertiesIdRoute
   '/properties/': typeof PropertiesIndexRoute
+  '/catalog/$slug/$code': typeof CatalogSlugCodeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -91,9 +98,10 @@ export interface FileRoutesByTo {
   '/favorites': typeof FavoritesRoute
   '/gallery': typeof GalleryRoute
   '/property-types': typeof PropertyTypesRoute
-  '/catalog/$slug': typeof CatalogSlugRoute
+  '/catalog/$slug': typeof CatalogSlugRouteWithChildren
   '/properties/$id': typeof PropertiesIdRoute
   '/properties': typeof PropertiesIndexRoute
+  '/catalog/$slug/$code': typeof CatalogSlugCodeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -104,9 +112,10 @@ export interface FileRoutesById {
   '/favorites': typeof FavoritesRoute
   '/gallery': typeof GalleryRoute
   '/property-types': typeof PropertyTypesRoute
-  '/catalog/$slug': typeof CatalogSlugRoute
+  '/catalog/$slug': typeof CatalogSlugRouteWithChildren
   '/properties/$id': typeof PropertiesIdRoute
   '/properties/': typeof PropertiesIndexRoute
+  '/catalog/$slug/$code': typeof CatalogSlugCodeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -121,6 +130,7 @@ export interface FileRouteTypes {
     | '/catalog/$slug'
     | '/properties/$id'
     | '/properties/'
+    | '/catalog/$slug/$code'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -133,6 +143,7 @@ export interface FileRouteTypes {
     | '/catalog/$slug'
     | '/properties/$id'
     | '/properties'
+    | '/catalog/$slug/$code'
   id:
     | '__root__'
     | '/'
@@ -145,6 +156,7 @@ export interface FileRouteTypes {
     | '/catalog/$slug'
     | '/properties/$id'
     | '/properties/'
+    | '/catalog/$slug/$code'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -155,7 +167,7 @@ export interface RootRouteChildren {
   FavoritesRoute: typeof FavoritesRoute
   GalleryRoute: typeof GalleryRoute
   PropertyTypesRoute: typeof PropertyTypesRoute
-  CatalogSlugRoute: typeof CatalogSlugRoute
+  CatalogSlugRoute: typeof CatalogSlugRouteWithChildren
   PropertiesIdRoute: typeof PropertiesIdRoute
   PropertiesIndexRoute: typeof PropertiesIndexRoute
 }
@@ -232,8 +244,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CatalogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/catalog/$slug/$code': {
+      id: '/catalog/$slug/$code'
+      path: '/$code'
+      fullPath: '/catalog/$slug/$code'
+      preLoaderRoute: typeof CatalogSlugCodeRouteImport
+      parentRoute: typeof CatalogSlugRoute
+    }
   }
 }
+
+interface CatalogSlugRouteChildren {
+  CatalogSlugCodeRoute: typeof CatalogSlugCodeRoute
+}
+
+const CatalogSlugRouteChildren: CatalogSlugRouteChildren = {
+  CatalogSlugCodeRoute: CatalogSlugCodeRoute,
+}
+
+const CatalogSlugRouteWithChildren = CatalogSlugRoute._addFileChildren(
+  CatalogSlugRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -243,7 +274,7 @@ const rootRouteChildren: RootRouteChildren = {
   FavoritesRoute: FavoritesRoute,
   GalleryRoute: GalleryRoute,
   PropertyTypesRoute: PropertyTypesRoute,
-  CatalogSlugRoute: CatalogSlugRoute,
+  CatalogSlugRoute: CatalogSlugRouteWithChildren,
   PropertiesIdRoute: PropertiesIdRoute,
   PropertiesIndexRoute: PropertiesIndexRoute,
 }

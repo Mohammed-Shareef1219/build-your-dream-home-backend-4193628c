@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 
 /* ---------------- Types ---------------- */
 
-type CategorySlug = "apartment" | "villa" | "duplex" | "country_house" | "studio";
+export type CategorySlug = "apartment" | "villa" | "duplex" | "country_house" | "studio";
 
-interface Listing {
+export interface Listing {
   code: string;
   name: string;
   arabicName: string;
@@ -22,7 +22,7 @@ interface Listing {
   image: string;
 }
 
-interface Category {
+export interface Category {
   slug: CategorySlug;
   title: string;
   arabicTitle: string;
@@ -33,7 +33,7 @@ interface Category {
 
 /* ---------------- Data: 5 categories × 10 listings ---------------- */
 
-const CATEGORIES: Record<CategorySlug, Category> = {
+export const CATEGORIES: Record<CategorySlug, Category> = {
   apartment: {
     slug: "apartment",
     title: "Smart Apartments",
@@ -561,7 +561,7 @@ function CatalogPage() {
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid gap-6 md:grid-cols-2">
           {cat.listings.map((listing, idx) => (
-            <ListingCard key={listing.code} listing={listing} index={idx + 1} />
+            <ListingCard key={listing.code} listing={listing} index={idx + 1} slug={cat.slug} />
           ))}
         </div>
 
@@ -580,9 +580,13 @@ function CatalogPage() {
   );
 }
 
-function ListingCard({ listing, index }: { listing: Listing; index: number }) {
+function ListingCard({ listing, index, slug }: { listing: Listing; index: number; slug: CategorySlug }) {
   return (
-    <article className="group flex gap-0 overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 via-white/[0.02] to-white/5 backdrop-blur-sm shadow-2xl hover:border-amber-300/40 hover:shadow-amber-500/10 transition-all duration-300 hover:-translate-y-1">
+    <Link
+      to="/catalog/$slug/$code"
+      params={{ slug, code: listing.code }}
+      className="group flex gap-0 overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 via-white/[0.02] to-white/5 backdrop-blur-sm shadow-2xl hover:border-amber-300/40 hover:shadow-amber-500/10 transition-all duration-300 hover:-translate-y-1"
+    >
       {/* Image */}
       <div className="relative w-2/5 shrink-0 overflow-hidden">
         <img
@@ -647,7 +651,12 @@ function ListingCard({ listing, index }: { listing: Listing; index: number }) {
           </a>
           <div className="text-[10px] text-white/40 pt-1">Code: {listing.code}</div>
         </div>
+        <div className="mt-3">
+          <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-300 group-hover:text-amber-200">
+            View full details →
+          </span>
+        </div>
       </div>
-    </article>
+    </Link>
   );
 }
