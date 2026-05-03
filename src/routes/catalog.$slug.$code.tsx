@@ -18,7 +18,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CATEGORIES, type CategorySlug, type Listing } from "./catalog.$slug";
+import { CATEGORIES, type CategorySlug, type Listing } from "./catalog.$slug.index";
 
 /* ---------------- Mood-board templates per category ---------------- */
 
