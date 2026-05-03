@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
   Phone,
@@ -128,7 +128,8 @@ function PropertyDetail() {
 
   const phoneHref = `tel:${listing.contact.replace(/\s/g, "")}`;
   const mapsHref = `https://www.google.com/maps/search/${encodeURIComponent(listing.location)}`;
-  const shareUrl = typeof window !== "undefined" ? window.location.href : "";
+  const [shareUrl, setShareUrl] = useState("");
+  useEffect(() => { setShareUrl(window.location.href); }, []);
   const waHref = `https://wa.me/?text=${encodeURIComponent(`${listing.name} — ${listing.location} — ${shareUrl}`)}`;
   const fbHref = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
   const igHref = `https://www.instagram.com/`;
