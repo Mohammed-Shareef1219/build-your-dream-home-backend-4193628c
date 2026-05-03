@@ -158,17 +158,26 @@ function PropertyDetail() {
           <section className="lg:col-span-8 space-y-5">
             {/* Hero card */}
             <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-2xl">
-              <div className="aspect-[16/10] relative">
-                <img
-                  key={activeBoard.image}
-                  src={activeBoard.image}
-                  alt={`${listing.name} — ${activeBoard.label}`}
-                  className="h-full w-full object-cover transition-all duration-500 animate-in fade-in"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#050a18]/90 via-transparent to-transparent pointer-events-none" />
+              <div className="aspect-[16/10] relative overflow-hidden">
+                {/* Sliding track */}
+                <div
+                  className="absolute inset-0 flex transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform"
+                  style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+                >
+                  {boards.map((b) => (
+                    <div key={b.id} className="relative w-full h-full shrink-0">
+                      <img
+                        src={b.image}
+                        alt={`${listing.name} — ${b.label}`}
+                        className="h-full w-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#050a18]/90 via-transparent to-transparent pointer-events-none" />
+                    </div>
+                  ))}
+                </div>
 
                 {/* Floating code + views */}
-                <div className="absolute top-4 left-4 flex flex-col gap-2">
+                <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
                   <span className="rounded-lg bg-black/60 backdrop-blur px-3 py-1.5 text-xs font-mono text-amber-200 border border-amber-300/30">
                     [Property Code: {listing.code}]
                   </span>
@@ -178,14 +187,14 @@ function PropertyDetail() {
                 </div>
 
                 {/* Arabic property tag */}
-                <div className="absolute top-4 right-4">
+                <div className="absolute top-4 right-4 z-10">
                   <span className="rounded-lg bg-black/60 backdrop-blur px-4 py-2 text-base font-bold text-white border border-white/10">
                     {listing.arabicName}
                   </span>
                 </div>
 
                 {/* Active caption */}
-                <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-3">
+                <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-3 z-10">
                   <div>
                     <h1 className="text-2xl md:text-3xl font-bold text-white">{listing.name}</h1>
                     <p className="text-sm text-white/70 flex items-center gap-1.5 mt-1">
