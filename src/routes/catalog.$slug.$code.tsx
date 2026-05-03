@@ -124,7 +124,8 @@ function PropertyDetail() {
   }, [slug, listing]);
 
   const [activeBoardId, setActiveBoardId] = useState(boards[0].id);
-  const activeBoard = boards.find((b) => b.id === activeBoardId) ?? boards[0];
+  const activeIndex = Math.max(0, boards.findIndex((b) => b.id === activeBoardId));
+  const activeBoard = boards[activeIndex] ?? boards[0];
 
   const phoneHref = `tel:${listing.contact.replace(/\s/g, "")}`;
   const mapsHref = `https://www.google.com/maps/search/${encodeURIComponent(listing.location)}`;
