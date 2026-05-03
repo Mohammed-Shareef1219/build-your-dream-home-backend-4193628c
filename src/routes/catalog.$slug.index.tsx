@@ -489,7 +489,7 @@ const VALID_SLUGS = Object.keys(CATEGORIES) as CategorySlug[];
 
 /* ---------------- Route ---------------- */
 
-export const Route = createFileRoute("/catalog/$slug")({
+export const Route = createFileRoute("/catalog/$slug/")({
   beforeLoad: ({ params }) => {
     if (!VALID_SLUGS.includes(params.slug as CategorySlug)) {
       throw notFound();
@@ -599,7 +599,6 @@ function ListingCard({ listing, index, slug }: { listing: Listing; index: number
           {index}
         </span>
       </div>
-
       {/* Content */}
       <div className="flex-1 p-5 flex flex-col">
         <div className="flex items-start justify-between gap-3 mb-2">
@@ -658,5 +657,5 @@ function ListingCard({ listing, index, slug }: { listing: Listing; index: number
         </div>
       </div>
     </Link>
-  );
+  )
 }
