@@ -365,11 +365,17 @@ function PropertyDetail() {
               rel="noreferrer"
               className="block rounded-xl overflow-hidden border border-white/10 mb-4 group"
             >
-              <div className="h-24 bg-gradient-to-br from-emerald-500/30 via-cyan-500/20 to-blue-500/30 relative">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(56,189,248,0.4),transparent_60%)]" />
-                <MapPin className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-7 text-cyan-200 fill-cyan-400/50" />
+              <div className="h-28 relative">
+                <iframe
+                  title={`Map of ${listing.location}`}
+                  src={`https://www.google.com/maps?q=${encodeURIComponent(listing.location)}&output=embed`}
+                  className="absolute inset-0 w-full h-full border-0 grayscale-[20%] contrast-110"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+                <div className="absolute inset-0 pointer-events-none ring-1 ring-inset ring-cyan-300/20" />
               </div>
-              <div className="bg-white/5 px-3 py-2 text-xs font-semibold text-white/80 inline-flex items-center gap-1.5 w-full">
+              <div className="bg-white/5 px-3 py-2 text-xs font-semibold text-white/80 inline-flex items-center gap-1.5 w-full group-hover:bg-cyan-500/10 transition-colors">
                 <MapPin className="size-3.5 text-amber-300" /> VIEW ON MAP
               </div>
             </a>
