@@ -645,10 +645,10 @@ function ListingCard({ listing, index, slug }: { listing: Listing; index: number
             <User className="size-3 text-amber-300/70" />
             <span><span className="text-white/50">Seller:</span> {listing.seller}</span>
           </div>
-          <a href={`tel:${listing.contact.replace(/\s/g, "")}`} className="flex items-center gap-1.5 text-amber-300 hover:text-amber-200 font-semibold">
+          <div className="flex items-center gap-1.5 text-amber-300 font-semibold">
             <Phone className="size-3" />
             <span>{listing.contact}</span>
-          </a>
+          </div>
           <div className="text-[10px] text-white/40 pt-1">Code: {listing.code}</div>
         </div>
         <div className="mt-3">
