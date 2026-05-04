@@ -365,11 +365,17 @@ function PropertyDetail() {
               rel="noreferrer"
               className="block rounded-xl overflow-hidden border border-white/10 mb-4 group"
             >
-              <div className="h-24 bg-gradient-to-br from-emerald-500/30 via-cyan-500/20 to-blue-500/30 relative">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(56,189,248,0.4),transparent_60%)]" />
-                <MapPin className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-7 text-cyan-200 fill-cyan-400/50" />
+              <div className="h-28 relative">
+                <iframe
+                  title={`Map of ${listing.location}`}
+                  src={`https://www.google.com/maps?q=${encodeURIComponent(listing.location)}&output=embed`}
+                  className="absolute inset-0 w-full h-full border-0 grayscale-[20%] contrast-110"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+                <div className="absolute inset-0 pointer-events-none ring-1 ring-inset ring-cyan-300/20" />
               </div>
-              <div className="bg-white/5 px-3 py-2 text-xs font-semibold text-white/80 inline-flex items-center gap-1.5 w-full">
+              <div className="bg-white/5 px-3 py-2 text-xs font-semibold text-white/80 inline-flex items-center gap-1.5 w-full group-hover:bg-cyan-500/10 transition-colors">
                 <MapPin className="size-3.5 text-amber-300" /> VIEW ON MAP
               </div>
             </a>
@@ -428,6 +434,80 @@ function PropertyDetail() {
           ))}
         </div>
       </main>
+
+      {/* Floating AI Assistant bubble */}
+      <AiAssistantBubble />
     </div>
   );
 }
+
+function AiAssistantBubble() {
+  const [open, setOpen] = useState(false);
+  const [messages, setMessages] = useState<{ from: "ai" | "me"; text: string }[]>([
+    { from: "ai", text: "Hi, I'm Zeyad 👋 Ask about financing, installments, or scheduling a tour." },
+  ]);
+  const [input, setInput] = useState("");
+
+  const send = (e: React.FormEvent) => {
+    e.preventDefault();
+    const t = input.trim();
+    if (!t) return;
+    setMessages((m) => [...m, { from: "me", text: t }]);
+    setInput("");
+    setTimeout(() => {
+      setMessages((m) => [
+        ...m,
+        { from: "ai", text: "Great question! Installment plans up to 8 years are available — want me to send the full payment plan?" },
+      ]);
+    }, 600);
+  };
+
+  return (
+    <div className="fixed right-4 bottom-24 lg:bottom-4 z-50">
+      {open && (
+        <div className="mb-3 w-[300px] rounded-2xl border border-cyan-300/30 bg-[#0a142b]/95 backdrop-blur-xl shadow-2xl overflow-hidden animate-fade-in">
+          <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border-b border-white/10">
+            <div className="flex items-center gap-2">
+              <div className="size-8 rounded-full bg-cyan-500 flex items-center justify-center">
+                <Headphones className="size-4 text-[#070d1c]" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-white">AI ASSISTANT</p>
+                <p className="text-[10px] text-cyan-200">Zeyad · Online</p>
+              </div>
+            </div>
+            <button onClick={() => setOpen(false)} className="text-white/60 hover:text-white text-lg leading-none">×</button>
+          </div>
+          <div className="max-h-64 overflow-y-auto p-3 space-y-2">
+            {messages.map((m, i) => (
+              <div key={i} className={`flex ${m.from === "me" ? "justify-end" : "justify-start"}`}>
+                <div className={`max-w-[80%] rounded-2xl px-3 py-2 text-xs ${m.from === "me" ? "bg-cyan-500 text-[#070d1c]" : "bg-white/10 text-white/90"}`}>
+                  {m.text}
+                </div>
+              </div>
+            ))}
+          </div>
+          <form onSubmit={send} className="flex gap-2 p-3 border-t border-white/10">
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Type a message…"
+              className="flex-1 rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-xs placeholder:text-white/40 focus:outline-none focus:border-cyan-300/60 text-white"
+            />
+            <button type="submit" className="rounded-lg bg-cyan-500 hover:bg-cyan-400 text-[#070d1c] px-3 inline-flex items-center">
+              <Send className="size-4" />
+            </button>
+          </form>
+        </div>
+      )}
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className="size-14 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 shadow-2xl shadow-cyan-500/40 flex items-center justify-center text-white hover:scale-110 transition-transform border-2 border-white/20"
+        aria-label="Open AI assistant"
+      >
+        <MessageCircle className="size-6" />
+      </button>
+    </div>
+  );
+}
+
