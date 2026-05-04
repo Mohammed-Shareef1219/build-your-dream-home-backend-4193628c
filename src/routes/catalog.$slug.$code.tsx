@@ -509,3 +509,5 @@ function AiAssistantBubble() {
       </button>
     </div>
   );
+}
+
