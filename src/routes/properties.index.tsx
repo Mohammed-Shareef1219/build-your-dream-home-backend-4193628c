@@ -82,7 +82,7 @@ function ListingsPage() {
             className="pl-9"
           />
         </div>
-        <Select value={type} onValueChange={(v) => navigate({ search: (prev) => ({ ...prev, type: v }) })}>
+        <Select value={type} onValueChange={(v) => navigate({ search: (prev: { type?: string; q?: string }) => ({ ...prev, type: v }) })}>
           <SelectTrigger className="w-full sm:w-52">
             <SelectValue />
           </SelectTrigger>
