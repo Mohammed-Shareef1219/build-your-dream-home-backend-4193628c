@@ -78,11 +78,11 @@ function ListingsPage() {
         <Input
             placeholder="Search by title or location..."
             value={q}
-            onChange={(e) => navigate({ search: (prev) => ({ ...prev, q: e.target.value }) })}
+            onChange={(e) => navigate({ search: (prev: { type?: string; q?: string }) => ({ ...prev, q: e.target.value }) })}
             className="pl-9"
           />
         </div>
-        <Select value={type} onValueChange={(v) => navigate({ search: (prev) => ({ ...prev, type: v }) })}>
+        <Select value={type} onValueChange={(v) => navigate({ search: (prev: { type?: string; q?: string }) => ({ ...prev, type: v }) })}>
           <SelectTrigger className="w-full sm:w-52">
             <SelectValue />
           </SelectTrigger>
