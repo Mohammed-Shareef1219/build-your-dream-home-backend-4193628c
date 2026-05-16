@@ -38,6 +38,15 @@ export const Route = createRootRoute({
         content:
           "Your digital real-estate broker. Browse villas, apartments, duplexes and more. Free consultations and AI-powered home design.",
       },
+      { property: "og:title", content: "BuildYourHome — Design & Discover Your Dream Home" },
+      { name: "twitter:title", content: "BuildYourHome — Design & Discover Your Dream Home" },
+      { name: "description", content: "Real estate website to showcase properties for sale, acting as a digital broker." },
+      { property: "og:description", content: "Real estate website to showcase properties for sale, acting as a digital broker." },
+      { name: "twitter:description", content: "Real estate website to showcase properties for sale, acting as a digital broker." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/303e8f0f-0359-4d81-a083-2eff839445d8/id-preview-ad537adb--c2afe350-4d6a-4cde-a158-1695a0027220.lovable.app-1778929329184.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/303e8f0f-0359-4d81-a083-2eff839445d8/id-preview-ad537adb--c2afe350-4d6a-4cde-a158-1695a0027220.lovable.app-1778929329184.png" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:type", content: "website" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
