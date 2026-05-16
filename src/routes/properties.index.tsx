@@ -78,7 +78,7 @@ function ListingsPage() {
         <Input
             placeholder="Search by title or location..."
             value={q}
-            onChange={(e) => navigate({ search: (prev) => ({ ...prev, q: e.target.value }) })}
+            onChange={(e) => navigate({ search: (prev: { type?: string; q?: string }) => ({ ...prev, q: e.target.value }) })}
             className="pl-9"
           />
         </div>
