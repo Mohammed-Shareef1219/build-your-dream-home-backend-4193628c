@@ -2,11 +2,24 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { PropertyCard } from "@/components/PropertyCard";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Search, Handshake, ShieldCheck, Phone } from "lucide-react";
+import {
+  Search,
+  Eye,
+  MapPin,
+  BedDouble,
+  Bath,
+  Maximize,
+  Phone,
+  Heart,
+  Headphones,
+  Sparkles,
+  Home,
+  ChefHat,
+  Sofa,
+  ShowerHead,
+  Trees,
+} from "lucide-react";
+import { toast } from "sonner";
 import type { Database } from "@/integrations/supabase/types";
 
 type Property = Database["public"]["Tables"]["properties"]["Row"];
@@ -21,11 +34,11 @@ export const Route = createFileRoute("/properties/")({
   }),
   head: () => ({
     meta: [
-      { title: "Property Listings — BuildYourHome" },
+      { title: "Properties — IBN BEITAK 2026" },
       {
         name: "description",
         content:
-          "Active real-estate listings for sale and rent — price, location, rooms and condition, with a direct line to the owner or agent.",
+          "Live property listings with smart-home unit specs, mood boards, owner contact and engagement counters.",
       },
     ],
   }),
@@ -33,7 +46,7 @@ export const Route = createFileRoute("/properties/")({
 });
 
 const TYPES = [
-  { value: "all", label: "All types" },
+  { value: "all", label: "All Types" },
   { value: "villa", label: "Villa" },
   { value: "apartment", label: "Apartment" },
   { value: "duplex", label: "Duplex" },
@@ -43,7 +56,7 @@ const TYPES = [
 ];
 
 const BEDS = [
-  { value: "any", label: "Any beds" },
+  { value: "any", label: "Any Beds" },
   { value: "1", label: "1+" },
   { value: "2", label: "2+" },
   { value: "3", label: "3+" },
@@ -52,9 +65,23 @@ const BEDS = [
 
 const SORTS = [
   { value: "featured", label: "Featured first" },
-  { value: "price_asc", label: "Price: low to high" },
-  { value: "price_desc", label: "Price: high to low" },
+  { value: "price_asc", label: "Price ↑" },
+  { value: "price_desc", label: "Price ↓" },
   { value: "newest", label: "Newest" },
+];
+
+const TABS = [
+  { id: "properties", label: "PROPERTIES" },
+  { id: "invest", label: "INVEST" },
+  { id: "vr", label: "VR TOURS" },
+];
+
+const MOOD_ICONS = [
+  { Icon: ChefHat, label: "Kitchen" },
+  { Icon: Sofa, label: "Living" },
+  { Icon: ShowerHead, label: "Bath" },
+  { Icon: BedDouble, label: "Beds" },
+  { Icon: Trees, label: "Garden" },
 ];
 
 function ListingsPage() {
@@ -62,6 +89,7 @@ function ListingsPage() {
   const navigate = Route.useNavigate();
   const [items, setItems] = useState<Property[]>([]);
   const [favIds, setFavIds] = useState<Set<string>>(new Set());
+  const [activeTab, setActiveTab] = useState("properties");
   const { user } = useAuth();
 
   const setSearch = (patch: Partial<SearchState>) =>
@@ -102,133 +130,296 @@ function ListingsPage() {
     return sorted;
   }, [items, type, q, beds, sort]);
 
-  const available = items.filter((p) => p.status === "available").length;
+  const toggleFav = async (e: React.MouseEvent, propertyId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!user) return toast.error("Please sign in to save favorites");
+    const isFav = favIds.has(propertyId);
+    if (isFav) {
+      const { error } = await supabase.from("favorites").delete()
+        .eq("user_id", user.id).eq("property_id", propertyId);
+      if (error) return toast.error(error.message);
+      setFavIds((prev) => { const n = new Set(prev); n.delete(propertyId); return n; });
+    } else {
+      const { error } = await supabase.from("favorites")
+        .insert({ user_id: user.id, property_id: propertyId });
+      if (error) return toast.error(error.message);
+      setFavIds((prev) => new Set(prev).add(propertyId));
+    }
+  };
 
   return (
-    <div className="bg-background">
-      {/* Intro / objective */}
-      <section className="border-b bg-gradient-to-br from-primary/5 via-background to-accent/5">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-          <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 text-primary px-3 py-1 text-xs font-semibold mb-4">
-            <Handshake className="h-3.5 w-3.5" /> Live Market — Sale &amp; Rent
-          </span>
-          <h1 className="text-3xl md:text-4xl font-bold mb-3">Property Listings</h1>
-          <p className="text-muted-foreground max-w-3xl text-base md:text-lg">
-            The active real-estate market for commercial transactions. Each
-            listing shows the asking price, exact location, room count and the
-            property's real condition — your primary destination if you're
-            actively looking to buy or rent and want a genuine line to the
-            owner or agent.
+    <div
+      className="min-h-screen text-slate-100"
+      style={{
+        background:
+          "radial-gradient(1200px 600px at 20% 0%, rgba(14,165,233,0.18), transparent 60%), radial-gradient(900px 500px at 90% 10%, rgba(99,102,241,0.15), transparent 60%), linear-gradient(180deg,#060b1a 0%,#0a1230 50%,#060b1a 100%)",
+      }}
+    >
+      {/* TOP BAR */}
+      <header className="sticky top-0 z-30 border-b border-white/10 backdrop-blur-xl bg-[#060b1a]/70">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <Link to="/" className="text-lg font-bold tracking-wide">
+            IBN BEITAK <span className="text-cyan-400">2026</span>
+          </Link>
+          <nav className="hidden md:flex items-center gap-10 text-[13px] tracking-[0.18em]">
+            {TABS.map((t) => (
+              <button
+                key={t.id}
+                onClick={() => setActiveTab(t.id)}
+                className={`relative py-5 transition ${
+                  activeTab === t.id ? "text-white" : "text-slate-400 hover:text-slate-200"
+                }`}
+              >
+                {t.label}
+                {activeTab === t.id && (
+                  <span className="absolute left-0 right-0 -bottom-px h-0.5 bg-cyan-400 rounded-full" />
+                )}
+              </button>
+            ))}
+          </nav>
+          <div className="flex items-center gap-3">
+            <span className="hidden sm:block text-[13px] tracking-[0.18em] text-slate-300">
+              DETAILS <span className="text-slate-500 mx-1">|</span>{" "}
+              <span className="text-cyan-300">العقار</span>
+            </span>
+            <div className="h-9 w-9 rounded-full bg-gradient-to-br from-cyan-400 to-indigo-500 ring-2 ring-white/20" />
+          </div>
+        </div>
+      </header>
+
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+        {/* Intro */}
+        <section className="mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Property Listings</h1>
+          <p className="text-slate-300 max-w-3xl">
+            The live real-estate market — every unit shows price, location,
+            rooms and real condition with a direct line to the owner or agent.
           </p>
+        </section>
 
-          <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl">
-            <Stat label="Total listings" value={items.length} />
-            <Stat label="Available now" value={available} />
-            <Stat label="Matching filters" value={filtered.length} />
-            <Stat label="Verified owners" value="100%" />
+        {/* FILTER GLASS */}
+        <section className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-3 md:p-4 mb-8 shadow-[0_8px_40px_-12px_rgba(8,145,178,0.35)]">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
+            <div className="relative md:col-span-5">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-cyan-300" />
+              <input
+                value={q}
+                onChange={(e) => setSearch({ q: e.target.value })}
+                placeholder="Search by title or location..."
+                className="w-full h-11 pl-9 pr-3 rounded-xl bg-white/5 border border-white/10 text-sm placeholder:text-slate-400 focus:outline-none focus:border-cyan-400/60"
+              />
+            </div>
+            <GlassSelect className="md:col-span-3" value={type} onChange={(v) => setSearch({ type: v })} options={TYPES} />
+            <GlassSelect className="md:col-span-2" value={beds} onChange={(v) => setSearch({ beds: v })} options={BEDS} />
+            <GlassSelect className="md:col-span-2" value={sort} onChange={(v) => setSearch({ sort: v })} options={SORTS} />
           </div>
-        </div>
-      </section>
-
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
-        {/* Filter bar */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-3 mb-8">
-          <div className="relative md:col-span-5">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search by title or location..."
-              value={q}
-              onChange={(e) => setSearch({ q: e.target.value })}
-              className="pl-9"
-            />
-          </div>
-          <div className="md:col-span-3">
-            <Select value={type} onValueChange={(v) => setSearch({ type: v })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                {TYPES.map((t) => <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>)}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="md:col-span-2">
-            <Select value={beds} onValueChange={(v) => setSearch({ beds: v })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                {BEDS.map((b) => <SelectItem key={b.value} value={b.value}>{b.label}</SelectItem>)}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="md:col-span-2">
-            <Select value={sort} onValueChange={(v) => setSearch({ sort: v })}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                {SORTS.map((s) => <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>)}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        {filtered.length === 0 ? (
-          <div className="rounded-2xl border-2 border-dashed border-border p-16 text-center">
-            <p className="text-muted-foreground mb-4">No properties match your filters.</p>
-            <Button
-              variant="outline"
+          <div className="mt-3 flex items-center justify-between text-xs text-slate-400 px-1">
+            <span>{filtered.length} matching listings</span>
+            <button
               onClick={() => setSearch({ type: "all", q: "", beds: "any", sort: "featured" })}
+              className="text-cyan-300 hover:text-cyan-200"
             >
               Reset filters
-            </Button>
+            </button>
+          </div>
+        </section>
+
+        {/* GRID */}
+        {filtered.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-16 text-center text-slate-400">
+            No properties match your filters.
           </div>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((p) => (
-              <PropertyCard
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {filtered.map((p, i) => (
+              <GlassPropertyCard
                 key={p.id}
                 property={p}
+                index={i}
                 isFavorite={favIds.has(p.id)}
-                onFavoriteChange={(v) =>
-                  setFavIds((prev) => {
-                    const n = new Set(prev);
-                    v ? n.add(p.id) : n.delete(p.id);
-                    return n;
-                  })
-                }
+                onToggleFav={(e) => toggleFav(e, p.id)}
               />
             ))}
           </div>
         )}
 
-        {/* Connect strip */}
-        <section className="mt-16 rounded-2xl bg-primary text-primary-foreground p-8 md:p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="max-w-xl">
-            <div className="inline-flex items-center gap-2 text-xs font-semibold opacity-90 mb-2">
-              <ShieldCheck className="h-4 w-4" /> Direct &amp; verified
+        {/* DEVELOPER STRIP */}
+        <section className="mt-14 rounded-2xl border border-white/10 bg-gradient-to-br from-cyan-500/10 via-white/5 to-indigo-500/10 backdrop-blur-xl p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="flex items-center gap-4">
+            <div className="h-14 w-14 rounded-2xl bg-cyan-500/20 border border-cyan-300/30 flex items-center justify-center">
+              <Home className="h-7 w-7 text-cyan-300" />
             </div>
-            <h2 className="text-2xl font-bold mb-2">
-              Found something? Talk to the owner or agent directly.
-            </h2>
-            <p className="opacity-90">
-              Every listing is published with a real point of contact. No
-              middlemen, no recycled ads — just genuine opportunities.
-            </p>
+            <div>
+              <div className="text-xs tracking-[0.2em] text-cyan-300">IBN BEITAK</div>
+              <div className="text-xl font-bold">DEVELOPMENTS</div>
+              <div className="text-sm text-slate-300">
+                Verified developer · Direct owner contact on every listing
+              </div>
+            </div>
           </div>
-          <div className="flex gap-3">
-            <Button asChild variant="accent" size="lg">
-              <Link to="/consultation">
-                <Phone className="h-4 w-4" /> Request a callback
-              </Link>
-            </Button>
-          </div>
+          <a
+            href="tel:+201000000000"
+            className="inline-flex items-center gap-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-semibold px-6 h-12 shadow-[0_8px_30px_-8px_rgba(34,211,238,0.7)] transition"
+          >
+            <Phone className="h-4 w-4" /> CALL NOW
+          </a>
         </section>
+      </main>
+
+      {/* AI ASSISTANT BUBBLE */}
+      <div className="fixed bottom-5 right-5 z-40 flex items-center gap-3">
+        <div className="hidden sm:flex items-center gap-2 rounded-full border border-white/15 bg-[#0a1230]/90 backdrop-blur px-4 py-2 text-xs text-slate-200 shadow-xl">
+          <Headphones className="h-4 w-4 text-cyan-300" />
+          <span className="font-semibold">AI ASSISTANT (ZEYAD):</span>
+          <span className="text-slate-400">"Ask about financing!"</span>
+        </div>
+        <button className="h-12 w-12 rounded-full bg-cyan-500 hover:bg-cyan-400 text-slate-900 flex items-center justify-center shadow-[0_10px_30px_-6px_rgba(34,211,238,0.7)]">
+          <Sparkles className="h-5 w-5" />
+        </button>
       </div>
     </div>
   );
 }
 
-function Stat({ label, value }: { label: string; value: number | string }) {
+/* ---------------- Components ---------------- */
+
+function GlassSelect({
+  value,
+  onChange,
+  options,
+  className,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  options: { value: string; label: string }[];
+  className?: string;
+}) {
   return (
-    <div className="rounded-xl border bg-card p-3">
-      <div className="text-2xl font-bold text-primary">{value}</div>
-      <div className="text-xs text-muted-foreground">{label}</div>
+    <div className={className}>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full h-11 px-3 rounded-xl bg-white/5 border border-white/10 text-sm text-slate-100 focus:outline-none focus:border-cyan-400/60 [&>option]:bg-[#0a1230] [&>option]:text-slate-100"
+      >
+        {options.map((o) => (
+          <option key={o.value} value={o.value}>{o.label}</option>
+        ))}
+      </select>
     </div>
+  );
+}
+
+function GlassPropertyCard({
+  property,
+  index,
+  isFavorite,
+  onToggleFav,
+}: {
+  property: Property;
+  index: number;
+  isFavorite: boolean;
+  onToggleFav: (e: React.MouseEvent) => void;
+}) {
+  const img =
+    property.image_urls?.[0] ??
+    "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1400&auto=format&fit=crop";
+
+  const code = `EBK-${String(2024 + (index % 3)).padStart(4, "0")}`;
+  const views = 1250 + index * 137;
+  const arabicLabel =
+    property.type === "villa" ? "فيلا العقار"
+    : property.type === "apartment" ? "شقة العقار"
+    : property.type === "duplex" ? "دوبلكس العقار"
+    : property.type === "studio" ? "ستوديو العقار"
+    : property.type === "country_house" ? "ريفي العقار"
+    : "العقار";
+
+  return (
+    <Link
+      to="/properties/$id"
+      params={{ id: property.id }}
+      className="group relative block rounded-3xl border border-white/10 bg-white/[0.04] backdrop-blur-xl overflow-hidden shadow-[0_10px_40px_-15px_rgba(0,0,0,0.7)] hover:border-cyan-400/40 hover:shadow-[0_15px_60px_-15px_rgba(34,211,238,0.45)] hover:-translate-y-1 transition-all duration-300"
+    >
+      {/* Hero */}
+      <div className="relative aspect-[16/11] overflow-hidden">
+        <img
+          src={img}
+          alt={property.title}
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#060b1a]/95 via-[#060b1a]/30 to-transparent" />
+
+        {/* Top-left: code + views */}
+        <div className="absolute top-3 left-3 rounded-xl border border-amber-300/40 bg-[#060b1a]/70 backdrop-blur px-3 py-1.5 text-[11px]">
+          <div className="text-amber-300 font-semibold">[كود العقار: {code}]</div>
+          <div className="flex items-center gap-1 text-slate-200 mt-0.5">
+            <Eye className="h-3 w-3" /> {views.toLocaleString()} مشاهدة
+          </div>
+        </div>
+
+        {/* Top-right: Arabic label */}
+        <div className="absolute top-3 right-3 rounded-xl border border-white/15 bg-white/10 backdrop-blur px-3 py-1.5 text-sm font-semibold">
+          {arabicLabel}
+        </div>
+
+        {/* Favorite */}
+        <button
+          onClick={onToggleFav}
+          aria-label="Toggle favorite"
+          className="absolute top-16 right-3 h-9 w-9 rounded-full bg-[#060b1a]/70 backdrop-blur border border-white/15 flex items-center justify-center hover:scale-110 transition"
+        >
+          <Heart className={`h-4 w-4 ${isFavorite ? "fill-rose-400 text-rose-400" : "text-slate-200"}`} />
+        </button>
+
+        {/* Mood-board strip */}
+        <div className="absolute left-3 right-3 bottom-3 rounded-2xl border border-white/15 bg-[#060b1a]/75 backdrop-blur px-3 py-2.5 flex items-center justify-between">
+          {MOOD_ICONS.map(({ Icon, label }) => (
+            <div key={label} className="flex flex-col items-center gap-1">
+              <span className="h-9 w-9 rounded-full bg-cyan-500/20 border border-cyan-300/40 flex items-center justify-center">
+                <Icon className="h-4 w-4 text-cyan-300" />
+              </span>
+              <span className="text-[9px] text-slate-300">{label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Body */}
+      <div className="p-5">
+        <h3 className="font-semibold text-lg leading-tight line-clamp-1 mb-1">
+          {property.title}
+        </h3>
+        {property.location && (
+          <p className="flex items-center gap-1 text-xs text-slate-400 mb-3">
+            <MapPin className="h-3 w-3" /> {property.location}
+          </p>
+        )}
+        <div className="flex items-center gap-4 text-xs text-slate-300 mb-4">
+          {property.bedrooms != null && (
+            <span className="flex items-center gap-1"><BedDouble className="h-3.5 w-3.5 text-cyan-300" /> {property.bedrooms}</span>
+          )}
+          {property.bathrooms != null && (
+            <span className="flex items-center gap-1"><Bath className="h-3.5 w-3.5 text-cyan-300" /> {property.bathrooms}</span>
+          )}
+          {property.area_sqm != null && (
+            <span className="flex items-center gap-1"><Maximize className="h-3.5 w-3.5 text-cyan-300" /> {property.area_sqm}m²</span>
+          )}
+        </div>
+        <div className="flex items-end justify-between pt-3 border-t border-white/10">
+          <div>
+            <div className="text-[10px] uppercase tracking-wider text-slate-500">Starting from</div>
+            <div className="text-xl font-bold text-cyan-300">
+              {new Intl.NumberFormat("en-US").format(Number(property.price))}{" "}
+              <span className="text-xs text-slate-400">{property.currency}</span>
+            </div>
+          </div>
+          <span className="inline-flex items-center gap-1.5 rounded-lg bg-cyan-500/90 hover:bg-cyan-400 text-slate-900 text-xs font-semibold px-3 py-2 transition">
+            <Phone className="h-3.5 w-3.5" /> Details
+          </span>
+        </div>
+      </div>
+    </Link>
   );
 }
