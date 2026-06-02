@@ -18,6 +18,14 @@ import {
   Sofa,
   ShowerHead,
   Trees,
+  TrendingUp,
+  Glasses,
+  Building2,
+  BadgePercent,
+  CalendarClock,
+  Compass,
+  PlayCircle,
+  ArrowRight,
 } from "lucide-react";
 import { toast } from "sonner";
 import type { Database } from "@/integrations/supabase/types";
@@ -189,60 +197,62 @@ function ListingsPage() {
       </header>
 
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
-        {/* Intro */}
-        <section className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">Property Listings</h1>
-          <p className="text-slate-300 max-w-3xl">
-            The live real-estate market — every unit shows price, location,
-            rooms and real condition with a direct line to the owner or agent.
-          </p>
-        </section>
+        {/* TAB INTRO CARD */}
+        <TabIntro tab={activeTab} />
 
-        {/* FILTER GLASS */}
-        <section className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-3 md:p-4 mb-8 shadow-[0_8px_40px_-12px_rgba(8,145,178,0.35)]">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
-            <div className="relative md:col-span-5">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-cyan-300" />
-              <input
-                value={q}
-                onChange={(e) => setSearch({ q: e.target.value })}
-                placeholder="Search by title or location..."
-                className="w-full h-11 pl-9 pr-3 rounded-xl bg-white/5 border border-white/10 text-sm placeholder:text-slate-400 focus:outline-none focus:border-cyan-400/60"
-              />
-            </div>
-            <GlassSelect className="md:col-span-3" value={type} onChange={(v) => setSearch({ type: v })} options={TYPES} />
-            <GlassSelect className="md:col-span-2" value={beds} onChange={(v) => setSearch({ beds: v })} options={BEDS} />
-            <GlassSelect className="md:col-span-2" value={sort} onChange={(v) => setSearch({ sort: v })} options={SORTS} />
-          </div>
-          <div className="mt-3 flex items-center justify-between text-xs text-slate-400 px-1">
-            <span>{filtered.length} matching listings</span>
-            <button
-              onClick={() => setSearch({ type: "all", q: "", beds: "any", sort: "featured" })}
-              className="text-cyan-300 hover:text-cyan-200"
-            >
-              Reset filters
-            </button>
-          </div>
-        </section>
+        {activeTab === "properties" && (
+          <>
+            {/* FILTER GLASS */}
+            <section className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-3 md:p-4 mb-8 shadow-[0_8px_40px_-12px_rgba(8,145,178,0.35)]">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
+                <div className="relative md:col-span-5">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-cyan-300" />
+                  <input
+                    value={q}
+                    onChange={(e) => setSearch({ q: e.target.value })}
+                    placeholder="Search by location, title, size..."
+                    className="w-full h-11 pl-9 pr-3 rounded-xl bg-white/5 border border-white/10 text-sm placeholder:text-slate-400 focus:outline-none focus:border-cyan-400/60"
+                  />
+                </div>
+                <GlassSelect className="md:col-span-3" value={type} onChange={(v) => setSearch({ type: v })} options={TYPES} />
+                <GlassSelect className="md:col-span-2" value={beds} onChange={(v) => setSearch({ beds: v })} options={BEDS} />
+                <GlassSelect className="md:col-span-2" value={sort} onChange={(v) => setSearch({ sort: v })} options={SORTS} />
+              </div>
+              <div className="mt-3 flex items-center justify-between text-xs text-slate-400 px-1">
+                <span>{filtered.length} matching listings</span>
+                <button
+                  onClick={() => setSearch({ type: "all", q: "", beds: "any", sort: "featured" })}
+                  className="text-cyan-300 hover:text-cyan-200"
+                >
+                  Reset filters
+                </button>
+              </div>
+            </section>
 
-        {/* GRID */}
-        {filtered.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-16 text-center text-slate-400">
-            No properties match your filters.
-          </div>
-        ) : (
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {filtered.map((p, i) => (
-              <GlassPropertyCard
-                key={p.id}
-                property={p}
-                index={i}
-                isFavorite={favIds.has(p.id)}
-                onToggleFav={(e) => toggleFav(e, p.id)}
-              />
-            ))}
-          </div>
+            {/* GRID */}
+            {filtered.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-16 text-center text-slate-400">
+                No properties match your filters.
+              </div>
+            ) : (
+              <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                {filtered.map((p, i) => (
+                  <GlassPropertyCard
+                    key={p.id}
+                    property={p}
+                    index={i}
+                    isFavorite={favIds.has(p.id)}
+                    onToggleFav={(e) => toggleFav(e, p.id)}
+                  />
+                ))}
+              </div>
+            )}
+          </>
         )}
+
+        {activeTab === "invest" && <InvestPanel />}
+        {activeTab === "vr" && <VRPanel />}
+
 
         {/* DEVELOPER STRIP */}
         <section className="mt-14 rounded-2xl border border-white/10 bg-gradient-to-br from-cyan-500/10 via-white/5 to-indigo-500/10 backdrop-blur-xl p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
@@ -423,3 +433,212 @@ function GlassPropertyCard({
     </Link>
   );
 }
+
+/* ---------------- Tab Intro + Panels ---------------- */
+
+const TAB_INTROS: Record<
+  string,
+  {
+    badge: string;
+    title: string;
+    content: string;
+    details: string;
+    objective: string;
+    image: string;
+    Icon: typeof Home;
+  }
+> = {
+  properties: {
+    badge: "PROPERTIES",
+    title: "Find a home ready to move into",
+    content:
+      "An advanced search engine for every available unit on the live market — sale or rent.",
+    details:
+      "Filter by location, size, price and number of rooms to narrow thousands of listings to the few that fit.",
+    objective:
+      "Quick, traditional browsing to find the right property for immediate occupancy.",
+    image:
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&auto=format&fit=crop",
+    Icon: Home,
+  },
+  invest: {
+    badge: "INVESTMENT",
+    title: "Put your capital to work",
+    content:
+      "Off-plan residential projects and prime commercial or office assets curated for yield.",
+    details:
+      "Each opportunity displays expected ROI, long-term payment plans and projected price growth.",
+    objective:
+      "Built for investors looking to grow capital — not for immediate occupancy.",
+    image:
+      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1600&auto=format&fit=crop",
+    Icon: TrendingUp,
+  },
+  vr: {
+    badge: "VR TOURS",
+    title: "Walk the unit before you visit",
+    content:
+      "Interactive 360° virtual reality tours of selected properties.",
+    details:
+      "Move room to room and inspect real finishes as if you were standing inside the unit.",
+    objective:
+      "Accurate remote inspection — saving time, effort and unnecessary site visits.",
+    image:
+      "https://images.unsplash.com/photo-1593508512255-86ab42a8e620?w=1600&auto=format&fit=crop",
+    Icon: Glasses,
+  },
+};
+
+function TabIntro({ tab }: { tab: string }) {
+  const info = TAB_INTROS[tab] ?? TAB_INTROS.properties;
+  const { Icon } = info;
+  return (
+    <section className="mb-8 grid md:grid-cols-5 gap-6 items-stretch">
+      <div className="md:col-span-3 rounded-3xl border border-white/10 bg-white/[0.04] backdrop-blur-xl p-7 md:p-9 flex flex-col justify-center">
+        <div className="inline-flex items-center gap-2 self-start rounded-full border border-cyan-300/30 bg-cyan-500/10 px-3 py-1 text-[11px] tracking-[0.2em] text-cyan-300 mb-4">
+          <Icon className="h-3.5 w-3.5" /> {info.badge}
+        </div>
+        <h1 className="text-3xl md:text-4xl font-bold mb-3">{info.title}</h1>
+        <p className="text-slate-300 mb-4">{info.content}</p>
+        <ul className="space-y-2 text-sm text-slate-300">
+          <li className="flex gap-2"><span className="text-cyan-300 font-semibold">Details:</span> {info.details}</li>
+          <li className="flex gap-2"><span className="text-amber-300 font-semibold">Objective:</span> {info.objective}</li>
+        </ul>
+      </div>
+      <div className="md:col-span-2 relative rounded-3xl overflow-hidden border border-white/10 min-h-[240px] shadow-[0_15px_60px_-20px_rgba(34,211,238,0.45)]">
+        <img
+          src={info.image}
+          alt={info.title}
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-tr from-[#060b1a]/80 via-[#060b1a]/20 to-transparent" />
+      </div>
+    </section>
+  );
+}
+
+const INVEST_DEALS = [
+  {
+    name: "Marina Tower — Off-plan",
+    location: "New Alamein, North Coast",
+    roi: "14% / yr",
+    plan: "8 years · 5% down",
+    growth: "+32% projected (3 yr)",
+    image:
+      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1400&auto=format&fit=crop",
+  },
+  {
+    name: "Capital Business Hub",
+    location: "New Administrative Capital",
+    roi: "11% / yr",
+    plan: "6 years · 10% down",
+    growth: "+24% projected (3 yr)",
+    image:
+      "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1400&auto=format&fit=crop",
+  },
+  {
+    name: "Sheikh Zayed Office Park",
+    location: "Sheikh Zayed, Giza",
+    roi: "9% / yr",
+    plan: "5 years · 15% down",
+    growth: "+18% projected (3 yr)",
+    image:
+      "https://images.unsplash.com/photo-1554469384-e58fac16e23a?w=1400&auto=format&fit=crop",
+  },
+];
+
+function InvestPanel() {
+  return (
+    <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-3 mb-8">
+      {INVEST_DEALS.map((d) => (
+        <article
+          key={d.name}
+          className="group rounded-3xl border border-white/10 bg-white/[0.04] backdrop-blur-xl overflow-hidden hover:border-amber-300/40 hover:-translate-y-1 transition-all duration-300 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.7)]"
+        >
+          <div className="relative aspect-[16/10] overflow-hidden">
+            <img src={d.image} alt={d.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#060b1a]/95 via-[#060b1a]/20 to-transparent" />
+            <div className="absolute top-3 left-3 rounded-full border border-amber-300/40 bg-[#060b1a]/70 backdrop-blur px-3 py-1 text-[11px] text-amber-300 font-semibold flex items-center gap-1">
+              <BadgePercent className="h-3 w-3" /> ROI {d.roi}
+            </div>
+          </div>
+          <div className="p-5">
+            <div className="flex items-center gap-1.5 text-[11px] tracking-[0.18em] text-cyan-300 mb-1">
+              <Building2 className="h-3.5 w-3.5" /> OFF-PLAN
+            </div>
+            <h3 className="text-lg font-semibold mb-1">{d.name}</h3>
+            <p className="flex items-center gap-1 text-xs text-slate-400 mb-4">
+              <MapPin className="h-3 w-3" /> {d.location}
+            </p>
+            <div className="space-y-2 text-xs text-slate-300 border-t border-white/10 pt-3">
+              <div className="flex items-center gap-2"><CalendarClock className="h-3.5 w-3.5 text-cyan-300" /> {d.plan}</div>
+              <div className="flex items-center gap-2"><TrendingUp className="h-3.5 w-3.5 text-emerald-300" /> {d.growth}</div>
+            </div>
+            <button className="mt-4 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-900 text-sm font-semibold h-10 transition">
+              Request investment memo <ArrowRight className="h-4 w-4" />
+            </button>
+          </div>
+        </article>
+      ))}
+    </section>
+  );
+}
+
+const VR_TOURS = [
+  {
+    name: "Penthouse — Marina Tower",
+    rooms: "5 rooms · 320m²",
+    image:
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1400&auto=format&fit=crop",
+  },
+  {
+    name: "Smart Villa — Sheikh Zayed",
+    rooms: "4 rooms · 410m²",
+    image:
+      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1400&auto=format&fit=crop",
+  },
+  {
+    name: "Loft — New Capital",
+    rooms: "2 rooms · 145m²",
+    image:
+      "https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=1400&auto=format&fit=crop",
+  },
+];
+
+function VRPanel() {
+  return (
+    <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-3 mb-8">
+      {VR_TOURS.map((t) => (
+        <article
+          key={t.name}
+          className="group relative rounded-3xl border border-white/10 bg-white/[0.04] backdrop-blur-xl overflow-hidden hover:border-cyan-400/50 hover:-translate-y-1 transition-all duration-300 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.7)]"
+        >
+          <div className="relative aspect-[4/3] overflow-hidden">
+            <img src={t.image} alt={t.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#060b1a]/95 via-[#060b1a]/30 to-transparent" />
+            <div className="absolute top-3 left-3 rounded-full border border-cyan-300/40 bg-[#060b1a]/70 backdrop-blur px-3 py-1 text-[11px] text-cyan-300 font-semibold flex items-center gap-1">
+              <Compass className="h-3 w-3" /> 360° VR
+            </div>
+            <button
+              aria-label="Play VR tour"
+              className="absolute inset-0 m-auto h-16 w-16 rounded-full bg-cyan-500/90 hover:bg-cyan-400 text-slate-900 flex items-center justify-center shadow-[0_10px_40px_-8px_rgba(34,211,238,0.8)] transition group-hover:scale-110"
+            >
+              <PlayCircle className="h-8 w-8" />
+            </button>
+          </div>
+          <div className="p-5 flex items-center justify-between">
+            <div>
+              <h3 className="text-base font-semibold">{t.name}</h3>
+              <p className="text-xs text-slate-400 mt-0.5">{t.rooms}</p>
+            </div>
+            <span className="inline-flex items-center gap-1.5 rounded-lg bg-cyan-500/90 hover:bg-cyan-400 text-slate-900 text-xs font-semibold px-3 py-2 transition">
+              <Glasses className="h-3.5 w-3.5" /> Enter
+            </span>
+          </div>
+        </article>
+      ))}
+    </section>
+  );
+}
+
