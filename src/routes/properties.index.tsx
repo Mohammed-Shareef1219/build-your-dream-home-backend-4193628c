@@ -197,60 +197,62 @@ function ListingsPage() {
       </header>
 
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
-        {/* Intro */}
-        <section className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">Property Listings</h1>
-          <p className="text-slate-300 max-w-3xl">
-            The live real-estate market — every unit shows price, location,
-            rooms and real condition with a direct line to the owner or agent.
-          </p>
-        </section>
+        {/* TAB INTRO CARD */}
+        <TabIntro tab={activeTab} />
 
-        {/* FILTER GLASS */}
-        <section className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-3 md:p-4 mb-8 shadow-[0_8px_40px_-12px_rgba(8,145,178,0.35)]">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
-            <div className="relative md:col-span-5">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-cyan-300" />
-              <input
-                value={q}
-                onChange={(e) => setSearch({ q: e.target.value })}
-                placeholder="Search by title or location..."
-                className="w-full h-11 pl-9 pr-3 rounded-xl bg-white/5 border border-white/10 text-sm placeholder:text-slate-400 focus:outline-none focus:border-cyan-400/60"
-              />
-            </div>
-            <GlassSelect className="md:col-span-3" value={type} onChange={(v) => setSearch({ type: v })} options={TYPES} />
-            <GlassSelect className="md:col-span-2" value={beds} onChange={(v) => setSearch({ beds: v })} options={BEDS} />
-            <GlassSelect className="md:col-span-2" value={sort} onChange={(v) => setSearch({ sort: v })} options={SORTS} />
-          </div>
-          <div className="mt-3 flex items-center justify-between text-xs text-slate-400 px-1">
-            <span>{filtered.length} matching listings</span>
-            <button
-              onClick={() => setSearch({ type: "all", q: "", beds: "any", sort: "featured" })}
-              className="text-cyan-300 hover:text-cyan-200"
-            >
-              Reset filters
-            </button>
-          </div>
-        </section>
+        {activeTab === "properties" && (
+          <>
+            {/* FILTER GLASS */}
+            <section className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-3 md:p-4 mb-8 shadow-[0_8px_40px_-12px_rgba(8,145,178,0.35)]">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
+                <div className="relative md:col-span-5">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-cyan-300" />
+                  <input
+                    value={q}
+                    onChange={(e) => setSearch({ q: e.target.value })}
+                    placeholder="Search by location, title, size..."
+                    className="w-full h-11 pl-9 pr-3 rounded-xl bg-white/5 border border-white/10 text-sm placeholder:text-slate-400 focus:outline-none focus:border-cyan-400/60"
+                  />
+                </div>
+                <GlassSelect className="md:col-span-3" value={type} onChange={(v) => setSearch({ type: v })} options={TYPES} />
+                <GlassSelect className="md:col-span-2" value={beds} onChange={(v) => setSearch({ beds: v })} options={BEDS} />
+                <GlassSelect className="md:col-span-2" value={sort} onChange={(v) => setSearch({ sort: v })} options={SORTS} />
+              </div>
+              <div className="mt-3 flex items-center justify-between text-xs text-slate-400 px-1">
+                <span>{filtered.length} matching listings</span>
+                <button
+                  onClick={() => setSearch({ type: "all", q: "", beds: "any", sort: "featured" })}
+                  className="text-cyan-300 hover:text-cyan-200"
+                >
+                  Reset filters
+                </button>
+              </div>
+            </section>
 
-        {/* GRID */}
-        {filtered.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-16 text-center text-slate-400">
-            No properties match your filters.
-          </div>
-        ) : (
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {filtered.map((p, i) => (
-              <GlassPropertyCard
-                key={p.id}
-                property={p}
-                index={i}
-                isFavorite={favIds.has(p.id)}
-                onToggleFav={(e) => toggleFav(e, p.id)}
-              />
-            ))}
-          </div>
+            {/* GRID */}
+            {filtered.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-16 text-center text-slate-400">
+                No properties match your filters.
+              </div>
+            ) : (
+              <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                {filtered.map((p, i) => (
+                  <GlassPropertyCard
+                    key={p.id}
+                    property={p}
+                    index={i}
+                    isFavorite={favIds.has(p.id)}
+                    onToggleFav={(e) => toggleFav(e, p.id)}
+                  />
+                ))}
+              </div>
+            )}
+          </>
         )}
+
+        {activeTab === "invest" && <InvestPanel />}
+        {activeTab === "vr" && <VRPanel />}
+
 
         {/* DEVELOPER STRIP */}
         <section className="mt-14 rounded-2xl border border-white/10 bg-gradient-to-br from-cyan-500/10 via-white/5 to-indigo-500/10 backdrop-blur-xl p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
