@@ -18,6 +18,14 @@ import {
   Sofa,
   ShowerHead,
   Trees,
+  TrendingUp,
+  Glasses,
+  Building2,
+  BadgePercent,
+  CalendarClock,
+  Compass,
+  PlayCircle,
+  ArrowRight,
 } from "lucide-react";
 import { toast } from "sonner";
 import type { Database } from "@/integrations/supabase/types";
