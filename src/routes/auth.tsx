@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Home } from "lucide-react";
+import { lovable } from "@/integrations/lovable";
 
 export const Route = createFileRoute("/auth")({
   validateSearch: (s: Record<string, unknown>): { mode?: "login" | "signup" } => ({
@@ -51,41 +52,105 @@ function LoginForm() {
     toast.success("Welcome back!");
   };
 
+  const onGoogle = async () => {
+    const result = await lovable.auth.signInWithOAuth("google", {
+      redirect_uri: window.location.origin,
+    });
+    if (result?.error) toast.error(result.error.message);
+  };
+
   return (
-    <div className="flex min-h-[80vh] items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-gradient shadow-glow mb-4">
-            <Home className="h-7 w-7 text-white" />
-          </div>
-          <h1 className="text-3xl font-bold">Welcome back</h1>
-          <p className="text-muted-foreground mt-2">Sign in to continue.</p>
+    <div className="relative min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12 overflow-hidden">
+      {/* Animated background */}
+      <div className="absolute inset-0 -z-10 animate-[bgSlide_20s_infinite] bg-cover bg-center brightness-[0.6]"
+        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80')" }} />
+      <style>{`
+        @keyframes bgSlide {
+          0%,100% { background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80'); }
+          33% { background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80'); }
+          66% { background-image: url('https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80'); }
+        }
+      `}</style>
+
+      <div className="w-[380px] max-w-[90%] rounded-xl bg-white/95 backdrop-blur-md border border-white/30 shadow-[0_4px_30px_rgba(0,0,0,0.1)] p-8 text-center">
+        <h1 className="mb-6 text-[28px] font-semibold text-[#2d3748]">Login</h1>
+
+        <button
+          type="button"
+          onClick={onGoogle}
+          className="mb-5 w-full flex items-center justify-center gap-3 rounded-lg border border-[#dadce0] bg-white px-3 py-3 text-sm font-medium text-[#3c4043] hover:bg-[#f7f8f8] transition-colors"
+        >
+          <svg width="18" height="18" viewBox="0 0 48 48">
+            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
+            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
+            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
+          </svg>
+          Sign in with Google
+        </button>
+
+        <div className="my-5 flex items-center gap-4 text-sm text-[#a0aec0]">
+          <div className="h-px flex-1 bg-[#e2e8f0]" />
+          <span>or</span>
+          <div className="h-px flex-1 bg-[#e2e8f0]" />
         </div>
 
-        <form onSubmit={onSubmit} className="bg-card rounded-2xl shadow-elegant p-8 space-y-4">
+        <form onSubmit={onSubmit} className="space-y-5 text-left">
           <div>
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
+            <label htmlFor="email" className="mb-2 block text-sm font-medium text-[#4a5568]">Email</label>
+            <input
+              id="email"
+              type="email"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              required
+              className="w-full rounded-lg border border-[#e2e8f0] bg-[#f8fafc] px-4 py-3 text-[15px] transition-all focus:border-[#4299e1] focus:outline-none focus:ring-[3px] focus:ring-[#4299e1]/20"
+            />
           </div>
           <div>
-            <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required />
+            <label htmlFor="password" className="mb-2 block text-sm font-medium text-[#4a5568]">Password</label>
+            <input
+              id="password"
+              type="password"
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+              required
+              className="w-full rounded-lg border border-[#e2e8f0] bg-[#f8fafc] px-4 py-3 text-[15px] transition-all focus:border-[#4299e1] focus:outline-none focus:ring-[3px] focus:ring-[#4299e1]/20"
+            />
           </div>
-          <Button type="submit" variant="brand" size="lg" className="w-full" disabled={loading}>
-            {loading ? "Please wait..." : "Sign in"}
-          </Button>
-          <div className="text-center text-sm text-muted-foreground">
-            No account?{" "}
-            <button type="button" className="text-secondary font-medium hover:underline"
-              onClick={() => navigate({ to: "/auth", search: { mode: "signup" } })}>
-              Create one
-            </button>
+
+          <div className="flex items-center justify-between text-sm">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" className="h-4 w-4 accent-[#4299e1]" />
+              <span className="text-[#4a5568]">Remember me</span>
+            </label>
+            <a href="#" className="text-[#4299e1] hover:text-[#3182ce] hover:underline">Forgot password?</a>
           </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full rounded-lg bg-[#4299e1] px-4 py-3.5 text-base font-medium text-white shadow-[0_2px_5px_rgba(66,153,225,0.2)] transition-all hover:bg-[#3182ce] hover:-translate-y-0.5 hover:shadow-[0_4px_8px_rgba(66,153,225,0.3)] disabled:opacity-50 disabled:hover:transform-none"
+          >
+            {loading ? "Please wait..." : "Login"}
+          </button>
         </form>
+
+        <div className="mt-5 text-sm text-[#4a5568]">
+          Don't have an account?{" "}
+          <button
+            type="button"
+            onClick={() => navigate({ to: "/auth", search: { mode: "signup" } })}
+            className="font-medium text-[#4299e1] hover:text-[#3182ce] hover:underline"
+          >
+            Register
+          </button>
+        </div>
       </div>
     </div>
   );
 }
+
 
 /* -------------------------- SIGNUP WIZARD -------------------------- */
 
