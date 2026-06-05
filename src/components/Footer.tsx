@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Home, Mail, Phone, Facebook, Instagram, Twitter } from "lucide-react";
+import { Mail, Phone, Facebook, Instagram, Twitter } from "lucide-react";
 
 export function Footer() {
   return (
@@ -8,9 +8,6 @@ export function Footer() {
         <div className="grid gap-10 md:grid-cols-4">
           <div className="md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-secondary shadow-glow">
-                <Home className="h-5 w-5 text-white" />
-              </div>
               <span className="font-display text-2xl font-bold">BuildYourHome</span>
             </div>
             <p className="text-sm text-primary-foreground/70 leading-relaxed">
