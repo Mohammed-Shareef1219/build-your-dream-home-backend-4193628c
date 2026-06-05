@@ -28,11 +28,19 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link to="/" className="flex items-center gap-2 group">
-          <span className="font-display text-2xl font-bold bg-brand-gradient bg-clip-text text-transparent">
+        <Link to="/" className="flex items-center gap-2.5 group">
+          <img
+            src={logo}
+            alt="BuildYourHome logo"
+            width={36}
+            height={36}
+            className="h-9 w-9 object-contain transition-transform group-hover:scale-105"
+          />
+          <span className="font-display text-2xl font-bold bg-brand-gradient bg-clip-text text-transparent tracking-tight">
             BuildYourHome
           </span>
         </Link>
+
 
         <nav className="hidden lg:flex items-center gap-7">
           {navLinks.map((l) => {
