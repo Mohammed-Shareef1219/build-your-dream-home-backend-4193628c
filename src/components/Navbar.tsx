@@ -32,11 +32,11 @@ export function Navbar() {
           <img
             src={logo}
             alt="BuildYourHome logo"
-            width={36}
-            height={36}
-            className="h-9 w-9 object-contain transition-transform group-hover:scale-105"
+            width={44}
+            height={44}
+            className="h-11 w-11 object-contain transition-transform group-hover:scale-105"
           />
-          <span className="font-display text-2xl font-bold bg-brand-gradient bg-clip-text text-transparent tracking-tight">
+          <span className="font-display text-2xl font-bold tracking-tight">
             BuildYourHome
           </span>
         </Link>
