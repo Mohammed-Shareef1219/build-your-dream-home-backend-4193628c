@@ -1,5 +1,5 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Home, Menu, X, User, LogOut, LayoutDashboard, Heart } from "lucide-react";
+import { Menu, X, User, LogOut, LayoutDashboard, Heart } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
@@ -28,9 +28,6 @@ export function Navbar() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link to="/" className="flex items-center gap-2 group">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-gradient shadow-glow">
-            <Home className="h-5 w-5 text-white" />
-          </div>
           <span className="font-display text-2xl font-bold bg-brand-gradient bg-clip-text text-transparent">
             BuildYourHome
           </span>
