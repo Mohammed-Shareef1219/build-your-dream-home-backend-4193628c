@@ -52,7 +52,7 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="h-4 w-4" />
-                <span>+971 000 0000</span>
+                <span>+20111639205</span>
               </li>
             </ul>
           </div>
