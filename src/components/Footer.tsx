@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Mail, Phone, Facebook, Instagram, Twitter } from "lucide-react";
+import logo from "@/assets/logo.png";
 
 export function Footer() {
   return (
@@ -7,8 +8,9 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid gap-10 md:grid-cols-4">
           <div className="md:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <span className="font-display text-2xl font-bold">BuildYourHome</span>
+            <div className="flex items-center gap-2.5 mb-4">
+              <img src={logo} alt="BuildYourHome logo" width={36} height={36} className="h-9 w-9 object-contain" loading="lazy" />
+              <span className="font-display text-2xl font-bold tracking-tight">BuildYourHome</span>
             </div>
             <p className="text-sm text-primary-foreground/70 leading-relaxed">
               Your digital broker for modern real estate. Design, discover, and own smarter.
