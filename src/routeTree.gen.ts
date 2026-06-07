@@ -9,21 +9,44 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as SupportRouteImport } from './routes/support'
 import { Route as PropertyTypesRouteImport } from './routes/property-types'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as FavoritesRouteImport } from './routes/favorites'
+import { Route as CookiesRouteImport } from './routes/cookies'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ConsultationRouteImport } from './routes/consultation'
+import { Route as CareersRouteImport } from './routes/careers'
+import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PropertiesIndexRouteImport } from './routes/properties.index'
 import { Route as PropertiesIdRouteImport } from './routes/properties.$id'
 import { Route as CatalogSlugRouteImport } from './routes/catalog.$slug'
 import { Route as CatalogSlugCodeRouteImport } from './routes/catalog.$slug.$code'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SupportRoute = SupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PropertyTypesRoute = PropertyTypesRouteImport.update({
   id: '/property-types',
   path: '/property-types',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GalleryRoute = GalleryRouteImport.update({
@@ -36,9 +59,29 @@ const FavoritesRoute = FavoritesRouteImport.update({
   path: '/favorites',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CookiesRoute = CookiesRouteImport.update({
+  id: '/cookies',
+  path: '/cookies',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ConsultationRoute = ConsultationRouteImport.update({
   id: '/consultation',
   path: '/consultation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CareersRoute = CareersRouteImport.update({
+  id: '/careers',
+  path: '/careers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -49,6 +92,11 @@ const AuthRoute = AuthRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -79,12 +127,20 @@ const CatalogSlugCodeRoute = CatalogSlugCodeRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
+  '/blog': typeof BlogRoute
+  '/careers': typeof CareersRoute
   '/consultation': typeof ConsultationRoute
+  '/contact': typeof ContactRoute
+  '/cookies': typeof CookiesRoute
   '/favorites': typeof FavoritesRoute
   '/gallery': typeof GalleryRoute
+  '/privacy': typeof PrivacyRoute
   '/property-types': typeof PropertyTypesRoute
+  '/support': typeof SupportRoute
+  '/terms': typeof TermsRoute
   '/catalog/$slug': typeof CatalogSlugRouteWithChildren
   '/properties/$id': typeof PropertiesIdRoute
   '/properties/': typeof PropertiesIndexRoute
@@ -92,12 +148,20 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
+  '/blog': typeof BlogRoute
+  '/careers': typeof CareersRoute
   '/consultation': typeof ConsultationRoute
+  '/contact': typeof ContactRoute
+  '/cookies': typeof CookiesRoute
   '/favorites': typeof FavoritesRoute
   '/gallery': typeof GalleryRoute
+  '/privacy': typeof PrivacyRoute
   '/property-types': typeof PropertyTypesRoute
+  '/support': typeof SupportRoute
+  '/terms': typeof TermsRoute
   '/catalog/$slug': typeof CatalogSlugRouteWithChildren
   '/properties/$id': typeof PropertiesIdRoute
   '/properties': typeof PropertiesIndexRoute
@@ -106,12 +170,20 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
+  '/blog': typeof BlogRoute
+  '/careers': typeof CareersRoute
   '/consultation': typeof ConsultationRoute
+  '/contact': typeof ContactRoute
+  '/cookies': typeof CookiesRoute
   '/favorites': typeof FavoritesRoute
   '/gallery': typeof GalleryRoute
+  '/privacy': typeof PrivacyRoute
   '/property-types': typeof PropertyTypesRoute
+  '/support': typeof SupportRoute
+  '/terms': typeof TermsRoute
   '/catalog/$slug': typeof CatalogSlugRouteWithChildren
   '/properties/$id': typeof PropertiesIdRoute
   '/properties/': typeof PropertiesIndexRoute
@@ -121,12 +193,20 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/admin'
     | '/auth'
+    | '/blog'
+    | '/careers'
     | '/consultation'
+    | '/contact'
+    | '/cookies'
     | '/favorites'
     | '/gallery'
+    | '/privacy'
     | '/property-types'
+    | '/support'
+    | '/terms'
     | '/catalog/$slug'
     | '/properties/$id'
     | '/properties/'
@@ -134,12 +214,20 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/admin'
     | '/auth'
+    | '/blog'
+    | '/careers'
     | '/consultation'
+    | '/contact'
+    | '/cookies'
     | '/favorites'
     | '/gallery'
+    | '/privacy'
     | '/property-types'
+    | '/support'
+    | '/terms'
     | '/catalog/$slug'
     | '/properties/$id'
     | '/properties'
@@ -147,12 +235,20 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/about'
     | '/admin'
     | '/auth'
+    | '/blog'
+    | '/careers'
     | '/consultation'
+    | '/contact'
+    | '/cookies'
     | '/favorites'
     | '/gallery'
+    | '/privacy'
     | '/property-types'
+    | '/support'
+    | '/terms'
     | '/catalog/$slug'
     | '/properties/$id'
     | '/properties/'
@@ -161,12 +257,20 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRoute
   AuthRoute: typeof AuthRoute
+  BlogRoute: typeof BlogRoute
+  CareersRoute: typeof CareersRoute
   ConsultationRoute: typeof ConsultationRoute
+  ContactRoute: typeof ContactRoute
+  CookiesRoute: typeof CookiesRoute
   FavoritesRoute: typeof FavoritesRoute
   GalleryRoute: typeof GalleryRoute
+  PrivacyRoute: typeof PrivacyRoute
   PropertyTypesRoute: typeof PropertyTypesRoute
+  SupportRoute: typeof SupportRoute
+  TermsRoute: typeof TermsRoute
   CatalogSlugRoute: typeof CatalogSlugRouteWithChildren
   PropertiesIdRoute: typeof PropertiesIdRoute
   PropertiesIndexRoute: typeof PropertiesIndexRoute
@@ -174,11 +278,32 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/support': {
+      id: '/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/property-types': {
       id: '/property-types'
       path: '/property-types'
       fullPath: '/property-types'
       preLoaderRoute: typeof PropertyTypesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/gallery': {
@@ -195,11 +320,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FavoritesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cookies': {
+      id: '/cookies'
+      path: '/cookies'
+      fullPath: '/cookies'
+      preLoaderRoute: typeof CookiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/consultation': {
       id: '/consultation'
       path: '/consultation'
       fullPath: '/consultation'
       preLoaderRoute: typeof ConsultationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/careers': {
+      id: '/careers'
+      path: '/careers'
+      fullPath: '/careers'
+      preLoaderRoute: typeof CareersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -214,6 +367,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -268,12 +428,20 @@ const CatalogSlugRouteWithChildren = CatalogSlugRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
   AdminRoute: AdminRoute,
   AuthRoute: AuthRoute,
+  BlogRoute: BlogRoute,
+  CareersRoute: CareersRoute,
   ConsultationRoute: ConsultationRoute,
+  ContactRoute: ContactRoute,
+  CookiesRoute: CookiesRoute,
   FavoritesRoute: FavoritesRoute,
   GalleryRoute: GalleryRoute,
+  PrivacyRoute: PrivacyRoute,
   PropertyTypesRoute: PropertyTypesRoute,
+  SupportRoute: SupportRoute,
+  TermsRoute: TermsRoute,
   CatalogSlugRoute: CatalogSlugRouteWithChildren,
   PropertiesIdRoute: PropertiesIdRoute,
   PropertiesIndexRoute: PropertiesIndexRoute,
