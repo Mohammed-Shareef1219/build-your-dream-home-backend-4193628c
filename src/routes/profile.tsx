@@ -85,8 +85,7 @@ function ProfilePage() {
     });
     if (!parsed.success) return toast.error(parsed.error.issues[0].message);
     setSaving(true);
-    const { error } = await supabase
-      .from("profiles")
+    const { error } = await (supabase.from("profiles") as any)
       .update({
         full_name: parsed.data.full_name,
         display_name: parsed.data.full_name,
