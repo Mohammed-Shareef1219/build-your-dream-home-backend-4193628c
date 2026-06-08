@@ -1,8 +1,10 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Menu, X, User, LogOut, LayoutDashboard, Heart } from "lucide-react";
+import { Menu, X, User, LogOut, LayoutDashboard, Heart, Sun, Moon, Languages, UserCog } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
+import { useTheme } from "@/hooks/useTheme";
+import { useLanguage } from "@/hooks/useLanguage";
 import logo from "@/assets/logo.png";
 import {
   DropdownMenu,
@@ -24,6 +26,8 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
   const { user, isAdmin, signOut } = useAuth();
   const location = useLocation();
+  const { theme, toggle: toggleTheme } = useTheme();
+  const { lang, toggle: toggleLang } = useLanguage();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
