@@ -79,15 +79,19 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   return (
-    <AuthProvider>
-      <div className="flex min-h-screen flex-col">
-        <Navbar />
-        <main className="flex-1">
-          <Outlet />
-        </main>
-        <Footer />
-      </div>
-      <Toaster richColors position="top-right" />
-    </AuthProvider>
+    <ThemeProvider>
+      <LanguageProvider>
+        <AuthProvider>
+          <div className="flex min-h-screen flex-col">
+            <Navbar />
+            <main className="flex-1">
+              <Outlet />
+            </main>
+            <Footer />
+          </div>
+          <Toaster richColors position="top-right" />
+        </AuthProvider>
+      </LanguageProvider>
+    </ThemeProvider>
   );
 }
