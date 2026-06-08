@@ -11,8 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SupportRouteImport } from './routes/support'
+import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as PropertyTypesRouteImport } from './routes/property-types'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as NeighborhoodsRouteImport } from './routes/neighborhoods'
+import { Route as InvestmentRouteImport } from './routes/investment'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as FavoritesRouteImport } from './routes/favorites'
 import { Route as CookiesRouteImport } from './routes/cookies'
@@ -39,6 +42,11 @@ const SupportRoute = SupportRouteImport.update({
   path: '/support',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResourcesRoute = ResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PropertyTypesRoute = PropertyTypesRouteImport.update({
   id: '/property-types',
   path: '/property-types',
@@ -47,6 +55,16 @@ const PropertyTypesRoute = PropertyTypesRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NeighborhoodsRoute = NeighborhoodsRouteImport.update({
+  id: '/neighborhoods',
+  path: '/neighborhoods',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InvestmentRoute = InvestmentRouteImport.update({
+  id: '/investment',
+  path: '/investment',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GalleryRoute = GalleryRouteImport.update({
@@ -137,8 +155,11 @@ export interface FileRoutesByFullPath {
   '/cookies': typeof CookiesRoute
   '/favorites': typeof FavoritesRoute
   '/gallery': typeof GalleryRoute
+  '/investment': typeof InvestmentRoute
+  '/neighborhoods': typeof NeighborhoodsRoute
   '/privacy': typeof PrivacyRoute
   '/property-types': typeof PropertyTypesRoute
+  '/resources': typeof ResourcesRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/catalog/$slug': typeof CatalogSlugRouteWithChildren
@@ -158,8 +179,11 @@ export interface FileRoutesByTo {
   '/cookies': typeof CookiesRoute
   '/favorites': typeof FavoritesRoute
   '/gallery': typeof GalleryRoute
+  '/investment': typeof InvestmentRoute
+  '/neighborhoods': typeof NeighborhoodsRoute
   '/privacy': typeof PrivacyRoute
   '/property-types': typeof PropertyTypesRoute
+  '/resources': typeof ResourcesRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/catalog/$slug': typeof CatalogSlugRouteWithChildren
@@ -180,8 +204,11 @@ export interface FileRoutesById {
   '/cookies': typeof CookiesRoute
   '/favorites': typeof FavoritesRoute
   '/gallery': typeof GalleryRoute
+  '/investment': typeof InvestmentRoute
+  '/neighborhoods': typeof NeighborhoodsRoute
   '/privacy': typeof PrivacyRoute
   '/property-types': typeof PropertyTypesRoute
+  '/resources': typeof ResourcesRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/catalog/$slug': typeof CatalogSlugRouteWithChildren
@@ -203,8 +230,11 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/favorites'
     | '/gallery'
+    | '/investment'
+    | '/neighborhoods'
     | '/privacy'
     | '/property-types'
+    | '/resources'
     | '/support'
     | '/terms'
     | '/catalog/$slug'
@@ -224,8 +254,11 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/favorites'
     | '/gallery'
+    | '/investment'
+    | '/neighborhoods'
     | '/privacy'
     | '/property-types'
+    | '/resources'
     | '/support'
     | '/terms'
     | '/catalog/$slug'
@@ -245,8 +278,11 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/favorites'
     | '/gallery'
+    | '/investment'
+    | '/neighborhoods'
     | '/privacy'
     | '/property-types'
+    | '/resources'
     | '/support'
     | '/terms'
     | '/catalog/$slug'
@@ -267,8 +303,11 @@ export interface RootRouteChildren {
   CookiesRoute: typeof CookiesRoute
   FavoritesRoute: typeof FavoritesRoute
   GalleryRoute: typeof GalleryRoute
+  InvestmentRoute: typeof InvestmentRoute
+  NeighborhoodsRoute: typeof NeighborhoodsRoute
   PrivacyRoute: typeof PrivacyRoute
   PropertyTypesRoute: typeof PropertyTypesRoute
+  ResourcesRoute: typeof ResourcesRoute
   SupportRoute: typeof SupportRoute
   TermsRoute: typeof TermsRoute
   CatalogSlugRoute: typeof CatalogSlugRouteWithChildren
@@ -292,6 +331,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SupportRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/resources': {
+      id: '/resources'
+      path: '/resources'
+      fullPath: '/resources'
+      preLoaderRoute: typeof ResourcesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/property-types': {
       id: '/property-types'
       path: '/property-types'
@@ -304,6 +350,20 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/neighborhoods': {
+      id: '/neighborhoods'
+      path: '/neighborhoods'
+      fullPath: '/neighborhoods'
+      preLoaderRoute: typeof NeighborhoodsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/investment': {
+      id: '/investment'
+      path: '/investment'
+      fullPath: '/investment'
+      preLoaderRoute: typeof InvestmentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/gallery': {
@@ -438,8 +498,11 @@ const rootRouteChildren: RootRouteChildren = {
   CookiesRoute: CookiesRoute,
   FavoritesRoute: FavoritesRoute,
   GalleryRoute: GalleryRoute,
+  InvestmentRoute: InvestmentRoute,
+  NeighborhoodsRoute: NeighborhoodsRoute,
   PrivacyRoute: PrivacyRoute,
   PropertyTypesRoute: PropertyTypesRoute,
+  ResourcesRoute: ResourcesRoute,
   SupportRoute: SupportRoute,
   TermsRoute: TermsRoute,
   CatalogSlugRoute: CatalogSlugRouteWithChildren,
@@ -449,12 +512,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}

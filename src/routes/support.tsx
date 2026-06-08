@@ -45,7 +45,26 @@ function SupportPage() {
         ))}
       </ol>
 
-      <div className="mt-16 text-center">
+      {/* Quick contact channels */}
+      <section className="mt-16 grid gap-4 md:grid-cols-3">
+        <a href="https://wa.me/20111639205" target="_blank" rel="noopener noreferrer" className="rounded-2xl border bg-card p-5 hover:shadow-elegant transition-shadow">
+          <div className="text-xs font-semibold text-secondary uppercase tracking-wider">WhatsApp</div>
+          <div className="mt-1 font-semibold">+20 111 639 205</div>
+          <p className="mt-1 text-sm text-muted-foreground">Tap to chat instantly.</p>
+        </a>
+        <a href="https://t.me/+20111639205" target="_blank" rel="noopener noreferrer" className="rounded-2xl border bg-card p-5 hover:shadow-elegant transition-shadow">
+          <div className="text-xs font-semibold text-secondary uppercase tracking-wider">Telegram</div>
+          <div className="mt-1 font-semibold">+20 111 639 205</div>
+          <p className="mt-1 text-sm text-muted-foreground">Send us a Telegram message.</p>
+        </a>
+        <a href="mailto:buildyourhom@gmail.com" className="rounded-2xl border bg-card p-5 hover:shadow-elegant transition-shadow">
+          <div className="text-xs font-semibold text-secondary uppercase tracking-wider">Email</div>
+          <div className="mt-1 font-semibold">buildyourhom@gmail.com</div>
+          <p className="mt-1 text-sm text-muted-foreground">Reply within 24 hours.</p>
+        </a>
+      </section>
+
+      <div className="mt-12 text-center">
         <Link to="/consultation" className="inline-flex rounded-full bg-secondary text-secondary-foreground px-8 py-3 font-semibold hover:opacity-90 transition">
           Book Free Consultation
         </Link>
@@ -53,3 +72,4 @@ function SupportPage() {
     </div>
   );
 }
+
