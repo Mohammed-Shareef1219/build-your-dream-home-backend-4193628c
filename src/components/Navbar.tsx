@@ -1,8 +1,10 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Menu, X, User, LogOut, LayoutDashboard, Heart } from "lucide-react";
+import { Menu, X, User, LogOut, LayoutDashboard, Heart, Sun, Moon, Languages, UserCog } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
+import { useTheme } from "@/hooks/useTheme";
+import { useLanguage } from "@/hooks/useLanguage";
 import logo from "@/assets/logo.png";
 import {
   DropdownMenu,
@@ -24,6 +26,8 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
   const { user, isAdmin, signOut } = useAuth();
   const location = useLocation();
+  const { theme, toggle: toggleTheme } = useTheme();
+  const { lang, toggle: toggleLang } = useLanguage();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
@@ -62,7 +66,13 @@ export function Navbar() {
           })}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <Button variant="ghost" size="sm" onClick={toggleLang} className="font-semibold text-xs px-2" aria-label="Toggle language">
+            <Languages className="h-4 w-4" /> {lang === "en" ? "AR" : "EN"}
+          </Button>
+          <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label="Toggle theme">
+            {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </Button>
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -78,6 +88,11 @@ export function Navbar() {
                   )}
                 </div>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/profile">
+                    <UserCog className="mr-2 h-4 w-4" /> Profile Settings
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/favorites">
                     <Heart className="mr-2 h-4 w-4" /> Favorites

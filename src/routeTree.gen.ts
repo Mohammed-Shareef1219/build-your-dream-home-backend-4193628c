@@ -13,6 +13,7 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as PropertyTypesRouteImport } from './routes/property-types'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as NeighborhoodsRouteImport } from './routes/neighborhoods'
 import { Route as InvestmentRouteImport } from './routes/investment'
@@ -50,6 +51,11 @@ const ResourcesRoute = ResourcesRouteImport.update({
 const PropertyTypesRoute = PropertyTypesRouteImport.update({
   id: '/property-types',
   path: '/property-types',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -158,6 +164,7 @@ export interface FileRoutesByFullPath {
   '/investment': typeof InvestmentRoute
   '/neighborhoods': typeof NeighborhoodsRoute
   '/privacy': typeof PrivacyRoute
+  '/profile': typeof ProfileRoute
   '/property-types': typeof PropertyTypesRoute
   '/resources': typeof ResourcesRoute
   '/support': typeof SupportRoute
@@ -182,6 +189,7 @@ export interface FileRoutesByTo {
   '/investment': typeof InvestmentRoute
   '/neighborhoods': typeof NeighborhoodsRoute
   '/privacy': typeof PrivacyRoute
+  '/profile': typeof ProfileRoute
   '/property-types': typeof PropertyTypesRoute
   '/resources': typeof ResourcesRoute
   '/support': typeof SupportRoute
@@ -207,6 +215,7 @@ export interface FileRoutesById {
   '/investment': typeof InvestmentRoute
   '/neighborhoods': typeof NeighborhoodsRoute
   '/privacy': typeof PrivacyRoute
+  '/profile': typeof ProfileRoute
   '/property-types': typeof PropertyTypesRoute
   '/resources': typeof ResourcesRoute
   '/support': typeof SupportRoute
@@ -233,6 +242,7 @@ export interface FileRouteTypes {
     | '/investment'
     | '/neighborhoods'
     | '/privacy'
+    | '/profile'
     | '/property-types'
     | '/resources'
     | '/support'
@@ -257,6 +267,7 @@ export interface FileRouteTypes {
     | '/investment'
     | '/neighborhoods'
     | '/privacy'
+    | '/profile'
     | '/property-types'
     | '/resources'
     | '/support'
@@ -281,6 +292,7 @@ export interface FileRouteTypes {
     | '/investment'
     | '/neighborhoods'
     | '/privacy'
+    | '/profile'
     | '/property-types'
     | '/resources'
     | '/support'
@@ -306,6 +318,7 @@ export interface RootRouteChildren {
   InvestmentRoute: typeof InvestmentRoute
   NeighborhoodsRoute: typeof NeighborhoodsRoute
   PrivacyRoute: typeof PrivacyRoute
+  ProfileRoute: typeof ProfileRoute
   PropertyTypesRoute: typeof PropertyTypesRoute
   ResourcesRoute: typeof ResourcesRoute
   SupportRoute: typeof SupportRoute
@@ -343,6 +356,13 @@ declare module '@tanstack/react-router' {
       path: '/property-types'
       fullPath: '/property-types'
       preLoaderRoute: typeof PropertyTypesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -501,6 +521,7 @@ const rootRouteChildren: RootRouteChildren = {
   InvestmentRoute: InvestmentRoute,
   NeighborhoodsRoute: NeighborhoodsRoute,
   PrivacyRoute: PrivacyRoute,
+  ProfileRoute: ProfileRoute,
   PropertyTypesRoute: PropertyTypesRoute,
   ResourcesRoute: ResourcesRoute,
   SupportRoute: SupportRoute,
