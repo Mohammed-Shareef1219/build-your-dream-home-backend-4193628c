@@ -313,9 +313,9 @@ function AIMatchingFeed({ budgetMin, budgetMax, type }: { budgetMin: number | nu
 function ScheduledTours({ userId }: { userId: string }) {
   const [items, setItems] = useState<any[]>([]);
   useEffect(() => {
-    supabase.from("property_tours").select("*").eq("user_id", userId)
+    (supabase.from("property_tours") as any).select("*").eq("user_id", userId)
       .order("scheduled_at", { ascending: true })
-      .then(({ data }) => setItems(data ?? []));
+      .then(({ data }: any) => setItems(data ?? []));
   }, [userId]);
 
   return (
