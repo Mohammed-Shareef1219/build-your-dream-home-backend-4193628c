@@ -18,7 +18,8 @@ import {
   Calendar, Video, MapPin, Heart, Sparkles, Settings2, Sun, Moon, Languages, LogOut, LogIn, Settings,
 } from "lucide-react";
 
-const t = {
+type Dict = Record<string, string>;
+const t: Record<"en" | "ar", Dict> = {
   en: {
     open: "Profile & Settings",
     title: "Profile & Settings",
@@ -65,7 +66,7 @@ const t = {
     match: "مطابقة 100% لذوقك وميزانيتك",
     virtual: "افتراضية 360°", physical: "حضورية",
   },
-} as const;
+};
 
 const profileSchema = z.object({
   full_name: z.string().trim().min(2).max(100),
