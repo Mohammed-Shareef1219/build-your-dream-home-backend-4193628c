@@ -164,7 +164,7 @@ function SettingsForm({ tr }: { tr: typeof t.en }) {
       const meta = (user.user_metadata ?? {}) as Record<string, unknown>;
       setProfile(data);
       setForm({
-        full_name: (data?.full_name as string) || (data?.display_name as string) || (meta.full_name as string) || (meta.name as string) || "",
+        full_name: (data?.display_name as string) || (meta.full_name as string) || (meta.name as string) || "",
         phone: (data?.phone as string) ?? "",
       });
     });
@@ -177,7 +177,7 @@ function SettingsForm({ tr }: { tr: typeof t.en }) {
     if (!parsed.success) return toast.error(parsed.error.issues[0].message);
     setSaving(true);
     const { error } = await (supabase.from("profiles") as any)
-      .update({ full_name: parsed.data.full_name, display_name: parsed.data.full_name, phone: parsed.data.phone })
+      .update({ display_name: parsed.data.full_name, phone: parsed.data.phone })
       .eq("id", user.id);
     setSaving(false);
     if (error) return toast.error(error.message);
