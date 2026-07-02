@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/hooks/useTheme";
 import { LanguageProvider } from "@/hooks/useLanguage";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { ProfilePanel } from "@/components/ProfilePanel";
 import { Link } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
@@ -89,6 +90,7 @@ function RootComponent() {
             </main>
             <Footer />
           </div>
+          <ProfilePanel />
           <Toaster richColors position="top-right" />
         </AuthProvider>
       </LanguageProvider>
