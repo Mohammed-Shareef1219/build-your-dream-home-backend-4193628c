@@ -157,7 +157,7 @@ export function Navbar() {
                 </Button>
                 <Button variant="brand" size="sm" className="flex-1" asChild>
                   <Link to="/auth" search={{ mode: "signup" }}>
-                    Sign up
+                    {t("Sign up")}
                   </Link>
                 </Button>
               </div>
