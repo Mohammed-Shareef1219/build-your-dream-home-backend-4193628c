@@ -1,3 +1,4 @@
+import { useT } from "@/lib/i18n";
 import { createFileRoute } from "@tanstack/react-router";
 import { Target, Eye, Sparkles, Rocket } from "lucide-react";
 
@@ -13,23 +14,23 @@ export const Route = createFileRoute("/about")({
   component: AboutPage,
 });
 
-const blocks = [
-  { icon: Target, title: "Our Goal", text: "Make buying, selling, or renting your property easier, faster, and clearer than ever before." },
-  { icon: Eye, title: "Our Vision", text: "A future where everyone can find their perfect property effortlessly." },
-  { icon: Sparkles, title: "Vision for the Future", text: "Integrity of brokers, speed of technology — for everyone." },
-  { icon: Rocket, title: "Our Aspiration", text: "The leading Arab platform for smart real estate marketing in minutes." },
+const blocksFactory = (t: (s:string)=>string) => [
+  { icon: Target, title: t("Our Goal"), text: t("Make buying, selling, or renting your property easier, faster, and clearer than ever before.") },
+  { icon: Eye, title: t("Our Vision"), text: t("A future where everyone can find their perfect property effortlessly.") },
+  { icon: Sparkles, title: t("Vision for the Future"), text: t("Integrity of brokers, speed of technology — for everyone.") },
+  { icon: Rocket, title: t("Our Aspiration"), text: t("The leading Arab platform for smart real estate marketing in minutes.") },
 ];
 
 function AboutPage() {
+  const t = useT();
+  const blocks = blocksFactory(t);
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16">
       <header className="text-center max-w-3xl mx-auto">
-        <p className="text-sm font-semibold text-secondary uppercase tracking-wider">About Us</p>
-        <h1 className="mt-3 text-4xl md:text-5xl font-bold tracking-tight">Who We Are</h1>
+        <p className="text-sm font-semibold text-secondary uppercase tracking-wider">{t("About Us")}</p>
+        <h1 className="mt-3 text-4xl md:text-5xl font-bold tracking-tight">{t("Who We Are")}</h1>
         <p className="mt-5 text-lg text-muted-foreground leading-relaxed">
-          Brokers + programmers, powered by technology. We are a team of real estate experts and programmers
-          specializing in transforming your property search into a fast and smart experience, using the latest
-          artificial intelligence technologies.
+          {t("Brokers + programmers, powered by technology. We are a team of real estate experts and programmers specializing in transforming your property search into a fast and smart experience, using the latest artificial intelligence technologies.")}
         </p>
       </header>
 

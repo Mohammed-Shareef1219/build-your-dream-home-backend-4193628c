@@ -222,3 +222,10 @@
     display: none;
   }
 }
+
+/* Arabic typography: use Cairo when document direction is RTL */
+html[dir="rtl"] body,
+html[lang="ar"] body {
+  font-family: "Cairo", "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
