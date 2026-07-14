@@ -29,6 +29,7 @@ export function Navbar() {
   const location = useLocation();
   const { theme, toggle: toggleTheme } = useTheme();
   const { lang, toggle: toggleLang } = useLanguage();
+  const t = useT();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
