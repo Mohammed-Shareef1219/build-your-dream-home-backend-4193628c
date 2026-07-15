@@ -1,4 +1,3 @@
-import { useT } from "@/lib/i18n";
 import { createFileRoute } from "@tanstack/react-router";
 import { Briefcase, Sparkles, MapPin, Phone } from "lucide-react";
 
@@ -50,11 +49,10 @@ const brokers = photoIds.map((id, i) => ({
 }));
 
 function CareersPage() {
-  const t = useT();
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
       <header className="text-center max-w-3xl mx-auto">
-        <p className="text-sm font-semibold text-secondary uppercase tracking-wider">{t("Careers")}</p>
+        <p className="text-sm font-semibold text-secondary uppercase tracking-wider">Careers</p>
         <h1 className="mt-3 text-4xl md:text-5xl font-bold tracking-tight">Build the future with us</h1>
       </header>
 

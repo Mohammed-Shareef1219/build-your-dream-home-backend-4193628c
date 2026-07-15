@@ -1,4 +1,3 @@
-import { useT } from "@/lib/i18n";
 import { createFileRoute } from "@tanstack/react-router";
 import { Newspaper, TrendingUp } from "lucide-react";
 
@@ -31,7 +30,6 @@ const ticker = [
 ];
 
 function BlogPage() {
-  const t = useT();
   return (
     <div>
       {/* Ticker */}
@@ -48,13 +46,13 @@ function BlogPage() {
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16">
         <header className="text-center max-w-3xl mx-auto">
-          <p className="text-sm font-semibold text-secondary uppercase tracking-wider">{t("Blog & News")}</p>
-          <h1 className="mt-3 text-4xl md:text-5xl font-bold tracking-tight">{t("Latest real estate updates")}</h1>
+          <p className="text-sm font-semibold text-secondary uppercase tracking-wider">Blog & News</p>
+          <h1 className="mt-3 text-4xl md:text-5xl font-bold tracking-tight">Latest real estate updates</h1>
         </header>
 
         <div className="mt-10 rounded-2xl border-l-4 border-secondary bg-secondary/10 p-6 shadow-soft flex items-start gap-3">
           <Newspaper className="h-6 w-6 text-secondary mt-0.5" />
-          <p className="text-lg font-medium">{t("Latest real estate updates and platform news.")}</p>
+          <p className="text-lg font-medium">Latest real estate updates and platform news.</p>
         </div>
 
         <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">

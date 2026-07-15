@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
 import { useLanguage } from "@/hooks/useLanguage";
-import { useT } from "@/lib/i18n";
 import logo from "@/assets/logo.png";
 import {
   DropdownMenu,
@@ -29,7 +28,6 @@ export function Navbar() {
   const location = useLocation();
   const { theme, toggle: toggleTheme } = useTheme();
   const { lang, toggle: toggleLang } = useLanguage();
-  const t = useT();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
@@ -59,7 +57,7 @@ export function Navbar() {
                   active ? "text-secondary" : "text-foreground/80"
                 }`}
               >
-                {t(l.label)}
+                {l.label}
                 {active && (
                   <span className="absolute -bottom-1 left-0 h-0.5 w-full rounded-full bg-secondary" />
                 )}
@@ -69,10 +67,10 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-1.5 sm:gap-2">
-          <Button variant="ghost" size="sm" onClick={toggleLang} className="font-semibold text-xs px-2" aria-label={t("Toggle language")}>
+          <Button variant="ghost" size="sm" onClick={toggleLang} className="font-semibold text-xs px-2" aria-label="Toggle language">
             <Languages className="h-4 w-4" /> {lang === "en" ? "AR" : "EN"}
           </Button>
-          <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label={t("Toggle theme")}>
+          <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label="Toggle theme">
             {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </Button>
           {user ? (
@@ -86,41 +84,41 @@ export function Navbar() {
                 <div className="px-2 py-1.5 text-sm">
                   <div className="font-medium">{user.email}</div>
                   {isAdmin && (
-                    <div className="text-xs text-secondary font-semibold mt-0.5">{t("Administrator")}</div>
+                    <div className="text-xs text-secondary font-semibold mt-0.5">Administrator</div>
                   )}
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                   <Link to="/profile">
-                    <UserCog className="mr-2 h-4 w-4" /> {t("Profile Settings")}
+                    <UserCog className="mr-2 h-4 w-4" /> Profile Settings
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/favorites">
-                    <Heart className="mr-2 h-4 w-4" /> {t("Favorites")}
+                    <Heart className="mr-2 h-4 w-4" /> Favorites
                   </Link>
                 </DropdownMenuItem>
                 {isAdmin && (
                   <DropdownMenuItem asChild>
                     <Link to="/admin">
-                      <LayoutDashboard className="mr-2 h-4 w-4" /> {t("Admin Dashboard")}
+                      <LayoutDashboard className="mr-2 h-4 w-4" /> Admin Dashboard
                     </Link>
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => signOut()}>
-                  <LogOut className="mr-2 h-4 w-4" /> {t("Sign out")}
+                  <LogOut className="mr-2 h-4 w-4" /> Sign out
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
             <div className="hidden sm:flex items-center gap-2">
               <Button variant="ghost" size="sm" asChild>
-                <Link to="/auth">{t("Login")}</Link>
+                <Link to="/auth">Login</Link>
               </Button>
               <Button variant="brand" size="sm" asChild>
                 <Link to="/auth" search={{ mode: "signup" }}>
-                  {t("Sign up")}
+                  Sign up
                 </Link>
               </Button>
             </div>
@@ -130,7 +128,7 @@ export function Navbar() {
             size="icon"
             className="lg:hidden"
             onClick={() => setOpen((o) => !o)}
-            aria-label={t("Toggle menu")}
+            aria-label="Toggle menu"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
@@ -147,17 +145,17 @@ export function Navbar() {
                 onClick={() => setOpen(false)}
                 className="px-3 py-2 rounded-md text-sm font-medium hover:bg-muted"
               >
-                {t(l.label)}
+                {l.label}
               </Link>
             ))}
             {!user && (
               <div className="flex gap-2 pt-3 border-t border-border/40 mt-2">
                 <Button variant="outline" size="sm" className="flex-1" asChild>
-                  <Link to="/auth">{t("Login")}</Link>
+                  <Link to="/auth">Login</Link>
                 </Button>
                 <Button variant="brand" size="sm" className="flex-1" asChild>
                   <Link to="/auth" search={{ mode: "signup" }}>
-                    {t("Sign up")}
+                    Sign up
                   </Link>
                 </Button>
               </div>

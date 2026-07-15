@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Mail, Phone, Facebook, Instagram, Twitter, Linkedin, Send, MessageCircle, Music2, Shield, BadgeCheck, ArrowRight, UserPlus, Search, CalendarCheck, Handshake } from "lucide-react";
 import logo from "@/assets/logo.png";
-import { useT } from "@/lib/i18n";
 
 const tickerItems = [
   "Cairo Market: +4.2% ↑",
@@ -37,7 +36,6 @@ const socials = [
 ];
 
 export function Footer() {
-  const t = useT();
   return (
     <footer className="bg-primary text-primary-foreground mt-20">
       {/* Live ticker */}
@@ -62,19 +60,19 @@ export function Footer() {
               <span className="font-display text-2xl font-bold tracking-tight">BuildYourHome</span>
             </div>
             <p className="text-sm text-primary-foreground/70 leading-relaxed">
-              {t("Your digital broker for modern real estate. Design, discover, and own smarter.")}
+              Your digital broker for modern real estate. Design, discover, and own smarter.
             </p>
           </div>
 
-          <FooterCol title={t("Explore")}>
-            <FooterLink to="/property-types">{t("Property Types")}</FooterLink>
-            <FooterLink to="/gallery">{t("Design Gallery")}</FooterLink>
-            <FooterLink to="/properties">{t("Listings")}</FooterLink>
-            <FooterLink to="/consultation">{t("Free Consultation")}</FooterLink>
+          <FooterCol title="Explore">
+            <FooterLink to="/property-types">Property Types</FooterLink>
+            <FooterLink to="/gallery">Design Gallery</FooterLink>
+            <FooterLink to="/properties">Listings</FooterLink>
+            <FooterLink to="/consultation">Free Consultation</FooterLink>
           </FooterCol>
 
           <div>
-            <h3 className="font-semibold mb-4">{t("Contact")}</h3>
+            <h3 className="font-semibold mb-4">Contact</h3>
             <ul className="space-y-2 text-sm text-primary-foreground/80">
               <li className="flex items-center gap-2"><Mail className="h-4 w-4" /><span>buildyourhom@gmail.com</span></li>
               <li className="flex items-center gap-2"><Phone className="h-4 w-4" /><span>+20111639205</span></li>
@@ -82,7 +80,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="font-semibold mb-4">{t("Follow")}</h3>
+            <h3 className="font-semibold mb-4">Follow</h3>
             <div className="flex flex-wrap gap-2.5">
               {socials.map((s) => (
                 <a
@@ -102,59 +100,59 @@ export function Footer() {
 
         {/* Main navigation sections */}
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 pt-10 border-t border-primary-foreground/10">
-          <FooterCol title={t("About Us")}>
-            <FooterLink to="/about">{t("Who We Are")}</FooterLink>
-            <FooterLink to="/about">{t("Our Goal")}</FooterLink>
-            <FooterLink to="/about">{t("Our Vision")}</FooterLink>
-            <FooterLink to="/about">{t("Ambition")}</FooterLink>
+          <FooterCol title="About Us">
+            <FooterLink to="/about">Who We Are</FooterLink>
+            <FooterLink to="/about">Our Goal</FooterLink>
+            <FooterLink to="/about">Our Vision</FooterLink>
+            <FooterLink to="/about">Ambition</FooterLink>
           </FooterCol>
 
-          <FooterCol title={t("Careers")}>
-            <FooterLink to="/careers">{t("Join Our Team")}</FooterLink>
-            <FooterLink to="/careers">{t("Brokers")}</FooterLink>
-            <FooterLink to="/careers">{t("Sales Team")}</FooterLink>
-            <FooterLink to="/careers">{t("AI Engineers")}</FooterLink>
+          <FooterCol title="Careers">
+            <FooterLink to="/careers">Join Our Team</FooterLink>
+            <FooterLink to="/careers">Brokers</FooterLink>
+            <FooterLink to="/careers">Sales Team</FooterLink>
+            <FooterLink to="/careers">AI Engineers</FooterLink>
           </FooterCol>
 
-          <FooterCol title={t("Blog & News")}>
-            <FooterLink to="/blog">{t("Market Updates")}</FooterLink>
-            <FooterLink to="/blog">{t("Platform News")}</FooterLink>
-            <FooterLink to="/blog">{t("Agent Listings")}</FooterLink>
-            <FooterLink to="/blog">{t("Local Prices")}</FooterLink>
+          <FooterCol title="Blog & News">
+            <FooterLink to="/blog">Market Updates</FooterLink>
+            <FooterLink to="/blog">Platform News</FooterLink>
+            <FooterLink to="/blog">Agent Listings</FooterLink>
+            <FooterLink to="/blog">Local Prices</FooterLink>
           </FooterCol>
 
-          <FooterCol title={t("Resources")}>
-            <FooterLink to="/resources">{t("Real Estate Guides")}</FooterLink>
-            <FooterLink to="/resources">{t("Egyptian Market")}</FooterLink>
-            <FooterLink to="/resources">{t("Valuation Tips")}</FooterLink>
-            <FooterLink to="/resources">{t("Smart Budgeting")}</FooterLink>
+          <FooterCol title="Resources">
+            <FooterLink to="/resources">Real Estate Guides</FooterLink>
+            <FooterLink to="/resources">Egyptian Market</FooterLink>
+            <FooterLink to="/resources">Valuation Tips</FooterLink>
+            <FooterLink to="/resources">Smart Budgeting</FooterLink>
           </FooterCol>
 
-          <FooterCol title={t("Neighborhoods")}>
-            <FooterLink to="/neighborhoods">{t("New Cairo")}</FooterLink>
-            <FooterLink to="/neighborhoods">{t("6 October")}</FooterLink>
-            <FooterLink to="/neighborhoods">{t("Sheikh Zayed")}</FooterLink>
-            <FooterLink to="/neighborhoods">{t("North Coast")}</FooterLink>
+          <FooterCol title="Neighborhoods">
+            <FooterLink to="/neighborhoods">New Cairo</FooterLink>
+            <FooterLink to="/neighborhoods">6 October</FooterLink>
+            <FooterLink to="/neighborhoods">Sheikh Zayed</FooterLink>
+            <FooterLink to="/neighborhoods">North Coast</FooterLink>
           </FooterCol>
 
-          <FooterCol title={t("Investment")}>
-            <FooterLink to="/investment">{t("Legal Verification")}</FooterLink>
-            <FooterLink to="/investment">{t("Rental Income")}</FooterLink>
-            <FooterLink to="/investment">{t("Garages & Land")}</FooterLink>
-            <FooterLink to="/investment">{t("Palm Groves")}</FooterLink>
+          <FooterCol title="Investment">
+            <FooterLink to="/investment">Legal Verification</FooterLink>
+            <FooterLink to="/investment">Rental Income</FooterLink>
+            <FooterLink to="/investment">Garages & Land</FooterLink>
+            <FooterLink to="/investment">Palm Groves</FooterLink>
           </FooterCol>
 
-          <FooterCol title={t("Support")}>
-            <FooterLink to="/support">{t("Help Center")}</FooterLink>
-            <FooterLink to="/support">{t("How It Works")}</FooterLink>
-            <FooterLink to="/support">{t("FAQ")}</FooterLink>
-            <FooterLink to="/contact">{t("Contact Us")}</FooterLink>
+          <FooterCol title="Support">
+            <FooterLink to="/support">Help Center</FooterLink>
+            <FooterLink to="/support">How It Works</FooterLink>
+            <FooterLink to="/support">FAQ</FooterLink>
+            <FooterLink to="/contact">Contact Us</FooterLink>
           </FooterCol>
         </div>
 
         {/* Onboarding steps */}
         <section className="rounded-2xl bg-primary-foreground/5 border border-primary-foreground/10 p-6">
-          <h3 className="font-semibold text-lg mb-5">{t("How to find your dream property")}</h3>
+          <h3 className="font-semibold text-lg mb-5">How to find your dream property</h3>
           <ol className="grid gap-4 md:grid-cols-4">
             {steps.map((s, i) => (
               <li key={s.label} className="flex items-start gap-3">
@@ -162,8 +160,8 @@ export function Footer() {
                   <s.icon className="h-5 w-5" />
                 </div>
                 <div>
-                  <div className="text-xs text-primary-foreground/60">{t("Step")} {i + 1}</div>
-                  <div className="font-medium">{t(s.label)}</div>
+                  <div className="text-xs text-primary-foreground/60">Step {i + 1}</div>
+                  <div className="font-medium">{s.label}</div>
                 </div>
               </li>
             ))}
@@ -173,25 +171,25 @@ export function Footer() {
         {/* Contact CTA */}
         <section className="grid gap-6 md:grid-cols-2 items-center">
           <div className="rounded-2xl bg-accent/10 border border-accent/30 p-6">
-            <h3 className="font-semibold text-lg">{t("Book Free Consultation")}</h3>
+            <h3 className="font-semibold text-lg">Book Free Consultation</h3>
             <p className="text-sm text-primary-foreground/75 mt-1">
-              {t("Get free expert advice within 24 hours. Our team combines AI with real human support to guide you.")}
+              Get free expert advice within 24 hours. Our team combines AI with real human support to guide you.
             </p>
             <Link
               to="/consultation"
               className="mt-4 inline-flex items-center gap-2 rounded-full bg-accent text-accent-foreground px-5 py-2.5 text-sm font-semibold hover:opacity-90 transition"
             >
-              {t("Book Now")} <ArrowRight className="h-4 w-4 rtl:rotate-180" />
+              Book Now <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
           <div className="grid gap-3">
             <div className="flex items-start gap-3 rounded-xl bg-primary-foreground/5 border border-primary-foreground/10 p-4">
               <BadgeCheck className="h-5 w-5 text-secondary shrink-0 mt-0.5" />
-              <p className="text-sm text-primary-foreground/80">{t("Verified listings with transparent pricing and no hidden fees.")}</p>
+              <p className="text-sm text-primary-foreground/80">Verified listings with transparent pricing and no hidden fees.</p>
             </div>
             <div className="flex items-start gap-3 rounded-xl bg-primary-foreground/5 border border-primary-foreground/10 p-4">
               <Shield className="h-5 w-5 text-secondary shrink-0 mt-0.5" />
-              <p className="text-sm text-primary-foreground/80">{t("Best market deals with zero hidden commissions.")}</p>
+              <p className="text-sm text-primary-foreground/80">Best market deals with zero hidden commissions.</p>
             </div>
           </div>
         </section>
@@ -200,11 +198,11 @@ export function Footer() {
       {/* Bottom bar */}
       <div className="bg-black/30 border-t border-primary-foreground/10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-5 flex flex-col md:flex-row items-center justify-between gap-3 text-sm text-primary-foreground/70">
-          <p>{t("© 2026 BuildYourHome. All rights reserved.")}</p>
+          <p>© 2026 BuildYourHome. All rights reserved.</p>
           <div className="flex gap-5">
-            <Link to="/privacy" className="hover:text-secondary transition-colors">{t("Privacy Policy")}</Link>
-            <Link to="/terms" className="hover:text-secondary transition-colors">{t("Terms of Service")}</Link>
-            <Link to="/cookies" className="hover:text-secondary transition-colors">{t("Cookie Policy")}</Link>
+            <Link to="/privacy" className="hover:text-secondary transition-colors">Privacy Policy</Link>
+            <Link to="/terms" className="hover:text-secondary transition-colors">Terms of Service</Link>
+            <Link to="/cookies" className="hover:text-secondary transition-colors">Cookie Policy</Link>
           </div>
         </div>
       </div>

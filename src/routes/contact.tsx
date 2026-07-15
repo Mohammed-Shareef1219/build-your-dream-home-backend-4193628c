@@ -1,4 +1,3 @@
-import { useT } from "@/lib/i18n";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Mail, Phone, ArrowRight, Sparkles } from "lucide-react";
 
@@ -15,11 +14,10 @@ export const Route = createFileRoute("/contact")({
 });
 
 function ContactPage() {
-  const t = useT();
   return (
     <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16">
       <header className="text-center max-w-3xl mx-auto">
-        <p className="text-sm font-semibold text-secondary uppercase tracking-wider">{t("Contact Us")}</p>
+        <p className="text-sm font-semibold text-secondary uppercase tracking-wider">Contact Us</p>
         <h1 className="mt-3 text-4xl md:text-5xl font-bold tracking-tight">We're here to help</h1>
         <p className="mt-4 text-muted-foreground">
           Our team combines artificial intelligence with real human support to guide you.
