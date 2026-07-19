@@ -17,38 +17,59 @@ export type Database = {
       consultations: {
         Row: {
           budget: string | null
+          company: string | null
           created_at: string
+          description: string | null
           email: string
           id: string
+          ip_address: string | null
           message: string
           name: string
+          notes: string | null
           phone: string | null
           project_type: string | null
+          service: string | null
           status: string
+          timeline: string | null
+          user_agent: string | null
           user_id: string | null
         }
         Insert: {
           budget?: string | null
+          company?: string | null
           created_at?: string
+          description?: string | null
           email: string
           id?: string
+          ip_address?: string | null
           message: string
           name: string
+          notes?: string | null
           phone?: string | null
           project_type?: string | null
+          service?: string | null
           status?: string
+          timeline?: string | null
+          user_agent?: string | null
           user_id?: string | null
         }
         Update: {
           budget?: string | null
+          company?: string | null
           created_at?: string
+          description?: string | null
           email?: string
           id?: string
+          ip_address?: string | null
           message?: string
           name?: string
+          notes?: string | null
           phone?: string | null
           project_type?: string | null
+          service?: string | null
           status?: string
+          timeline?: string | null
+          user_agent?: string | null
           user_id?: string | null
         }
         Relationships: []
