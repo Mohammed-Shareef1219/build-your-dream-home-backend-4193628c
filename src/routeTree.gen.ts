@@ -12,13 +12,16 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as ResourcesRouteImport } from './routes/resources'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PropertyTypesRouteImport } from './routes/property-types'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as NeighborhoodsRouteImport } from './routes/neighborhoods'
 import { Route as InvestmentRouteImport } from './routes/investment'
 import { Route as GalleryRouteImport } from './routes/gallery'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as FavoritesRouteImport } from './routes/favorites'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ConsultationRouteImport } from './routes/consultation'
@@ -46,6 +49,11 @@ const SupportRoute = SupportRouteImport.update({
 const ResourcesRoute = ResourcesRouteImport.update({
   id: '/resources',
   path: '/resources',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PropertyTypesRoute = PropertyTypesRouteImport.update({
@@ -78,9 +86,19 @@ const GalleryRoute = GalleryRouteImport.update({
   path: '/gallery',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FavoritesRoute = FavoritesRouteImport.update({
   id: '/favorites',
   path: '/favorites',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CookiesRoute = CookiesRouteImport.update({
@@ -159,13 +177,16 @@ export interface FileRoutesByFullPath {
   '/consultation': typeof ConsultationRoute
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
+  '/dashboard': typeof DashboardRoute
   '/favorites': typeof FavoritesRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/gallery': typeof GalleryRoute
   '/investment': typeof InvestmentRoute
   '/neighborhoods': typeof NeighborhoodsRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/property-types': typeof PropertyTypesRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/resources': typeof ResourcesRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
@@ -184,13 +205,16 @@ export interface FileRoutesByTo {
   '/consultation': typeof ConsultationRoute
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
+  '/dashboard': typeof DashboardRoute
   '/favorites': typeof FavoritesRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/gallery': typeof GalleryRoute
   '/investment': typeof InvestmentRoute
   '/neighborhoods': typeof NeighborhoodsRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/property-types': typeof PropertyTypesRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/resources': typeof ResourcesRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
@@ -210,13 +234,16 @@ export interface FileRoutesById {
   '/consultation': typeof ConsultationRoute
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
+  '/dashboard': typeof DashboardRoute
   '/favorites': typeof FavoritesRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/gallery': typeof GalleryRoute
   '/investment': typeof InvestmentRoute
   '/neighborhoods': typeof NeighborhoodsRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/property-types': typeof PropertyTypesRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/resources': typeof ResourcesRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
@@ -237,13 +264,16 @@ export interface FileRouteTypes {
     | '/consultation'
     | '/contact'
     | '/cookies'
+    | '/dashboard'
     | '/favorites'
+    | '/forgot-password'
     | '/gallery'
     | '/investment'
     | '/neighborhoods'
     | '/privacy'
     | '/profile'
     | '/property-types'
+    | '/reset-password'
     | '/resources'
     | '/support'
     | '/terms'
@@ -262,13 +292,16 @@ export interface FileRouteTypes {
     | '/consultation'
     | '/contact'
     | '/cookies'
+    | '/dashboard'
     | '/favorites'
+    | '/forgot-password'
     | '/gallery'
     | '/investment'
     | '/neighborhoods'
     | '/privacy'
     | '/profile'
     | '/property-types'
+    | '/reset-password'
     | '/resources'
     | '/support'
     | '/terms'
@@ -287,13 +320,16 @@ export interface FileRouteTypes {
     | '/consultation'
     | '/contact'
     | '/cookies'
+    | '/dashboard'
     | '/favorites'
+    | '/forgot-password'
     | '/gallery'
     | '/investment'
     | '/neighborhoods'
     | '/privacy'
     | '/profile'
     | '/property-types'
+    | '/reset-password'
     | '/resources'
     | '/support'
     | '/terms'
@@ -313,13 +349,16 @@ export interface RootRouteChildren {
   ConsultationRoute: typeof ConsultationRoute
   ContactRoute: typeof ContactRoute
   CookiesRoute: typeof CookiesRoute
+  DashboardRoute: typeof DashboardRoute
   FavoritesRoute: typeof FavoritesRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   GalleryRoute: typeof GalleryRoute
   InvestmentRoute: typeof InvestmentRoute
   NeighborhoodsRoute: typeof NeighborhoodsRoute
   PrivacyRoute: typeof PrivacyRoute
   ProfileRoute: typeof ProfileRoute
   PropertyTypesRoute: typeof PropertyTypesRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   ResourcesRoute: typeof ResourcesRoute
   SupportRoute: typeof SupportRoute
   TermsRoute: typeof TermsRoute
@@ -349,6 +388,13 @@ declare module '@tanstack/react-router' {
       path: '/resources'
       fullPath: '/resources'
       preLoaderRoute: typeof ResourcesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/property-types': {
@@ -393,11 +439,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GalleryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/favorites': {
       id: '/favorites'
       path: '/favorites'
       fullPath: '/favorites'
       preLoaderRoute: typeof FavoritesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cookies': {
@@ -516,13 +576,16 @@ const rootRouteChildren: RootRouteChildren = {
   ConsultationRoute: ConsultationRoute,
   ContactRoute: ContactRoute,
   CookiesRoute: CookiesRoute,
+  DashboardRoute: DashboardRoute,
   FavoritesRoute: FavoritesRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   GalleryRoute: GalleryRoute,
   InvestmentRoute: InvestmentRoute,
   NeighborhoodsRoute: NeighborhoodsRoute,
   PrivacyRoute: PrivacyRoute,
   ProfileRoute: ProfileRoute,
   PropertyTypesRoute: PropertyTypesRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   ResourcesRoute: ResourcesRoute,
   SupportRoute: SupportRoute,
   TermsRoute: TermsRoute,
@@ -533,13 +596,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

@@ -1,13 +1,11 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Home } from "lucide-react";
 import { lovable } from "@/integrations/lovable";
 
 export const Route = createFileRoute("/auth")({
@@ -23,7 +21,7 @@ function AuthPage() {
   const { user } = useAuth();
 
   useEffect(() => {
-    if (user) navigate({ to: "/" });
+    if (user) navigate({ to: "/dashboard" });
   }, [user, navigate]);
 
   return mode === "signup" ? <SignupWizard /> : <LoginForm />;
@@ -124,7 +122,7 @@ function LoginForm() {
               <input type="checkbox" className="h-4 w-4 accent-[#4299e1]" />
               <span className="text-[#4a5568]">Remember me</span>
             </label>
-            <a href="#" className="text-[#4299e1] hover:text-[#3182ce] hover:underline">Forgot password?</a>
+            <Link to="/forgot-password" className="text-[#4299e1] hover:text-[#3182ce] hover:underline">Forgot password?</Link>
           </div>
 
           <button
@@ -247,8 +245,10 @@ function SignupWizard() {
         emailRedirectTo: `${window.location.origin}/`,
         data: {
           display_name: data.fullName,
+          full_name: data.fullName,
           username: data.username,
           phone: data.phone,
+          account_type: "Customer",
           project_type: data.projectType,
           budget: data.budget,
           timeline: data.timeline,
