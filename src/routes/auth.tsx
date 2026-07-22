@@ -245,8 +245,10 @@ function SignupWizard() {
         emailRedirectTo: `${window.location.origin}/`,
         data: {
           display_name: data.fullName,
+          full_name: data.fullName,
           username: data.username,
           phone: data.phone,
+          account_type: "Customer",
           project_type: data.projectType,
           budget: data.budget,
           timeline: data.timeline,
