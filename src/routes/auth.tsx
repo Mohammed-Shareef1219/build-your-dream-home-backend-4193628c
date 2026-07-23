@@ -301,10 +301,10 @@ function SignupWizard() {
         </div>
 
         {/* Form card */}
-        <div className="bg-white/97 backdrop-blur rounded-xl shadow-elegant border border-border p-6 md:p-8 lg:ml-auto w-full max-w-[650px]">
+        <div className="bg-white/97 backdrop-blur rounded-xl shadow-elegant border border-border p-6 md:p-8 lg:ml-auto w-full max-w-[650px] text-[#2c3e50]">
           <div className="text-center mb-6">
             <h2 className="text-2xl font-bold text-[#2c3e50]">Create New Account</h2>
-            <p className="text-muted-foreground mt-1">Fill out the form below to create your account</p>
+            <p className="mt-1 text-[#5a6b7a]">Fill out the form below to create your account</p>
           </div>
 
           {/* Progress bar */}
