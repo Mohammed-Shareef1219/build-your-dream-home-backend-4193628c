@@ -451,7 +451,7 @@ function SignupWizard() {
             )}
           </form>
 
-          <div className="text-center text-sm text-muted-foreground mt-6">
+          <div className="text-center text-sm text-[#5a6b7a] mt-6">
             Already have an account?{" "}
             <button
               type="button"
