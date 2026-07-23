@@ -497,7 +497,7 @@ function Check({ id, checked, onChange, label }: { id: string; checked: boolean;
         onChange={(e) => onChange(e.target.checked)}
         className="h-[18px] w-[18px] cursor-pointer accent-[#3498db]"
       />
-      <label htmlFor={id} className="text-[15px] cursor-pointer">{label}</label>
+      <label htmlFor={id} className="text-[15px] cursor-pointer text-[#2c3e50]">{label}</label>
     </div>
   );
 }
