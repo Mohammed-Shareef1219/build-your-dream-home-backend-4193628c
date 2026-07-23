@@ -428,7 +428,7 @@ function SignupWizard() {
                       onChange={(e) => setFileName(e.target.files?.[0]?.name ?? "No file chosen")}
                     />
                   </label>
-                  <div className="mt-2 text-sm text-muted-foreground">{fileName}</div>
+                  <div className="mt-2 text-sm text-[#5a6b7a]">{fileName}</div>
                 </div>
 
                 <div>
