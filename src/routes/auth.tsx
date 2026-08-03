@@ -240,11 +240,10 @@ function SignupWizard() {
     e.preventDefault();
     if (!data.agreeTerms) return toast.error("You must agree to the Terms of Use");
     setLoading(true);
-    const { error } = await supabase.auth.signUp({
+    const { data: signUpData, error } = await supabase.auth.signUp({
       email: data.email,
       password: data.password,
       options: {
-        emailRedirectTo: `${window.location.origin}/`,
         data: {
           display_name: data.fullName,
           full_name: data.fullName,
@@ -262,9 +261,24 @@ function SignupWizard() {
         },
       },
     });
+    if (error) {
+      setLoading(false);
+      return toast.error(error.message);
+    }
+
+    if (!signUpData.session) {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: data.email,
+        password: data.password,
+      });
+      if (signInError) {
+        setLoading(false);
+        return toast.error(signInError.message);
+      }
+    }
     setLoading(false);
-    if (error) return toast.error(error.message);
-    toast.success("Account created! Please check your email to verify.");
+    toast.success("Account created successfully.");
+    navigate({ to: "/" });
   };
 
   return (
