@@ -60,7 +60,7 @@ async function sendNotificationEmail(row: Record<string, unknown>) {
   if (!res.ok) {
     const errorBody = await res.text()
     console.error(`[consultation] Resend error [${res.status}]: ${errorBody}`)
-    throw new Error(`Email send failed [${res.status}]`)
+    return { queued: false, reason: 'send_failed' as const }
   }
   return { queued: true }
 }
