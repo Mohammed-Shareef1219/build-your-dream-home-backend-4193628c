@@ -60,7 +60,7 @@ async function sendNotificationEmail(row: Record<string, unknown>) {
   if (!res.ok) {
     const errorBody = await res.text()
     console.error(`[consultation] Resend error [${res.status}]: ${errorBody}`)
-    throw new Error(`Email send failed [${res.status}]`)
+    return { queued: false, reason: 'send_failed' as const }
   }
   return { queued: true }
 }
@@ -113,11 +113,16 @@ export const submitConsultation = createServerFn({ method: 'POST' })
       throw new Error(error.message)
     }
 
-    const emailResult = await sendNotificationEmail({
-      ...insertRow,
-      id: inserted.id,
-      submitted_at: inserted.created_at,
-    })
+    let emailResult: { queued: boolean; reason?: string } = { queued: false }
+    try {
+      emailResult = await sendNotificationEmail({
+        ...insertRow,
+        id: inserted.id,
+        submitted_at: inserted.created_at,
+      })
+    } catch (e) {
+      console.error('[consultation] notification email failed:', e)
+    }
 
     return { id: inserted.id, email: emailResult }
   })
