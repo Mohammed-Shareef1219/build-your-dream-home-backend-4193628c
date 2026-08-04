@@ -113,11 +113,16 @@ export const submitConsultation = createServerFn({ method: 'POST' })
       throw new Error(error.message)
     }
 
-    const emailResult = await sendNotificationEmail({
-      ...insertRow,
-      id: inserted.id,
-      submitted_at: inserted.created_at,
-    })
+    let emailResult: { queued: boolean; reason?: string } = { queued: false }
+    try {
+      emailResult = await sendNotificationEmail({
+        ...insertRow,
+        id: inserted.id,
+        submitted_at: inserted.created_at,
+      })
+    } catch (e) {
+      console.error('[consultation] notification email failed:', e)
+    }
 
     return { id: inserted.id, email: emailResult }
   })
