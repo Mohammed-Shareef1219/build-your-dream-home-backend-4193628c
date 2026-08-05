@@ -144,7 +144,11 @@ function ConsultationPage() {
             </h2>
           </div>
 
-          {!authLoading && !user ? (
+          {authLoading ? (
+            <div className="p-8 text-center text-sm text-muted-foreground">
+              Loading your account…
+            </div>
+          ) : !user ? (
             <div className="rounded-xl border border-dashed border-muted-foreground/30 p-8 text-center">
               <Lock className="h-8 w-8 mx-auto text-[#2196f3] mb-3" />
               <h3 className="text-lg font-semibold mb-2">Sign in to request a consultation</h3>
