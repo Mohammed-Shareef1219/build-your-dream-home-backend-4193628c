@@ -81,7 +81,10 @@ function ConsultationPage() {
             typeof navigator !== "undefined" ? navigator.userAgent.slice(0, 500) : null,
         },
       });
-      toast.success("Consultation submitted! We'll reach out shortly.");
+      if (!res?.id) {
+        throw new Error("Submission was not saved. Please try again.");
+      }
+      toast.success(`Consultation saved (ref ${String(res.id).slice(0, 8)}). We'll reach out shortly.`);
       setForm((f) => ({
         ...f,
         phone: "",
