@@ -65,7 +65,7 @@ function ConsultationPage() {
     }
     setLoading(true);
     try {
-      await submit({
+      const res = await submit({
         data: {
           name: form.name.trim(),
           email: form.email.trim(),
