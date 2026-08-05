@@ -65,7 +65,7 @@ function ConsultationPage() {
     }
     setLoading(true);
     try {
-      await submit({
+      const res = await submit({
         data: {
           name: form.name.trim(),
           email: form.email.trim(),
@@ -81,7 +81,10 @@ function ConsultationPage() {
             typeof navigator !== "undefined" ? navigator.userAgent.slice(0, 500) : null,
         },
       });
-      toast.success("Consultation submitted! We'll reach out shortly.");
+      if (!res?.id) {
+        throw new Error("Submission was not saved. Please try again.");
+      }
+      toast.success(`Consultation saved (ref ${String(res.id).slice(0, 8)}). We'll reach out shortly.`);
       setForm((f) => ({
         ...f,
         phone: "",
@@ -141,7 +144,11 @@ function ConsultationPage() {
             </h2>
           </div>
 
-          {!authLoading && !user ? (
+          {authLoading ? (
+            <div className="p-8 text-center text-sm text-muted-foreground">
+              Loading your account…
+            </div>
+          ) : !user ? (
             <div className="rounded-xl border border-dashed border-muted-foreground/30 p-8 text-center">
               <Lock className="h-8 w-8 mx-auto text-[#2196f3] mb-3" />
               <h3 className="text-lg font-semibold mb-2">Sign in to request a consultation</h3>
