@@ -252,6 +252,42 @@ export type Database = {
         }
         Relationships: []
       }
+      sync_runs: {
+        Row: {
+          consultations_synced: number
+          created_at: string
+          error: string | null
+          finished_at: string | null
+          id: string
+          inquiries_synced: number
+          started_at: string
+          status: string
+          users_synced: number
+        }
+        Insert: {
+          consultations_synced?: number
+          created_at?: string
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          inquiries_synced?: number
+          started_at?: string
+          status?: string
+          users_synced?: number
+        }
+        Update: {
+          consultations_synced?: number
+          created_at?: string
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          inquiries_synced?: number
+          started_at?: string
+          status?: string
+          users_synced?: number
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
