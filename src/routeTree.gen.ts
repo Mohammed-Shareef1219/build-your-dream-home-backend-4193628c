@@ -35,6 +35,7 @@ import { Route as PropertiesIndexRouteImport } from './routes/properties.index'
 import { Route as PropertiesIdRouteImport } from './routes/properties.$id'
 import { Route as CatalogSlugRouteImport } from './routes/catalog.$slug'
 import { Route as CatalogSlugCodeRouteImport } from './routes/catalog.$slug.$code'
+import { Route as ApiPublicHooksSyncExternalRouteImport } from './routes/api/public/hooks/sync-external'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -166,6 +167,12 @@ const CatalogSlugCodeRoute = CatalogSlugCodeRouteImport.update({
   path: '/$code',
   getParentRoute: () => CatalogSlugRoute,
 } as any)
+const ApiPublicHooksSyncExternalRoute =
+  ApiPublicHooksSyncExternalRouteImport.update({
+    id: '/api/public/hooks/sync-external',
+    path: '/api/public/hooks/sync-external',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -194,6 +201,7 @@ export interface FileRoutesByFullPath {
   '/properties/$id': typeof PropertiesIdRoute
   '/properties/': typeof PropertiesIndexRoute
   '/catalog/$slug/$code': typeof CatalogSlugCodeRoute
+  '/api/public/hooks/sync-external': typeof ApiPublicHooksSyncExternalRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -222,6 +230,7 @@ export interface FileRoutesByTo {
   '/properties/$id': typeof PropertiesIdRoute
   '/properties': typeof PropertiesIndexRoute
   '/catalog/$slug/$code': typeof CatalogSlugCodeRoute
+  '/api/public/hooks/sync-external': typeof ApiPublicHooksSyncExternalRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -251,6 +260,7 @@ export interface FileRoutesById {
   '/properties/$id': typeof PropertiesIdRoute
   '/properties/': typeof PropertiesIndexRoute
   '/catalog/$slug/$code': typeof CatalogSlugCodeRoute
+  '/api/public/hooks/sync-external': typeof ApiPublicHooksSyncExternalRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -281,6 +291,7 @@ export interface FileRouteTypes {
     | '/properties/$id'
     | '/properties/'
     | '/catalog/$slug/$code'
+    | '/api/public/hooks/sync-external'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -309,6 +320,7 @@ export interface FileRouteTypes {
     | '/properties/$id'
     | '/properties'
     | '/catalog/$slug/$code'
+    | '/api/public/hooks/sync-external'
   id:
     | '__root__'
     | '/'
@@ -337,6 +349,7 @@ export interface FileRouteTypes {
     | '/properties/$id'
     | '/properties/'
     | '/catalog/$slug/$code'
+    | '/api/public/hooks/sync-external'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -365,6 +378,7 @@ export interface RootRouteChildren {
   CatalogSlugRoute: typeof CatalogSlugRouteWithChildren
   PropertiesIdRoute: typeof PropertiesIdRoute
   PropertiesIndexRoute: typeof PropertiesIndexRoute
+  ApiPublicHooksSyncExternalRoute: typeof ApiPublicHooksSyncExternalRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -551,6 +565,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CatalogSlugCodeRouteImport
       parentRoute: typeof CatalogSlugRoute
     }
+    '/api/public/hooks/sync-external': {
+      id: '/api/public/hooks/sync-external'
+      path: '/api/public/hooks/sync-external'
+      fullPath: '/api/public/hooks/sync-external'
+      preLoaderRoute: typeof ApiPublicHooksSyncExternalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -592,17 +613,8 @@ const rootRouteChildren: RootRouteChildren = {
   CatalogSlugRoute: CatalogSlugRouteWithChildren,
   PropertiesIdRoute: PropertiesIdRoute,
   PropertiesIndexRoute: PropertiesIndexRoute,
+  ApiPublicHooksSyncExternalRoute: ApiPublicHooksSyncExternalRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
