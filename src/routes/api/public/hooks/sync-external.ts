@@ -60,6 +60,7 @@ export const Route = createFileRoute('/api/public/hooks/sync-external')({
           ref,
           role,
           probe,
+        })
       },
       POST: async ({ request }) => {
         // Caller auth: the project's anon key (used by the scheduled job).
