@@ -44,12 +44,14 @@ export const Route = createFileRoute('/api/public/hooks/sync-external')({
             ref = 'unparsable'
           }
         }
-        let probe: number | null = null
+        const probe: Record<string, string | null> = {}
         if (targetUrl && k) {
-          const res = await fetch(`${targetUrl}/rest/v1/synced_users?select=id&limit=1`, {
-            headers: { apikey: k, Authorization: `Bearer ${k}` },
-          })
-          probe = res.status
+          for (const t of ['synced_users', 'synced_consultations', 'synced_inquiries']) {
+            const res = await fetch(`${targetUrl}/rest/v1/${t}?select=id&limit=1`, {
+              headers: { apikey: k, Authorization: `Bearer ${k}`, Prefer: 'count=exact' },
+            })
+            probe[t] = res.ok ? res.headers.get('content-range') : `error ${res.status}`
+          }
         }
         return Response.json({
           targetUrl,
@@ -58,7 +60,6 @@ export const Route = createFileRoute('/api/public/hooks/sync-external')({
           ref,
           role,
           probe,
-        })
       },
       POST: async ({ request }) => {
         // Caller auth: the project's anon key (used by the scheduled job).
