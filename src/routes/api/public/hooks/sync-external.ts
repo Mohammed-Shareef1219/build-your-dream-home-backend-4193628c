@@ -24,6 +24,42 @@ async function upsert(baseUrl: string, key: string, table: string, rows: Row[]) 
 export const Route = createFileRoute('/api/public/hooks/sync-external')({
   server: {
     handlers: {
+      // Safe diagnostic: reports key shape/project ref only, never the key itself.
+      GET: async ({ request }) => {
+        const anonKey = process.env['SUPABASE_ANON_KEY'] || process.env['SUPABASE_PUBLISHABLE_KEY']
+        const provided = request.headers.get('apikey')
+        if (!anonKey || provided !== anonKey) {
+          return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 })
+        }
+        const targetUrl = (process.env['SYNC_TARGET_SUPABASE_URL'] || '').replace(/\/+$/, '')
+        const k = process.env['SYNC_TARGET_SERVICE_ROLE_KEY'] || ''
+        let ref: string | null = null
+        let role: string | null = null
+        if (k.startsWith('eyJ')) {
+          try {
+            const payload = JSON.parse(atob(k.split('.')[1]!.replace(/-/g, '+').replace(/_/g, '/')))
+            ref = payload.ref ?? null
+            role = payload.role ?? null
+          } catch {
+            ref = 'unparsable'
+          }
+        }
+        let probe: number | null = null
+        if (targetUrl && k) {
+          const res = await fetch(`${targetUrl}/rest/v1/synced_users?select=id&limit=1`, {
+            headers: { apikey: k, Authorization: `Bearer ${k}` },
+          })
+          probe = res.status
+        }
+        return Response.json({
+          targetUrl,
+          keyLength: k.length,
+          keyPrefix: k.slice(0, 3),
+          ref,
+          role,
+          probe,
+        })
+      },
       POST: async ({ request }) => {
         // Caller auth: the project's anon key (used by the scheduled job).
         const anonKey = process.env['SUPABASE_ANON_KEY'] || process.env['SUPABASE_PUBLISHABLE_KEY']
