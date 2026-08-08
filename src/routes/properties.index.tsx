@@ -31,8 +31,8 @@ import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import type { Database } from "@/integrations/supabase/types";
 
+type Property = Database["public"]["Tables"]["properties"]["Row"];
 type SearchState = { type?: string; q?: string; beds?: string; sort?: string };
-type SearchState = { type: string; q: string; beds: string; sort: string };
 
 export const Route = createFileRoute("/properties/")({
   validateSearch: (s: Record<string, unknown>): SearchState => ({
