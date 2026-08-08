@@ -26,6 +26,7 @@ import {
   CheckCircle2,
   Calculator,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/property-types")({
   head: () => ({
@@ -252,27 +253,27 @@ function PropertyTypesPage() {
 /* ---------------- Sections ---------------- */
 
 function Hero() {
+  const { t } = useTranslation("propertyTypes");
   return (
     <section className="relative overflow-hidden bg-hero-gradient text-primary-foreground">
       <div className="absolute inset-0 opacity-20 [background-image:radial-gradient(circle_at_1px_1px,white_1px,transparent_0)] [background-size:32px_32px]" />
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
         <Badge className="bg-accent text-accent-foreground hover:bg-accent mb-6">
-          <Sparkles className="size-3.5 mr-1" /> Architectural Consultant
+          <Sparkles className="size-3.5 mr-1" /> {t("hero.badge")}
         </Badge>
         <h1 className="text-4xl md:text-6xl font-bold max-w-4xl text-balance leading-[1.05]">
-          Find the structural design that fits your{" "}
-          <span className="font-display text-accent">life, land & budget</span>
+          {t("hero.titlePart1")}{" "}
+          <span className="font-display text-accent">{t("hero.titleHighlight")}</span>
         </h1>
         <p className="mt-6 text-lg md:text-xl text-primary-foreground/80 max-w-2xl">
-          Not just images — a property matchmaking engine that compares cost, maintenance,
-          investment value and sustainability across every type of home.
+          {t("hero.subtitle")}
         </p>
         <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl">
           {[
-            { icon: Ruler, label: "Smart space analysis" },
-            { icon: TrendingUp, label: "Investment outlook" },
-            { icon: Sun, label: "Sustainability brief" },
-            { icon: Calculator, label: "Budget calculator" },
+            { icon: Ruler, label: t("hero.features.spaceAnalysis") },
+            { icon: TrendingUp, label: t("hero.features.investmentOutlook") },
+            { icon: Sun, label: t("hero.features.sustainabilityBrief") },
+            { icon: Calculator, label: t("hero.features.budgetCalculator") },
           ].map((f) => (
             <div
               key={f.label}
@@ -289,21 +290,22 @@ function Hero() {
 }
 
 function ConceptStrip() {
+  const { t } = useTranslation("propertyTypes");
   const items = [
     {
       icon: Ruler,
-      title: "Function",
-      body: "Square meters, layouts, structural systems, mechanical fit. The math of living.",
+      title: t("conceptStrip.function.title"),
+      body: t("conceptStrip.function.body"),
     },
     {
       icon: Sparkles,
-      title: "Feeling",
-      body: "Light, privacy, flow, identity. How a home behaves at 7am and 7pm.",
+      title: t("conceptStrip.feeling.title"),
+      body: t("conceptStrip.feeling.body"),
     },
     {
       icon: TrendingUp,
-      title: "Future",
-      body: "Resale, yield, sustainability, technology longevity. The asset behind the home.",
+      title: t("conceptStrip.future.title"),
+      body: t("conceptStrip.future.body"),
     },
   ];
   return (
@@ -326,18 +328,27 @@ function ConceptStrip() {
 }
 
 function ComparisonSection() {
+  const { t } = useTranslation("propertyTypes");
   return (
     <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
       <SectionHeader
-        eyebrow="Smart Comparison"
-        title="Compare types side-by-side"
-        subtitle="Cost, maintenance, family fit and yield — at a glance."
+        eyebrow={t("comparison.eyebrow")}
+        title={t("comparison.title")}
+        subtitle={t("comparison.subtitle")}
       />
       <div className="mt-10 overflow-x-auto rounded-2xl border bg-card shadow-soft">
         <table className="w-full text-sm">
           <thead className="bg-muted/50">
             <tr className="text-left">
-              {["Type", "Starts at", "Min size", "Family fit", "Maintenance", "Rent yield", "Liquidity"].map((h) => (
+              {[
+                t("comparison.headers.type"),
+                t("comparison.headers.startsAt"),
+                t("comparison.headers.minSize"),
+                t("comparison.headers.familyFit"),
+                t("comparison.headers.maintenance"),
+                t("comparison.headers.rentYield"),
+                t("comparison.headers.liquidity"),
+              ].map((h) => (
                 <th key={h} className="px-4 py-3 font-semibold text-foreground whitespace-nowrap">
                   {h}
                 </th>
@@ -345,31 +356,31 @@ function ComparisonSection() {
             </tr>
           </thead>
           <tbody>
-            {TYPES.map((t) => (
-              <tr key={t.slug} className="border-t hover:bg-muted/30 transition-colors">
+            {TYPES.map((tp) => (
+              <tr key={tp.slug} className="border-t hover:bg-muted/30 transition-colors">
                 <td className="px-4 py-4">
                   <div className="flex items-center gap-3">
                     <div className="size-9 rounded-lg bg-secondary/10 text-secondary flex items-center justify-center">
-                      <t.icon className="size-4" />
+                      <tp.icon className="size-4" />
                     </div>
                     <div>
-                      <div className="font-semibold">{t.name}</div>
-                      <div className="text-xs text-muted-foreground">{t.tagline}</div>
+                      <div className="font-semibold">{t(`types.${tp.slug}.name`)}</div>
+                      <div className="text-xs text-muted-foreground">{t(`types.${tp.slug}.tagline`)}</div>
                     </div>
                   </div>
                 </td>
                 <td className="px-4 py-4 font-medium whitespace-nowrap">
-                  {formatAED(t.startingPrice)}
+                  {formatAED(tp.startingPrice)}
                 </td>
-                <td className="px-4 py-4 whitespace-nowrap">{t.minSize} m²</td>
-                <td className="px-4 py-4 whitespace-nowrap">{t.idealFamily}</td>
+                <td className="px-4 py-4 whitespace-nowrap">{tp.minSize} m²</td>
+                <td className="px-4 py-4 whitespace-nowrap">{t(`types.${tp.slug}.idealFamily`)}</td>
                 <td className="px-4 py-4">
-                  <MaintenancePill level={t.maintenance} />
+                  <MaintenancePill level={tp.maintenance} label={t(`types.${tp.slug}.maintenance`)} />
                 </td>
                 <td className="px-4 py-4 whitespace-nowrap font-medium text-secondary">
-                  {t.rentYield}%
+                  {tp.rentYield}%
                 </td>
-                <td className="px-4 py-4 whitespace-nowrap">{t.liquidity}</td>
+                <td className="px-4 py-4 whitespace-nowrap">{t(`types.${tp.slug}.liquidity`)}</td>
               </tr>
             ))}
           </tbody>
@@ -383,12 +394,7 @@ function ComparisonSection() {
 
 interface ShowcaseCard {
   slug: TypeKey | "custom";
-  badge: string;
-  title: string;
-  description: string;
   image: string;
-  features: string[];
-  price: string;
   rating: number;
   properties: number;
   builder: string;
@@ -400,12 +406,7 @@ interface ShowcaseCard {
 const SHOWCASE: ShowcaseCard[] = [
   {
     slug: "apartment",
-    badge: "Apartment",
-    title: "Smart Apartments",
-    description: "Innovative solutions for small spaces with integrated technology",
     image: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=900&auto=format&fit=crop",
-    features: ["Smart lighting and energy control", "Multi-functional design", "Integrated security systems"],
-    price: "Starting from 250,000 AED",
     rating: 4.7,
     properties: 38,
     builder: "Aurora Developments",
@@ -414,12 +415,7 @@ const SHOWCASE: ShowcaseCard[] = [
   },
   {
     slug: "villa",
-    badge: "Villa",
-    title: "Luxury Villas",
-    description: "Elegant homes with innovative designs and spacious areas",
     image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=900&auto=format&fit=crop",
-    features: ["Private outdoor spaces", "Integrated entertainment systems", "Sustainable designs"],
-    price: "Starting from 1,200,000 AED",
     rating: 4.9,
     properties: 21,
     builder: "Palm Crown Builders",
@@ -428,12 +424,7 @@ const SHOWCASE: ShowcaseCard[] = [
   },
   {
     slug: "duplex",
-    badge: "Duplex",
-    title: "Duplex Designs",
-    description: "Practical family spaces with perfect privacy",
     image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=900&auto=format&fit=crop",
-    features: ["Multi-floor design", "Shared family spaces", "Perfect privacy"],
-    price: "Starting from 450,000 AED",
     rating: 4.6,
     properties: 27,
     builder: "Skyline Residences",
@@ -442,12 +433,7 @@ const SHOWCASE: ShowcaseCard[] = [
   },
   {
     slug: "country_house",
-    badge: "Country House",
-    title: "Country Houses",
-    description: "Connection with nature with modern living luxury",
     image: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=900&auto=format&fit=crop",
-    features: ["Natural building materials", "Sustainable energy systems", "Nature-harmonious design"],
-    price: "Starting from 350,000 AED",
     rating: 4.8,
     properties: 14,
     builder: "EarthForm Studio",
@@ -456,12 +442,7 @@ const SHOWCASE: ShowcaseCard[] = [
   },
   {
     slug: "studio",
-    badge: "Studio",
-    title: "Studios",
-    description: "Compact spaces with smart and innovative designs",
     image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=900&auto=format&fit=crop",
-    features: ["Multi-functional furniture", "Innovative storage solutions", "Space-expanding designs"],
-    price: "Starting from 180,000 AED",
     rating: 4.5,
     properties: 52,
     builder: "Nest Micro Homes",
@@ -470,12 +451,7 @@ const SHOWCASE: ShowcaseCard[] = [
   },
   {
     slug: "custom",
-    badge: "Custom",
-    title: "Custom Design",
-    description: "Design your own home from scratch according to your vision and needs",
     image: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=900&auto=format&fit=crop",
-    features: ["Unique and innovative design", "Material and finishing selection", "Complete design flexibility"],
-    price: "Custom Pricing",
     rating: 5.0,
     properties: 0,
     builder: "BuildYourHome Atelier",
@@ -486,17 +462,18 @@ const SHOWCASE: ShowcaseCard[] = [
 ];
 
 function ShowcaseSection() {
+  const { t } = useTranslation("propertyTypes");
   return (
     <section className="bg-muted/20 border-y">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
         <SectionHeader
-          eyebrow="Discover by Type"
-          title="Explore every property style"
-          subtitle="Tap Explore to view real listings, prices, ratings and the team behind each project."
+          eyebrow={t("showcase.eyebrow")}
+          title={t("showcase.title")}
+          subtitle={t("showcase.subtitle")}
         />
         <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {SHOWCASE.map((c) => (
-            <ShowcaseCardView key={c.title} card={c} />
+            <ShowcaseCardView key={c.slug} card={c} />
           ))}
         </div>
       </div>
@@ -505,7 +482,13 @@ function ShowcaseSection() {
 }
 
 function ShowcaseCardView({ card }: { card: ShowcaseCard }) {
+  const { t } = useTranslation("propertyTypes");
   const isCustom = card.custom;
+  const badge = t(`showcase.cards.${card.slug}.badge`);
+  const title = t(`showcase.cards.${card.slug}.title`);
+  const description = t(`showcase.cards.${card.slug}.description`);
+  const features = t(`showcase.cards.${card.slug}.features`, { returnObjects: true }) as string[];
+  const price = t(`showcase.cards.${card.slug}.price`);
   return (
     <article
       className={`group rounded-2xl overflow-hidden shadow-soft hover:shadow-elegant transition-all duration-300 hover:-translate-y-1 flex flex-col ${
@@ -515,22 +498,22 @@ function ShowcaseCardView({ card }: { card: ShowcaseCard }) {
       <div className="relative aspect-[4/3] overflow-hidden bg-muted">
         <img
           src={card.image}
-          alt={card.title}
+          alt={title}
           loading="lazy"
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
         <span className="absolute top-4 right-4 bg-accent text-accent-foreground text-xs font-semibold px-4 py-1.5 rounded-full shadow-soft">
-          {card.badge}
+          {badge}
         </span>
       </div>
       <div className="p-6 flex flex-col flex-1">
-        <h3 className="text-xl font-bold">{card.title}</h3>
+        <h3 className="text-xl font-bold">{title}</h3>
         <p className={`mt-2 text-sm ${isCustom ? "text-secondary-foreground/85" : "text-muted-foreground"}`}>
-          {card.description}
+          {description}
         </p>
 
         <ul className="mt-5 space-y-2.5">
-          {card.features.map((f) => (
+          {features.map((f) => (
             <li key={f} className="flex items-center gap-2 text-sm">
               <CheckCircle2
                 className={`size-4 shrink-0 ${isCustom ? "text-accent" : "text-secondary"}`}
@@ -548,15 +531,15 @@ function ShowcaseCardView({ card }: { card: ShowcaseCard }) {
         >
           <div>
             <div className="font-bold text-base">★ {card.rating.toFixed(1)}</div>
-            <div className={isCustom ? "text-secondary-foreground/70" : "text-muted-foreground"}>Rating</div>
+            <div className={isCustom ? "text-secondary-foreground/70" : "text-muted-foreground"}>{t("showcase.ratingLabel")}</div>
           </div>
           <div>
             <div className="font-bold text-base">{card.properties || "—"}</div>
-            <div className={isCustom ? "text-secondary-foreground/70" : "text-muted-foreground"}>Listings</div>
+            <div className={isCustom ? "text-secondary-foreground/70" : "text-muted-foreground"}>{t("showcase.listingsLabel")}</div>
           </div>
           <div>
-            <div className={`font-bold text-base ${isCustom ? "text-accent" : "text-secondary"}`}>Verified</div>
-            <div className={isCustom ? "text-secondary-foreground/70" : "text-muted-foreground"}>Builder</div>
+            <div className={`font-bold text-base ${isCustom ? "text-accent" : "text-secondary"}`}>{t("showcase.verified")}</div>
+            <div className={isCustom ? "text-secondary-foreground/70" : "text-muted-foreground"}>{t("showcase.builderLabel")}</div>
           </div>
         </div>
 
@@ -566,25 +549,25 @@ function ShowcaseCardView({ card }: { card: ShowcaseCard }) {
             isCustom ? "text-secondary-foreground/85" : "text-muted-foreground"
           }`}
         >
-          <div><span className="font-semibold">Builder:</span> {card.builder}</div>
-          <div><span className="font-semibold">Seller:</span> {card.seller}</div>
-          <div><span className="font-semibold">Contact:</span> {card.contact}</div>
+          <div><span className="font-semibold">{t("showcase.builderLabel")}:</span> {card.builder}</div>
+          <div><span className="font-semibold">{t("showcase.sellerLabel")}:</span> {card.seller}</div>
+          <div><span className="font-semibold">{t("showcase.contactLabel")}:</span> {card.contact}</div>
         </div>
 
         <div className="mt-6 flex items-end justify-between gap-3 pt-4 border-t border-foreground/10">
           <div className={`font-bold text-base ${isCustom ? "" : "text-primary"}`}>
-            {card.price}
+            {price}
           </div>
           {isCustom ? (
             <Button asChild variant="outline" className="bg-white text-secondary hover:bg-white/90 border-white">
               <Link to="/consultation">
-                Start Designing <ArrowRight />
+                {t("showcase.startDesigning")} <ArrowRight />
               </Link>
             </Button>
           ) : (
             <Button asChild variant="brand" size="sm">
               <Link to="/catalog/$slug" params={{ slug: card.slug as string }}>
-                Explore <ArrowRight />
+                {t("showcase.explore")} <ArrowRight />
               </Link>
             </Button>
           )}
@@ -595,44 +578,45 @@ function ShowcaseCardView({ card }: { card: ShowcaseCard }) {
 }
 
 function FloorPlansSection() {
+  const { t } = useTranslation("propertyTypes");
   const [active, setActive] = useState<TypeKey>("apartment");
-  const t = TYPES.find((x) => x.slug === active)!;
+  const activeType = TYPES.find((x) => x.slug === active)!;
   return (
     <section className="bg-muted/30 border-y">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
         <SectionHeader
-          eyebrow="Space Layouts"
-          title="Smart floor-plan logic"
-          subtitle="See how each type allocates space — and the trick that makes it feel larger."
+          eyebrow={t("floorPlans.eyebrow")}
+          title={t("floorPlans.title")}
+          subtitle={t("floorPlans.subtitle")}
         />
         <Tabs value={active} onValueChange={(v) => setActive(v as TypeKey)} className="mt-10">
           <TabsList className="flex flex-wrap h-auto bg-card shadow-soft p-1.5 rounded-xl">
             {TYPES.map((tp) => (
               <TabsTrigger key={tp.slug} value={tp.slug} className="gap-2 data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground">
-                <tp.icon className="size-4" /> {tp.name}
+                <tp.icon className="size-4" /> {t(`types.${tp.slug}.name`)}
               </TabsTrigger>
             ))}
           </TabsList>
           <TabsContent value={active} className="mt-8 grid lg:grid-cols-5 gap-8">
             <div className="lg:col-span-3">
-              <FloorPlanVisual type={t} />
+              <FloorPlanVisual type={activeType} />
             </div>
             <div className="lg:col-span-2 space-y-6">
               <div>
-                <h3 className="text-2xl font-bold">{t.name}</h3>
-                <p className="text-muted-foreground mt-2">{t.tagline}</p>
+                <h3 className="text-2xl font-bold">{t(`types.${activeType.slug}.name`)}</h3>
+                <p className="text-muted-foreground mt-2">{t(`types.${activeType.slug}.tagline`)}</p>
               </div>
               <div className="rounded-xl bg-accent/15 border border-accent/30 p-5">
                 <div className="flex items-center gap-2 text-sm font-semibold text-accent-foreground">
-                  <Sparkles className="size-4" /> Space-perception trick
+                  <Sparkles className="size-4" /> {t("floorPlans.spacePerceptionTrick")}
                 </div>
-                <p className="mt-2 text-sm text-foreground/80">{t.spaceTrick}</p>
+                <p className="mt-2 text-sm text-foreground/80">{t(`types.${activeType.slug}.spaceTrick`)}</p>
               </div>
               <div className="space-y-3">
-                {t.floorPlanZones.map((z) => (
-                  <div key={z.label}>
+                {activeType.floorPlanZones.map((z) => (
+                  <div key={z.key}>
                     <div className="flex justify-between text-sm mb-1.5">
-                      <span className="text-foreground/80">{z.label}</span>
+                      <span className="text-foreground/80">{t(`types.${activeType.slug}.zones.${z.key}`)}</span>
                       <span className="font-medium">{z.pct}%</span>
                     </div>
                     <div className="h-2 rounded-full bg-muted overflow-hidden">
@@ -645,8 +629,8 @@ function FloorPlansSection() {
                 ))}
               </div>
               <Button asChild variant="brand" size="lg">
-                <Link to="/properties" search={{ type: t.slug, q: "" }}>
-                  Explore {t.name} listings <ArrowRight />
+                <Link to="/properties" search={{ type: activeType.slug, q: "" }}>
+                  {t("floorPlans.exploreListings", { name: t(`types.${activeType.slug}.name`) })} <ArrowRight />
                 </Link>
               </Button>
             </div>
@@ -694,29 +678,30 @@ function FloorPlanVisual({ type }: { type: PropertyType }) {
 /* ---------------- Calculator ---------------- */
 
 function CalculatorSection() {
+  const { t } = useTranslation("propertyTypes");
   const [budget, setBudget] = useState(500000);
   const [familySize, setFamilySize] = useState(3);
   const [land, setLand] = useState(0);
 
   const recommendations = useMemo(() => {
-    return TYPES.map((t) => {
+    return TYPES.map((t2) => {
       let score = 0;
       // Budget fit
-      if (budget >= t.startingPrice) score += 40;
-      else score += Math.max(0, 40 - ((t.startingPrice - budget) / t.startingPrice) * 40);
+      if (budget >= t2.startingPrice) score += 40;
+      else score += Math.max(0, 40 - ((t2.startingPrice - budget) / t2.startingPrice) * 40);
       // Family fit
-      const familyScore = matchFamily(t.idealFamily, familySize);
+      const familyScore = matchFamily(t2.idealFamily, familySize);
       score += familyScore; // 0-35
       // Land hint
       if (land > 0) {
-        if (land >= 200 && (t.slug === "villa" || t.slug === "country_house")) score += 25;
-        else if (land >= 80 && t.slug === "duplex") score += 22;
-        else if (land < 80 && (t.slug === "apartment" || t.slug === "studio")) score += 20;
+        if (land >= 200 && (t2.slug === "villa" || t2.slug === "country_house")) score += 25;
+        else if (land >= 80 && t2.slug === "duplex") score += 22;
+        else if (land < 80 && (t2.slug === "apartment" || t2.slug === "studio")) score += 20;
         else score += 8;
       } else {
         score += 12;
       }
-      return { type: t, score: Math.round(Math.min(100, score)) };
+      return { type: t2, score: Math.round(Math.min(100, score)) };
     }).sort((a, b) => b.score - a.score);
   }, [budget, familySize, land]);
 
@@ -725,21 +710,21 @@ function CalculatorSection() {
   return (
     <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
       <SectionHeader
-        eyebrow="Estimate Calculator"
-        title="Which property type suits you?"
-        subtitle="Tell us your budget, family size and land — get a matched recommendation."
+        eyebrow={t("calculator.eyebrow")}
+        title={t("calculator.title")}
+        subtitle={t("calculator.subtitle")}
       />
       <div className="mt-10 grid lg:grid-cols-5 gap-8">
         <Card className="lg:col-span-2 shadow-soft">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Calculator className="size-5 text-secondary" /> Your inputs
+              <Calculator className="size-5 text-secondary" /> {t("calculator.yourInputs")}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-8">
             <div>
               <div className="flex justify-between mb-3">
-                <Label className="flex items-center gap-2"><Wallet className="size-4" /> Budget</Label>
+                <Label className="flex items-center gap-2"><Wallet className="size-4" /> {t("calculator.budget")}</Label>
                 <span className="font-semibold text-secondary">{formatAED(budget)}</span>
               </div>
               <Slider
@@ -752,8 +737,8 @@ function CalculatorSection() {
             </div>
             <div>
               <div className="flex justify-between mb-3">
-                <Label className="flex items-center gap-2"><Users className="size-4" /> Family size</Label>
-                <span className="font-semibold text-secondary">{familySize} people</span>
+                <Label className="flex items-center gap-2"><Users className="size-4" /> {t("calculator.familySize")}</Label>
+                <span className="font-semibold text-secondary">{t("calculator.peopleUnit", { count: familySize })}</span>
               </div>
               <Slider
                 value={[familySize]}
@@ -764,15 +749,15 @@ function CalculatorSection() {
               />
             </div>
             <div>
-              <Label className="flex items-center gap-2 mb-3"><Ruler className="size-4" /> Available land (m²) — optional</Label>
+              <Label className="flex items-center gap-2 mb-3"><Ruler className="size-4" /> {t("calculator.availableLand")}</Label>
               <Input
                 type="number"
                 min={0}
                 value={land || ""}
-                placeholder="e.g. 250"
+                placeholder={t("calculator.landPlaceholder")}
                 onChange={(e) => setLand(Number(e.target.value) || 0)}
               />
-              <p className="text-xs text-muted-foreground mt-2">Leave blank if buying a finished unit.</p>
+              <p className="text-xs text-muted-foreground mt-2">{t("calculator.landHint")}</p>
             </div>
           </CardContent>
         </Card>
@@ -789,32 +774,32 @@ function CalculatorSection() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <h3 className="font-semibold text-lg">{r.type.name}</h3>
+                    <h3 className="font-semibold text-lg">{t(`types.${r.type.slug}.name`)}</h3>
                     {idx === 0 && (
                       <Badge className="bg-secondary text-secondary-foreground hover:bg-secondary">
-                        Best match
+                        {t("calculator.bestMatch")}
                       </Badge>
                     )}
                   </div>
-                  <p className="text-sm text-muted-foreground line-clamp-1">{r.type.tagline}</p>
+                  <p className="text-sm text-muted-foreground line-clamp-1">{t(`types.${r.type.slug}.tagline`)}</p>
                   <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
                     <span>{formatAED(r.type.startingPrice)}+</span>
                     <span>·</span>
-                    <span>{r.type.idealFamily}</span>
+                    <span>{t(`types.${r.type.slug}.idealFamily`)}</span>
                     <span>·</span>
-                    <span className="text-secondary font-medium">{r.type.rentYield}% yield</span>
+                    <span className="text-secondary font-medium">{r.type.rentYield}{t("calculator.yieldSuffix")}</span>
                   </div>
                 </div>
                 <div className="text-right shrink-0">
                   <div className="text-3xl font-bold text-secondary">{r.score}</div>
-                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground">match</div>
+                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{t("calculator.matchLabel")}</div>
                 </div>
               </CardContent>
             </Card>
           ))}
           <Button asChild variant="brand" size="lg" className="w-full">
             <Link to="/consultation">
-              Book a free architectural consultation <ArrowRight />
+              {t("calculator.bookConsultation")} <ArrowRight />
             </Link>
           </Button>
         </div>
@@ -1000,7 +985,7 @@ function SectionHeader({
   );
 }
 
-function MaintenancePill({ level }: { level: "Low" | "Medium" | "High" }) {
+function MaintenancePill({ level, label }: { level: "Low" | "Medium" | "High"; label: string }) {
   const styles =
     level === "Low"
       ? "bg-secondary/15 text-secondary"
@@ -1009,7 +994,7 @@ function MaintenancePill({ level }: { level: "Low" | "Medium" | "High" }) {
         : "bg-destructive/15 text-destructive";
   return (
     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${styles}`}>
-      {level}
+      {label}
     </span>
   );
 }

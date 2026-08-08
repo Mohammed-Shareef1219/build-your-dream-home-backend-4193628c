@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Briefcase, Sparkles, MapPin, Phone } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/careers")({
   head: () => ({
@@ -14,7 +15,7 @@ export const Route = createFileRoute("/careers")({
 });
 
 const agencies = ["Ibn Beitak", "Z Agency", "Al-Nujoom"];
-const locations = ["New Cairo", "6 October", "Sheikh Zayed", "Maadi", "Heliopolis", "Alexandria", "North Coast", "5th Settlement"];
+const locationKeys = ["newCairo", "october", "sheikhZayed", "maadi", "heliopolis", "alexandria", "northCoast", "settlement5"];
 const firstNames = ["Ahmed", "Mohamed", "Omar", "Youssef", "Khaled", "Karim", "Mahmoud", "Hassan", "Tarek", "Amir", "Sara", "Nour", "Mariam", "Salma", "Laila", "Dina", "Hana", "Rana", "Yara", "Farah"];
 const lastNames = ["Mansour", "Hassan", "Ali", "Saleh", "Tarek", "Khaled", "Fouad", "Said", "Adel", "Ibrahim"];
 
@@ -39,39 +40,42 @@ const photoIds = [
   "1607746882042-944635dfe10e", "1531746020798-e6953c6e8e04",
 ];
 
+const roleKeys = ["senior", "sales", "advisor"];
+
 const brokers = photoIds.map((id, i) => ({
   photo: `https://images.unsplash.com/photo-${id}?w=400&h=400&fit=crop&crop=faces`,
   name: `${firstNames[i % firstNames.length]} ${lastNames[i % lastNames.length]}`,
   agency: agencies[i % agencies.length],
-  location: locations[i % locations.length],
+  locationKey: locationKeys[i % locationKeys.length],
   phone: `+20 ${100 + (i % 900)} ${1000000 + i * 137}`.slice(0, 19),
-  role: i % 3 === 0 ? "Senior Broker" : i % 3 === 1 ? "Sales Consultant" : "Property Advisor",
+  roleKey: roleKeys[i % roleKeys.length],
 }));
 
 function CareersPage() {
+  const { t } = useTranslation("info");
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
       <header className="text-center max-w-3xl mx-auto">
-        <p className="text-sm font-semibold text-secondary uppercase tracking-wider">Careers</p>
-        <h1 className="mt-3 text-4xl md:text-5xl font-bold tracking-tight">Build the future with us</h1>
+        <p className="text-sm font-semibold text-secondary uppercase tracking-wider">{t("careers.eyebrow")}</p>
+        <h1 className="mt-3 text-4xl md:text-5xl font-bold tracking-tight">{t("careers.title")}</h1>
       </header>
 
       {/* Notice boards */}
       <div className="mt-10 grid gap-5 md:grid-cols-2">
         <div className="rounded-2xl border-l-4 border-secondary bg-secondary/10 p-6 shadow-soft">
-          <div className="flex items-center gap-2 text-secondary font-semibold"><Briefcase className="h-5 w-5" /> Open Roles</div>
-          <p className="mt-2 text-lg font-medium">Join our team of brokers and programmers.</p>
+          <div className="flex items-center gap-2 text-secondary font-semibold"><Briefcase className="h-5 w-5" /> {t("careers.openRoles.label")}</div>
+          <p className="mt-2 text-lg font-medium">{t("careers.openRoles.text")}</p>
         </div>
         <div className="rounded-2xl border-l-4 border-accent bg-accent/10 p-6 shadow-soft">
-          <div className="flex items-center gap-2 text-accent-foreground font-semibold"><Sparkles className="h-5 w-5" /> Mission</div>
-          <p className="mt-2 text-lg font-medium">Build the future of AI-powered real estate marketing.</p>
+          <div className="flex items-center gap-2 text-accent-foreground font-semibold"><Sparkles className="h-5 w-5" /> {t("careers.mission.label")}</div>
+          <p className="mt-2 text-lg font-medium">{t("careers.mission.text")}</p>
         </div>
       </div>
 
       {/* Broker gallery */}
       <section className="mt-16">
-        <h2 className="text-2xl font-bold">Our Brokers & Sales Team</h2>
-        <p className="text-muted-foreground mt-1">50 trusted professionals across Ibn Beitak, Z, and Al-Nujoom.</p>
+        <h2 className="text-2xl font-bold">{t("careers.brokersHeading")}</h2>
+        <p className="text-muted-foreground mt-1">{t("careers.brokersSub")}</p>
 
         <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
           {brokers.map((b, i) => (
@@ -86,10 +90,10 @@ function CareersPage() {
               </div>
               <div className="p-3">
                 <h3 className="font-semibold text-sm truncate">{b.name}</h3>
-                <p className="text-xs text-secondary font-medium">{b.role}</p>
+                <p className="text-xs text-secondary font-medium">{t(`careers.roles.${b.roleKey}`)}</p>
                 <p className="text-xs text-muted-foreground mt-1">{b.agency}</p>
                 <div className="mt-2 space-y-1 text-xs text-muted-foreground">
-                  <div className="flex items-center gap-1"><MapPin className="h-3 w-3" />{b.location}</div>
+                  <div className="flex items-center gap-1"><MapPin className="h-3 w-3" />{t(`careers.locations.${b.locationKey}`)}</div>
                   <div className="flex items-center gap-1"><Phone className="h-3 w-3" />{b.phone}</div>
                 </div>
               </div>

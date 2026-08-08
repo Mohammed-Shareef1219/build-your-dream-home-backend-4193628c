@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/useAuth";
 
 type Props = {
@@ -15,6 +16,7 @@ type Props = {
  * Optionally requires the `admin` role.
  */
 export function ProtectedRoute({ children, requireAdmin = false, fallback }: Props) {
+  const { t } = useTranslation("common");
   const { user, isAdmin, loading } = useAuth();
   const navigate = useNavigate();
 
@@ -31,7 +33,7 @@ export function ProtectedRoute({ children, requireAdmin = false, fallback }: Pro
     return (
       fallback ?? (
         <div className="flex min-h-[50vh] items-center justify-center text-sm text-muted-foreground">
-          Checking your session…
+          {t("protected.checkingSession")}
         </div>
       )
     );

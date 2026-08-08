@@ -25,6 +25,7 @@ import {
   Eye,
   Rocket,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { PropertyCard } from "@/components/PropertyCard";
 import { supabase } from "@/integrations/supabase/client";
@@ -49,6 +50,7 @@ export const Route = createFileRoute("/")({
 });
 
 function IndexPage() {
+  const { t } = useTranslation("home");
   const [featured, setFeatured] = useState<Property[]>([]);
   const [favIds, setFavIds] = useState<Set<string>>(new Set());
   const { user } = useAuth();
@@ -82,24 +84,24 @@ function IndexPage() {
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 md:py-36">
           <div className="max-w-3xl">
             <span className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 rounded-full px-4 py-1.5 text-sm font-medium mb-6">
-              <Sparkles className="h-4 w-4 text-accent" /> Smart real estate marketing
+              <Sparkles className="h-4 w-4 text-accent" /> {t("hero.badge")}
             </span>
             <h1 className="text-4xl md:text-6xl font-bold mb-6 text-balance leading-tight">
-              Find Your Dream Property Smartly.{" "}
-              <span className="font-display text-accent">Know the market value in a minute.</span>
+              {t("hero.titleLine1")}{" "}
+              <span className="font-display text-accent">{t("hero.titleLine2")}</span>
             </h1>
             <p className="text-lg md:text-xl text-white/80 mb-8 max-w-2xl">
-              From 80m² to 300m² — villa, apartment, or commercial space. Make it yours in a few simple steps.
+              {t("hero.subtitle")}
             </p>
             <div className="flex flex-wrap gap-4">
               <Button variant="hero" size="xl" asChild>
                 <Link to="/properties">
-                  Browse Properties <ArrowRight className="ml-1" />
+                  {t("hero.browseProperties")} <ArrowRight className="ml-1" />
                 </Link>
               </Button>
               <Button variant="outlineHero" size="xl" asChild>
                 <Link to="/consultation">
-                  <HardHat /> Free Consultation
+                  <HardHat /> {t("hero.freeConsultation")}
                 </Link>
               </Button>
             </div>
@@ -111,16 +113,16 @@ function IndexPage() {
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
         <div className="grid gap-6 md:grid-cols-3">
           {[
-            { icon: Sparkles, title: "Curated Listings", desc: "Hand-picked properties across every style and budget." },
-            { icon: Shield, title: "Trusted Broker", desc: "Verified listings with transparent pricing." },
-            { icon: Zap, title: "Fast Consultation", desc: "Free expert advice within 24 hours." },
+            { key: "curated", icon: Sparkles },
+            { key: "trusted", icon: Shield },
+            { key: "fast", icon: Zap },
           ].map((f) => (
-            <div key={f.title} className="rounded-2xl bg-card p-8 shadow-soft hover:shadow-elegant transition-all hover:-translate-y-1">
+            <div key={f.key} className="rounded-2xl bg-card p-8 shadow-soft hover:shadow-elegant transition-all hover:-translate-y-1">
               <div className="h-12 w-12 rounded-xl bg-brand-gradient flex items-center justify-center mb-4 shadow-glow">
                 <f.icon className="h-6 w-6 text-white" />
               </div>
-              <h3 className="font-semibold text-lg mb-2">{f.title}</h3>
-              <p className="text-muted-foreground">{f.desc}</p>
+              <h3 className="font-semibold text-lg mb-2">{t(`valueProps.${f.key}.title`)}</h3>
+              <p className="text-muted-foreground">{t(`valueProps.${f.key}.desc`)}</p>
             </div>
           ))}
         </div>
@@ -131,27 +133,27 @@ function IndexPage() {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>
             <span className="inline-flex items-center gap-2 text-secondary font-semibold mb-3">
-              <Zap className="h-4 w-4" /> Who We Are
+              <Zap className="h-4 w-4" /> {t("whoWeAre.badge")}
             </span>
             <h2 className="text-3xl md:text-4xl font-bold mb-5">
-              Brokers + programmers, powered by <span className="text-secondary">Technology</span>.
+              {t("whoWeAre.titlePrefix")} <span className="text-secondary">{t("whoWeAre.titleHighlight")}</span>.
             </h2>
-            <p className="text-muted-foreground text-lg leading-relaxed">
-              We are a team of real estate experts and programmers specializing in transforming your
-              property search into a fast and smart experience, using the latest <em>artificial intelligence technologies</em>.
-            </p>
+            <p
+              className="text-muted-foreground text-lg leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: t("whoWeAre.description") }}
+            />
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
             {[
-              { icon: Target, title: "Our Goal", desc: "Make buying, selling, or renting your property easier, faster, and clearer than ever before." },
-              { icon: Eye, title: "Our Vision", desc: "A future where everyone can find their perfect property effortlessly." },
-              { icon: Rocket, title: "Vision for the Future", desc: "Integrity of brokers, speed of technology — for everyone." },
-              { icon: Sparkles, title: "Our Aspiration", desc: "The leading Arab platform for smart real estate marketing in minutes." },
+              { key: "goal", icon: Target },
+              { key: "vision", icon: Eye },
+              { key: "futureVision", icon: Rocket },
+              { key: "aspiration", icon: Sparkles },
             ].map((c) => (
-              <div key={c.title} className="rounded-2xl bg-card p-6 shadow-soft hover:shadow-elegant transition-all">
+              <div key={c.key} className="rounded-2xl bg-card p-6 shadow-soft hover:shadow-elegant transition-all">
                 <c.icon className="h-7 w-7 text-secondary mb-3" />
-                <h3 className="font-semibold mb-1.5">{c.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{c.desc}</p>
+                <h3 className="font-semibold mb-1.5">{t(`whoWeAre.${c.key}.title`)}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{t(`whoWeAre.${c.key}.desc`)}</p>
               </div>
             ))}
           </div>
@@ -162,27 +164,27 @@ function IndexPage() {
       <section className="bg-muted/30 py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-3">Property Types</h2>
-            <p className="text-muted-foreground text-lg">Choose from a variety of verified properties and styles.</p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-3">{t("propertyTypes.heading")}</h2>
+            <p className="text-muted-foreground text-lg">{t("propertyTypes.subheading")}</p>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { icon: Building2, title: "Villas", desc: "Luxurious and modern villas with spacious areas in prime locations." },
-              { icon: HomeIcon, title: "Apartments", desc: "Practical and beautiful apartments of every size for families and individuals." },
-              { icon: Warehouse, title: "Commercial Properties", desc: "Innovative spaces for shops, offices, and businesses." },
-            ].map((t) => (
+              { key: "villas", icon: Building2 },
+              { key: "apartments", icon: HomeIcon },
+              { key: "commercial", icon: Warehouse },
+            ].map((pt) => (
               <Link
-                key={t.title}
+                key={pt.key}
                 to="/property-types"
                 className="group rounded-2xl bg-card p-8 shadow-soft hover:shadow-elegant transition-all hover:-translate-y-1"
               >
                 <div className="h-14 w-14 rounded-2xl bg-brand-gradient flex items-center justify-center mb-5 shadow-glow group-hover:scale-110 transition-transform">
-                  <t.icon className="h-7 w-7 text-white" />
+                  <pt.icon className="h-7 w-7 text-white" />
                 </div>
-                <h3 className="font-semibold text-xl mb-2">{t.title}</h3>
-                <p className="text-muted-foreground">{t.desc}</p>
+                <h3 className="font-semibold text-xl mb-2">{t(`propertyTypes.${pt.key}.title`)}</h3>
+                <p className="text-muted-foreground">{t(`propertyTypes.${pt.key}.desc`)}</p>
                 <span className="inline-flex items-center gap-1 mt-4 text-secondary font-medium text-sm">
-                  Explore <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  {t("propertyTypes.explore")} <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </span>
               </Link>
             ))}
@@ -194,11 +196,11 @@ function IndexPage() {
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
         <div className="flex flex-wrap items-end justify-between gap-4 mb-10">
           <div>
-            <h2 className="text-3xl md:text-4xl font-bold">Property Gallery</h2>
-            <p className="text-muted-foreground mt-2">Get inspired by high-quality virtual tours of our properties.</p>
+            <h2 className="text-3xl md:text-4xl font-bold">{t("gallery.heading")}</h2>
+            <p className="text-muted-foreground mt-2">{t("gallery.subheading")}</p>
           </div>
           <Button variant="outline" asChild>
-            <Link to="/gallery">Open gallery <ArrowRight /></Link>
+            <Link to="/gallery">{t("gallery.openGallery")} <ArrowRight /></Link>
           </Button>
         </div>
       </section>
@@ -207,21 +209,21 @@ function IndexPage() {
       <section className="bg-muted/30 py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-3">Real Estate Tips</h2>
-            <p className="text-muted-foreground text-lg">Learn from our experts the best practices in buying and investing in real estate.</p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-3">{t("tips.heading")}</h2>
+            <p className="text-muted-foreground text-lg">{t("tips.subheading")}</p>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { icon: MapPin, title: "Choosing Property Location", desc: "The right location maximizes investment value. Study the neighborhood and future growth carefully." },
-              { icon: Wallet, title: "Market Valuation", desc: "Set a realistic budget and check market prices to get the best deal without overpaying." },
-              { icon: Hammer, title: "Legal Verification", desc: "Ensure all property documents and ownership titles are clear and legally sound." },
-            ].map((t) => (
-              <div key={t.title} className="rounded-2xl bg-card p-8 shadow-soft hover:shadow-elegant transition-all">
+              { key: "location", icon: MapPin },
+              { key: "valuation", icon: Wallet },
+              { key: "legal", icon: Hammer },
+            ].map((tip) => (
+              <div key={tip.key} className="rounded-2xl bg-card p-8 shadow-soft hover:shadow-elegant transition-all">
                 <div className="h-12 w-12 rounded-xl bg-accent/15 text-accent flex items-center justify-center mb-4">
-                  <t.icon className="h-6 w-6" />
+                  <tip.icon className="h-6 w-6" />
                 </div>
-                <h3 className="font-semibold text-lg mb-2">{t.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{t.desc}</p>
+                <h3 className="font-semibold text-lg mb-2">{t(`tips.${tip.key}.title`)}</h3>
+                <p className="text-muted-foreground leading-relaxed">{t(`tips.${tip.key}.desc`)}</p>
               </div>
             ))}
           </div>
@@ -232,19 +234,19 @@ function IndexPage() {
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
         <div className="flex items-end justify-between mb-10">
           <div>
-            <h2 className="text-3xl md:text-4xl font-bold">Featured Properties</h2>
-            <p className="text-muted-foreground mt-2">Hand-picked homes ready to view.</p>
+            <h2 className="text-3xl md:text-4xl font-bold">{t("featured.heading")}</h2>
+            <p className="text-muted-foreground mt-2">{t("featured.subheading")}</p>
           </div>
           <Button variant="outline" asChild className="hidden sm:flex">
-            <Link to="/properties">View all <ArrowRight /></Link>
+            <Link to="/properties">{t("featured.viewAll")} <ArrowRight /></Link>
           </Button>
         </div>
 
         {featured.length === 0 ? (
           <div className="rounded-2xl border-2 border-dashed border-border p-12 text-center">
-            <p className="text-muted-foreground mb-4">No properties listed yet.</p>
+            <p className="text-muted-foreground mb-4">{t("featured.empty")}</p>
             <Button variant="brand" asChild>
-              <Link to="/admin">Add your first property</Link>
+              <Link to="/admin">{t("featured.addFirst")}</Link>
             </Button>
           </div>
         ) : (
@@ -271,23 +273,23 @@ function IndexPage() {
       <section className="bg-muted/30 py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-3">Start Searching</h2>
-            <p className="text-muted-foreground text-lg">Follow these simple steps to find your dream property.</p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-3">{t("steps.heading")}</h2>
+            <p className="text-muted-foreground text-lg">{t("steps.subheading")}</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { n: 1, icon: UserPlus, title: "Create Account", desc: "Create your personal account on our platform." },
-              { n: 2, icon: LayoutGrid, title: "Browse Listings", desc: "Explore the property gallery and use smart filters." },
-              { n: 3, icon: Settings2, title: "Schedule a Tour", desc: "Book a physical or virtual tour with our experts." },
-              { n: 4, icon: FileCheck2, title: "Close the Deal", desc: "Get full legal support to complete your purchase safely." },
+              { n: 1, key: "createAccount", icon: UserPlus },
+              { n: 2, key: "browseListings", icon: LayoutGrid },
+              { n: 3, key: "scheduleTour", icon: Settings2 },
+              { n: 4, key: "closeDeal", icon: FileCheck2 },
             ].map((s) => (
               <div key={s.n} className="relative rounded-2xl bg-card p-7 shadow-soft hover:shadow-elegant transition-all">
                 <div className="absolute -top-4 left-7 h-9 w-9 rounded-full bg-brand-gradient text-white font-bold flex items-center justify-center shadow-glow">
                   {s.n}
                 </div>
                 <s.icon className="h-7 w-7 text-secondary mt-4 mb-3" />
-                <h3 className="font-semibold mb-1.5">{s.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
+                <h3 className="font-semibold mb-1.5">{t(`steps.${s.key}.title`)}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{t(`steps.${s.key}.desc`)}</p>
               </div>
             ))}
           </div>
@@ -297,24 +299,23 @@ function IndexPage() {
       {/* Client Consultation */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-3">Client Consultation</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-3">{t("consultationSection.heading")}</h2>
           <p className="text-muted-foreground text-lg">
-            Our team combines artificial intelligence with real human support to guide you through every step
-            of your real estate journey.
+            {t("consultationSection.subheading")}
           </p>
         </div>
         <div className="grid md:grid-cols-3 gap-6">
           {[
-            { icon: Users, title: "Personalized Support", desc: "Real brokers ready to help you at every step — completely free of charge." },
-            { icon: Brain, title: "Smart Valuation", desc: "Answer simple questions and receive property recommendations that speak to your style and budget." },
-            { icon: Shield, title: "Price Transparency", desc: "No hidden fees. Real-time market prices for all properties." },
+            { key: "personalized", icon: Users },
+            { key: "smartValuation", icon: Brain },
+            { key: "transparency", icon: Shield },
           ].map((c) => (
-            <div key={c.title} className="rounded-2xl bg-card p-8 shadow-soft hover:shadow-elegant transition-all">
+            <div key={c.key} className="rounded-2xl bg-card p-8 shadow-soft hover:shadow-elegant transition-all">
               <div className="h-12 w-12 rounded-xl bg-brand-gradient flex items-center justify-center mb-4 shadow-glow">
                 <c.icon className="h-6 w-6 text-white" />
               </div>
-              <h3 className="font-semibold text-lg mb-2">{c.title}</h3>
-              <p className="text-muted-foreground leading-relaxed">{c.desc}</p>
+              <h3 className="font-semibold text-lg mb-2">{t(`consultationSection.${c.key}.title`)}</h3>
+              <p className="text-muted-foreground leading-relaxed">{t(`consultationSection.${c.key}.desc`)}</p>
             </div>
           ))}
         </div>
@@ -324,32 +325,31 @@ function IndexPage() {
       <section className="bg-muted/30 py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-3">Why Choose Us?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-3">{t("whyChooseUs.heading")}</h2>
             <p className="text-muted-foreground text-lg">
-              Because we're truly different. We combine Technology with human expertise for your perfect real estate experience.
+              {t("whyChooseUs.subheading")}
             </p>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
             {[
-              { icon: Brain, title: "Technology-Powered", desc: "Latest artificial intelligence for accurate property matching." },
-              { icon: Users, title: "Human Support", desc: "Real certified experts to guide you personally." },
-              { icon: Clock, title: "Save Time", desc: "Find your perfect property in minutes, not weeks." },
-              { icon: PiggyBank, title: "Save Money", desc: "Best market deals with zero hidden commissions." },
-              { icon: Smile, title: "Unique Experience", desc: "Simple interface anyone can use." },
-              { icon: Sparkles, title: "Verified Listings", desc: "Properties of all sizes with full price transparency and free consultation." },
+              { key: "technology", icon: Brain },
+              { key: "humanSupport", icon: Users },
+              { key: "saveTime", icon: Clock },
+              { key: "saveMoney", icon: PiggyBank },
+              { key: "uniqueExperience", icon: Smile },
+              { key: "verifiedListings", icon: Sparkles },
             ].map((f) => (
-              <div key={f.title} className="rounded-2xl bg-card p-6 shadow-soft hover:shadow-elegant transition-all hover:-translate-y-1">
+              <div key={f.key} className="rounded-2xl bg-card p-6 shadow-soft hover:shadow-elegant transition-all hover:-translate-y-1">
                 <f.icon className="h-7 w-7 text-secondary mb-3" />
-                <h3 className="font-semibold mb-1.5">{f.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
+                <h3 className="font-semibold mb-1.5">{t(`whyChooseUs.${f.key}.title`)}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{t(`whyChooseUs.${f.key}.desc`)}</p>
               </div>
             ))}
           </div>
 
           <blockquote className="max-w-3xl mx-auto text-center text-lg md:text-xl italic text-foreground/80 border-l-4 border-secondary pl-6 py-2">
-            "You won't find all of this anywhere else, because we work to achieve one goal: for you to invest
-            or buy your dream property with confidence, without wasting time or money."
+            {t("whyChooseUs.quote")}
           </blockquote>
         </div>
       </section>
@@ -357,13 +357,13 @@ function IndexPage() {
       {/* Free Consultation CTA */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
         <div className="rounded-3xl bg-brand-gradient p-12 md:p-16 text-center shadow-elegant">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Free Consultation</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">{t("cta.heading")}</h2>
           <p className="text-white/85 text-lg mb-8 max-w-2xl mx-auto">
-            Get a free consultation from our experts to help you find your dream property.
+            {t("cta.subheading")}
           </p>
           <Button variant="accent" size="xl" asChild>
             <Link to="/consultation">
-              Book Free Consultation <ArrowRight />
+              {t("cta.book")} <ArrowRight />
             </Link>
           </Button>
         </div>

@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Heart, MapPin, BedDouble, Bath, Maximize } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -17,13 +18,14 @@ export function PropertyCard({
   isFavorite?: boolean;
   onFavoriteChange?: (favored: boolean) => void;
 }) {
+  const { t } = useTranslation("common");
   const { user } = useAuth();
 
   const toggleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (!user) {
-      toast.error("Please sign in to save favorites");
+      toast.error(t("propertyCard.signInToSave"));
       return;
     }
     if (isFavorite) {
@@ -33,14 +35,14 @@ export function PropertyCard({
         .eq("user_id", user.id)
         .eq("property_id", property.id);
       if (error) return toast.error(error.message);
-      toast.success("Removed from favorites");
+      toast.success(t("propertyCard.removedFromFavorites"));
       onFavoriteChange?.(false);
     } else {
       const { error } = await supabase
         .from("favorites")
         .insert({ user_id: user.id, property_id: property.id });
       if (error) return toast.error(error.message);
-      toast.success("Added to favorites");
+      toast.success(t("propertyCard.addedToFavorites"));
       onFavoriteChange?.(true);
     }
   };
@@ -62,7 +64,7 @@ export function PropertyCard({
         />
         {property.featured && (
           <span className="absolute top-3 left-3 bg-accent text-accent-foreground text-xs font-semibold px-3 py-1 rounded-full shadow-soft">
-            ⭐ Featured
+            ⭐ {t("propertyCard.featured")}
           </span>
         )}
         <span className="absolute top-3 right-3 bg-primary/90 backdrop-blur text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full capitalize">
@@ -70,7 +72,7 @@ export function PropertyCard({
         </span>
         <button
           onClick={toggleFavorite}
-          aria-label="Toggle favorite"
+          aria-label={t("propertyCard.toggleFavorite")}
           className="absolute bottom-3 right-3 h-10 w-10 rounded-full bg-background/90 backdrop-blur flex items-center justify-center shadow-soft hover:scale-110 transition-transform"
         >
           <Heart
@@ -108,13 +110,13 @@ export function PropertyCard({
         </div>
         <div className="flex items-end justify-between">
           <div>
-            <div className="text-xs text-muted-foreground">Starting from</div>
+            <div className="text-xs text-muted-foreground">{t("propertyCard.startingFrom")}</div>
             <div className="text-xl font-bold text-primary">
               {new Intl.NumberFormat("en-US").format(Number(property.price))} {property.currency}
             </div>
           </div>
           <Button variant="secondary" size="sm" className="pointer-events-none">
-            View
+            {t("propertyCard.view")}
           </Button>
         </div>
       </div>
