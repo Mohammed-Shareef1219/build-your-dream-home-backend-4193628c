@@ -28,6 +28,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import type { Database } from "@/integrations/supabase/types";
 
 type Property = Database["public"]["Tables"]["properties"]["Row"];
@@ -53,52 +54,33 @@ export const Route = createFileRoute("/properties/")({
   component: ListingsPage,
 });
 
-const TYPES = [
-  { value: "all", label: "All Types" },
-  { value: "villa", label: "Villa" },
-  { value: "apartment", label: "Apartment" },
-  { value: "duplex", label: "Duplex" },
-  { value: "country_house", label: "Country House" },
-  { value: "studio", label: "Studio" },
-  { value: "smart_home", label: "Smart Home" },
-];
+const TYPE_VALUES = ["all", "villa", "apartment", "duplex", "country_house", "studio", "smart_home"];
+const BED_VALUES = ["any", "1", "2", "3", "4"];
+const SORT_VALUES = ["featured", "price_asc", "price_desc", "newest"];
+const TAB_IDS = ["properties", "invest", "vr"];
 
-const BEDS = [
-  { value: "any", label: "Any Beds" },
-  { value: "1", label: "1+" },
-  { value: "2", label: "2+" },
-  { value: "3", label: "3+" },
-  { value: "4", label: "4+" },
-];
-
-const SORTS = [
-  { value: "featured", label: "Featured first" },
-  { value: "price_asc", label: "Price ↑" },
-  { value: "price_desc", label: "Price ↓" },
-  { value: "newest", label: "Newest" },
-];
-
-const TABS = [
-  { id: "properties", label: "PROPERTIES" },
-  { id: "invest", label: "INVEST" },
-  { id: "vr", label: "VR TOURS" },
-];
-
-const MOOD_ICONS = [
-  { Icon: ChefHat, label: "Kitchen" },
-  { Icon: Sofa, label: "Living" },
-  { Icon: ShowerHead, label: "Bath" },
-  { Icon: BedDouble, label: "Beds" },
-  { Icon: Trees, label: "Garden" },
+const MOOD_ICON_DEFS = [
+  { Icon: ChefHat, key: "kitchen" },
+  { Icon: Sofa, key: "living" },
+  { Icon: ShowerHead, key: "bath" },
+  { Icon: BedDouble, key: "beds" },
+  { Icon: Trees, key: "garden" },
 ];
 
 function ListingsPage() {
+  const { t } = useTranslation("listings");
   const { type, q, beds, sort } = Route.useSearch();
   const navigate = Route.useNavigate();
   const [items, setItems] = useState<Property[]>([]);
   const [favIds, setFavIds] = useState<Set<string>>(new Set());
   const [activeTab, setActiveTab] = useState("properties");
   const { user } = useAuth();
+
+  const TYPES = TYPE_VALUES.map((value) => ({ value, label: t(`properties.types.${value}`) }));
+  const BEDS = BED_VALUES.map((value) => ({ value, label: t(`properties.beds.${value}`) }));
+  const SORTS = SORT_VALUES.map((value) => ({ value, label: t(`properties.sorts.${value}`) }));
+  const TABS = TAB_IDS.map((id) => ({ id, label: t(`properties.tabs.${id}`) }));
+  const MOOD_ICONS = MOOD_ICON_DEFS.map(({ Icon, key }) => ({ Icon, label: t(`properties.moodIcons.${key}`) }));
 
   const setSearch = (patch: Partial<SearchState>) =>
     navigate({ search: (prev: SearchState) => ({ ...prev, ...patch }) });
@@ -141,7 +123,7 @@ function ListingsPage() {
   const toggleFav = async (e: React.MouseEvent, propertyId: string) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!user) return toast.error("Please sign in to save favorites");
+    if (!user) return toast.error(t("properties.signInFavorites"));
     const isFav = favIds.has(propertyId);
     if (isFav) {
       const { error } = await supabase.from("favorites").delete()
@@ -168,7 +150,7 @@ function ListingsPage() {
       <header className="sticky top-0 z-30 border-b border-white/10 backdrop-blur-xl bg-[#060b1a]/70">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to="/" className="text-lg font-bold tracking-wide">
-            IBN BEITAK <span className="text-cyan-400">2026</span>
+            {t("properties.brand")} <span className="text-cyan-400">2026</span>
           </Link>
           <nav className="hidden md:flex items-center gap-10 text-[13px] tracking-[0.18em]">
             {TABS.map((t) => (
@@ -188,7 +170,7 @@ function ListingsPage() {
           </nav>
           <div className="flex items-center gap-3">
             <span className="hidden sm:block text-[13px] tracking-[0.18em] text-slate-300">
-              DETAILS <span className="text-slate-500 mx-1">|</span>{" "}
+              {t("properties.detailsBar")} <span className="text-slate-500 mx-1">|</span>{" "}
               <span className="text-cyan-300">العقار</span>
             </span>
             <div className="h-9 w-9 rounded-full bg-gradient-to-br from-cyan-400 to-indigo-500 ring-2 ring-white/20" />
@@ -210,7 +192,7 @@ function ListingsPage() {
                   <input
                     value={q}
                     onChange={(e) => setSearch({ q: e.target.value })}
-                    placeholder="Search by location, title, size..."
+                    placeholder={t("properties.filters.searchPlaceholder")}
                     className="w-full h-11 pl-9 pr-3 rounded-xl bg-white/5 border border-white/10 text-sm placeholder:text-slate-400 focus:outline-none focus:border-cyan-400/60"
                   />
                 </div>
@@ -219,12 +201,12 @@ function ListingsPage() {
                 <GlassSelect className="md:col-span-2" value={sort} onChange={(v) => setSearch({ sort: v })} options={SORTS} />
               </div>
               <div className="mt-3 flex items-center justify-between text-xs text-slate-400 px-1">
-                <span>{filtered.length} matching listings</span>
+                <span>{t("properties.filters.matchingListings", { count: filtered.length })}</span>
                 <button
                   onClick={() => setSearch({ type: "all", q: "", beds: "any", sort: "featured" })}
                   className="text-cyan-300 hover:text-cyan-200"
                 >
-                  Reset filters
+                  {t("properties.filters.reset")}
                 </button>
               </div>
             </section>
@@ -232,7 +214,7 @@ function ListingsPage() {
             {/* GRID */}
             {filtered.length === 0 ? (
               <div className="rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-16 text-center text-slate-400">
-                No properties match your filters.
+                {t("properties.filters.noResults")}
               </div>
             ) : (
               <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
@@ -261,10 +243,10 @@ function ListingsPage() {
               <Home className="h-7 w-7 text-cyan-300" />
             </div>
             <div>
-              <div className="text-xs tracking-[0.2em] text-cyan-300">IBN BEITAK</div>
-              <div className="text-xl font-bold">DEVELOPMENTS</div>
+              <div className="text-xs tracking-[0.2em] text-cyan-300">{t("properties.brand")}</div>
+              <div className="text-xl font-bold">{t("properties.developerStrip.tagline")}</div>
               <div className="text-sm text-slate-300">
-                Verified developer · Direct owner contact on every listing
+                {t("properties.developerStrip.description")}
               </div>
             </div>
           </div>
@@ -272,7 +254,7 @@ function ListingsPage() {
             href="tel:+201000000000"
             className="inline-flex items-center gap-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-semibold px-6 h-12 shadow-[0_8px_30px_-8px_rgba(34,211,238,0.7)] transition"
           >
-            <Phone className="h-4 w-4" /> CALL NOW
+            <Phone className="h-4 w-4" /> {t("properties.developerStrip.callNow")}
           </a>
         </section>
       </main>
@@ -281,8 +263,8 @@ function ListingsPage() {
       <div className="fixed bottom-5 right-5 z-40 flex items-center gap-3">
         <div className="hidden sm:flex items-center gap-2 rounded-full border border-white/15 bg-[#0a1230]/90 backdrop-blur px-4 py-2 text-xs text-slate-200 shadow-xl">
           <Headphones className="h-4 w-4 text-cyan-300" />
-          <span className="font-semibold">AI ASSISTANT (ZEYAD):</span>
-          <span className="text-slate-400">"Ask about financing!"</span>
+          <span className="font-semibold">{t("properties.aiAssistant.label")}</span>
+          <span className="text-slate-400">{t("properties.aiAssistant.hint")}</span>
         </div>
         <button className="h-12 w-12 rounded-full bg-cyan-500 hover:bg-cyan-400 text-slate-900 flex items-center justify-center shadow-[0_10px_30px_-6px_rgba(34,211,238,0.7)]">
           <Sparkles className="h-5 w-5" />
@@ -335,15 +317,17 @@ function GlassPropertyCard({
     property.image_urls?.[0] ??
     "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1400&auto=format&fit=crop";
 
+  const { t } = useTranslation("listings");
   const code = `EBK-${String(2024 + (index % 3)).padStart(4, "0")}`;
   const views = 1250 + index * 137;
-  const arabicLabel =
-    property.type === "villa" ? "فيلا العقار"
-    : property.type === "apartment" ? "شقة العقار"
-    : property.type === "duplex" ? "دوبلكس العقار"
-    : property.type === "studio" ? "ستوديو العقار"
-    : property.type === "country_house" ? "ريفي العقار"
-    : "العقار";
+  const arabicLabelKey =
+    property.type === "villa" ? "villa"
+    : property.type === "apartment" ? "apartment"
+    : property.type === "duplex" ? "duplex"
+    : property.type === "studio" ? "studio"
+    : property.type === "country_house" ? "country_house"
+    : "default";
+  const arabicLabel = t(`properties.card.arabicLabels.${arabicLabelKey}`);
 
   return (
     <Link
@@ -363,9 +347,9 @@ function GlassPropertyCard({
 
         {/* Top-left: code + views */}
         <div className="absolute top-3 left-3 rounded-xl border border-amber-300/40 bg-[#060b1a]/70 backdrop-blur px-3 py-1.5 text-[11px]">
-          <div className="text-amber-300 font-semibold">[كود العقار: {code}]</div>
+          <div className="text-amber-300 font-semibold">{t("properties.card.propertyCode", { code })}</div>
           <div className="flex items-center gap-1 text-slate-200 mt-0.5">
-            <Eye className="h-3 w-3" /> {views.toLocaleString()} مشاهدة
+            <Eye className="h-3 w-3" /> {t("properties.card.views", { count: views.toLocaleString() })}
           </div>
         </div>
 
@@ -377,7 +361,7 @@ function GlassPropertyCard({
         {/* Favorite */}
         <button
           onClick={onToggleFav}
-          aria-label="Toggle favorite"
+          aria-label={t("properties.toggleFavorite")}
           className="absolute top-16 right-3 h-9 w-9 rounded-full bg-[#060b1a]/70 backdrop-blur border border-white/15 flex items-center justify-center hover:scale-110 transition"
         >
           <Heart className={`h-4 w-4 ${isFavorite ? "fill-rose-400 text-rose-400" : "text-slate-200"}`} />
@@ -385,12 +369,12 @@ function GlassPropertyCard({
 
         {/* Mood-board strip */}
         <div className="absolute left-3 right-3 bottom-3 rounded-2xl border border-white/15 bg-[#060b1a]/75 backdrop-blur px-3 py-2.5 flex items-center justify-between">
-          {MOOD_ICONS.map(({ Icon, label }) => (
-            <div key={label} className="flex flex-col items-center gap-1">
+          {MOOD_ICON_DEFS.map(({ Icon, key }) => (
+            <div key={key} className="flex flex-col items-center gap-1">
               <span className="h-9 w-9 rounded-full bg-cyan-500/20 border border-cyan-300/40 flex items-center justify-center">
                 <Icon className="h-4 w-4 text-cyan-300" />
               </span>
-              <span className="text-[9px] text-slate-300">{label}</span>
+              <span className="text-[9px] text-slate-300">{t(`properties.moodIcons.${key}`)}</span>
             </div>
           ))}
         </div>
@@ -419,14 +403,14 @@ function GlassPropertyCard({
         </div>
         <div className="flex items-end justify-between pt-3 border-t border-white/10">
           <div>
-            <div className="text-[10px] uppercase tracking-wider text-slate-500">Starting from</div>
+            <div className="text-[10px] uppercase tracking-wider text-slate-500">{t("properties.card.startingFrom")}</div>
             <div className="text-xl font-bold text-cyan-300">
               {new Intl.NumberFormat("en-US").format(Number(property.price))}{" "}
               <span className="text-xs text-slate-400">{property.currency}</span>
             </div>
           </div>
           <span className="inline-flex items-center gap-1.5 rounded-lg bg-cyan-500/90 hover:bg-cyan-400 text-slate-900 text-xs font-semibold px-3 py-2 transition">
-            <Phone className="h-3.5 w-3.5" /> Details
+            <Phone className="h-3.5 w-3.5" /> {t("properties.card.details")}
           </span>
         </div>
       </div>
@@ -436,53 +420,18 @@ function GlassPropertyCard({
 
 /* ---------------- Tab Intro + Panels ---------------- */
 
-const TAB_INTROS: Record<
-  string,
-  {
-    badge: string;
-    title: string;
-    content: string;
-    details: string;
-    objective: string;
-    image: string;
-    Icon: typeof Home;
-  }
-> = {
+const TAB_INTRO_META: Record<string, { image: string; Icon: typeof Home }> = {
   properties: {
-    badge: "PROPERTIES",
-    title: "Find a home ready to move into",
-    content:
-      "An advanced search engine for every available unit on the live market — sale or rent.",
-    details:
-      "Filter by location, size, price and number of rooms to narrow thousands of listings to the few that fit.",
-    objective:
-      "Quick, traditional browsing to find the right property for immediate occupancy.",
     image:
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&auto=format&fit=crop",
     Icon: Home,
   },
   invest: {
-    badge: "INVESTMENT",
-    title: "Put your capital to work",
-    content:
-      "Off-plan residential projects and prime commercial or office assets curated for yield.",
-    details:
-      "Each opportunity displays expected ROI, long-term payment plans and projected price growth.",
-    objective:
-      "Built for investors looking to grow capital — not for immediate occupancy.",
     image:
       "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1600&auto=format&fit=crop",
     Icon: TrendingUp,
   },
   vr: {
-    badge: "VR TOURS",
-    title: "Walk the unit before you visit",
-    content:
-      "Interactive 360° virtual reality tours of selected properties.",
-    details:
-      "Move room to room and inspect real finishes as if you were standing inside the unit.",
-    objective:
-      "Accurate remote inspection — saving time, effort and unnecessary site visits.",
     image:
       "https://images.unsplash.com/photo-1593508512255-86ab42a8e620?w=1600&auto=format&fit=crop",
     Icon: Glasses,
@@ -490,25 +439,27 @@ const TAB_INTROS: Record<
 };
 
 function TabIntro({ tab }: { tab: string }) {
-  const info = TAB_INTROS[tab] ?? TAB_INTROS.properties;
-  const { Icon } = info;
+  const { t } = useTranslation("listings");
+  const key = TAB_INTRO_META[tab] ? tab : "properties";
+  const meta = TAB_INTRO_META[key];
+  const { Icon } = meta;
   return (
     <section className="mb-8 grid md:grid-cols-5 gap-6 items-stretch">
       <div className="md:col-span-3 rounded-3xl border border-white/10 bg-white/[0.04] backdrop-blur-xl p-7 md:p-9 flex flex-col justify-center">
         <div className="inline-flex items-center gap-2 self-start rounded-full border border-cyan-300/30 bg-cyan-500/10 px-3 py-1 text-[11px] tracking-[0.2em] text-cyan-300 mb-4">
-          <Icon className="h-3.5 w-3.5" /> {info.badge}
+          <Icon className="h-3.5 w-3.5" /> {t(`properties.tabIntros.${key}.badge`)}
         </div>
-        <h1 className="text-3xl md:text-4xl font-bold mb-3">{info.title}</h1>
-        <p className="text-slate-300 mb-4">{info.content}</p>
+        <h1 className="text-3xl md:text-4xl font-bold mb-3">{t(`properties.tabIntros.${key}.title`)}</h1>
+        <p className="text-slate-300 mb-4">{t(`properties.tabIntros.${key}.content`)}</p>
         <ul className="space-y-2 text-sm text-slate-300">
-          <li className="flex gap-2"><span className="text-cyan-300 font-semibold">Details:</span> {info.details}</li>
-          <li className="flex gap-2"><span className="text-amber-300 font-semibold">Objective:</span> {info.objective}</li>
+          <li className="flex gap-2"><span className="text-cyan-300 font-semibold">{t("properties.tabIntros.detailsLabel")}</span> {t(`properties.tabIntros.${key}.details`)}</li>
+          <li className="flex gap-2"><span className="text-amber-300 font-semibold">{t("properties.tabIntros.objectiveLabel")}</span> {t(`properties.tabIntros.${key}.objective`)}</li>
         </ul>
       </div>
       <div className="md:col-span-2 relative rounded-3xl overflow-hidden border border-white/10 min-h-[240px] shadow-[0_15px_60px_-20px_rgba(34,211,238,0.45)]">
         <img
-          src={info.image}
-          alt={info.title}
+          src={meta.image}
+          alt={t(`properties.tabIntros.${key}.title`)}
           loading="lazy"
           className="absolute inset-0 h-full w-full object-cover"
         />
@@ -520,8 +471,7 @@ function TabIntro({ tab }: { tab: string }) {
 
 const INVEST_DEALS = [
   {
-    name: "Marina Tower — Off-plan",
-    location: "New Alamein, North Coast",
+    key: "marina",
     roi: "14% / yr",
     plan: "8 years · 5% down",
     growth: "+32% projected (3 yr)",
@@ -529,8 +479,7 @@ const INVEST_DEALS = [
       "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1400&auto=format&fit=crop",
   },
   {
-    name: "Capital Business Hub",
-    location: "New Administrative Capital",
+    key: "capital",
     roi: "11% / yr",
     plan: "6 years · 10% down",
     growth: "+24% projected (3 yr)",
@@ -538,8 +487,7 @@ const INVEST_DEALS = [
       "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1400&auto=format&fit=crop",
   },
   {
-    name: "Sheikh Zayed Office Park",
-    location: "Sheikh Zayed, Giza",
+    key: "zayed",
     roi: "9% / yr",
     plan: "5 years · 15% down",
     growth: "+18% projected (3 yr)",
@@ -549,34 +497,35 @@ const INVEST_DEALS = [
 ];
 
 function InvestPanel() {
+  const { t } = useTranslation("listings");
   return (
     <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-3 mb-8">
       {INVEST_DEALS.map((d) => (
         <article
-          key={d.name}
+          key={d.key}
           className="group rounded-3xl border border-white/10 bg-white/[0.04] backdrop-blur-xl overflow-hidden hover:border-amber-300/40 hover:-translate-y-1 transition-all duration-300 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.7)]"
         >
           <div className="relative aspect-[16/10] overflow-hidden">
-            <img src={d.image} alt={d.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+            <img src={d.image} alt={t(`properties.invest.deals.${d.key}.name`)} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#060b1a]/95 via-[#060b1a]/20 to-transparent" />
             <div className="absolute top-3 left-3 rounded-full border border-amber-300/40 bg-[#060b1a]/70 backdrop-blur px-3 py-1 text-[11px] text-amber-300 font-semibold flex items-center gap-1">
-              <BadgePercent className="h-3 w-3" /> ROI {d.roi}
+              <BadgePercent className="h-3 w-3" /> {t("properties.invest.roiLabel", { roi: d.roi })}
             </div>
           </div>
           <div className="p-5">
             <div className="flex items-center gap-1.5 text-[11px] tracking-[0.18em] text-cyan-300 mb-1">
-              <Building2 className="h-3.5 w-3.5" /> OFF-PLAN
+              <Building2 className="h-3.5 w-3.5" /> {t("properties.invest.offPlan")}
             </div>
-            <h3 className="text-lg font-semibold mb-1">{d.name}</h3>
+            <h3 className="text-lg font-semibold mb-1">{t(`properties.invest.deals.${d.key}.name`)}</h3>
             <p className="flex items-center gap-1 text-xs text-slate-400 mb-4">
-              <MapPin className="h-3 w-3" /> {d.location}
+              <MapPin className="h-3 w-3" /> {t(`properties.invest.deals.${d.key}.location`)}
             </p>
             <div className="space-y-2 text-xs text-slate-300 border-t border-white/10 pt-3">
               <div className="flex items-center gap-2"><CalendarClock className="h-3.5 w-3.5 text-cyan-300" /> {d.plan}</div>
               <div className="flex items-center gap-2"><TrendingUp className="h-3.5 w-3.5 text-emerald-300" /> {d.growth}</div>
             </div>
             <button className="mt-4 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-900 text-sm font-semibold h-10 transition">
-              Request investment memo <ArrowRight className="h-4 w-4" />
+              {t("properties.invest.requestMemo")} <ArrowRight className="h-4 w-4" />
             </button>
           </div>
         </article>
@@ -587,41 +536,39 @@ function InvestPanel() {
 
 const VR_TOURS = [
   {
-    name: "Penthouse — Marina Tower",
-    rooms: "5 rooms · 320m²",
+    key: "penthouse",
     image:
       "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1400&auto=format&fit=crop",
   },
   {
-    name: "Smart Villa — Sheikh Zayed",
-    rooms: "4 rooms · 410m²",
+    key: "villa",
     image:
       "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1400&auto=format&fit=crop",
   },
   {
-    name: "Loft — New Capital",
-    rooms: "2 rooms · 145m²",
+    key: "loft",
     image:
       "https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=1400&auto=format&fit=crop",
   },
 ];
 
 function VRPanel() {
+  const { t } = useTranslation("listings");
   return (
     <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-3 mb-8">
-      {VR_TOURS.map((t) => (
+      {VR_TOURS.map((tour) => (
         <article
-          key={t.name}
+          key={tour.key}
           className="group relative rounded-3xl border border-white/10 bg-white/[0.04] backdrop-blur-xl overflow-hidden hover:border-cyan-400/50 hover:-translate-y-1 transition-all duration-300 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.7)]"
         >
           <div className="relative aspect-[4/3] overflow-hidden">
-            <img src={t.image} alt={t.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+            <img src={tour.image} alt={t(`properties.vr.tours.${tour.key}.name`)} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#060b1a]/95 via-[#060b1a]/30 to-transparent" />
             <div className="absolute top-3 left-3 rounded-full border border-cyan-300/40 bg-[#060b1a]/70 backdrop-blur px-3 py-1 text-[11px] text-cyan-300 font-semibold flex items-center gap-1">
-              <Compass className="h-3 w-3" /> 360° VR
+              <Compass className="h-3 w-3" /> {t("properties.vr.badge")}
             </div>
             <button
-              aria-label="Play VR tour"
+              aria-label={t("properties.vr.playAria")}
               className="absolute inset-0 m-auto h-16 w-16 rounded-full bg-cyan-500/90 hover:bg-cyan-400 text-slate-900 flex items-center justify-center shadow-[0_10px_40px_-8px_rgba(34,211,238,0.8)] transition group-hover:scale-110"
             >
               <PlayCircle className="h-8 w-8" />
@@ -629,11 +576,11 @@ function VRPanel() {
           </div>
           <div className="p-5 flex items-center justify-between">
             <div>
-              <h3 className="text-base font-semibold">{t.name}</h3>
-              <p className="text-xs text-slate-400 mt-0.5">{t.rooms}</p>
+              <h3 className="text-base font-semibold">{t(`properties.vr.tours.${tour.key}.name`)}</h3>
+              <p className="text-xs text-slate-400 mt-0.5">{t(`properties.vr.tours.${tour.key}.rooms`)}</p>
             </div>
             <span className="inline-flex items-center gap-1.5 rounded-lg bg-cyan-500/90 hover:bg-cyan-400 text-slate-900 text-xs font-semibold px-3 py-2 transition">
-              <Glasses className="h-3.5 w-3.5" /> Enter
+              <Glasses className="h-3.5 w-3.5" /> {t("properties.vr.enter")}
             </span>
           </div>
         </article>

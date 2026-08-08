@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
+import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
@@ -18,55 +19,7 @@ import {
   Calendar, Video, MapPin, Heart, Sparkles, Settings2, Sun, Moon, Languages, LogOut, LogIn, Settings,
 } from "lucide-react";
 
-type Dict = Record<string, string>;
-const t: Record<"en" | "ar", Dict> = {
-  en: {
-    open: "Profile & Settings",
-    title: "Profile & Settings",
-    desc: "Manage your account, tours and preferences.",
-    signInTitle: "You're signed out",
-    signInDesc: "Sign in to manage your profile, saved listings and tour bookings.",
-    login: "Login", signup: "Sign up",
-    settings: "Profile Settings",
-    fullName: "Full Name", email: "Email", phone: "Phone", changePhoto: "Change Photo",
-    save: "Save Changes", saving: "Saving…",
-    prefs: "Preferences", theme: "Theme", language: "Language", light: "Light", dark: "Dark",
-    consult: "Consultation Tracker", consultDesc: "Expert advice within 24 hours.",
-    noConsult: "No requests yet.", bookConsult: "Book a free consultation →",
-    ai: "AI Matching", aiDesc: "Smart valuation for your budget & style.",
-    noAi: "Set preferences to see matches.",
-    tours: "Scheduled Tours", noTours: "No tours scheduled.", browse: "Browse listings →",
-    saved: "Saved Listings", noSaved: "No saved properties yet.",
-    signOut: "Sign out",
-    pending: "Pending", processing: "Processing", assigned: "Expert Assigned",
-    left: "left", due: "Due",
-    match: "100% Match for Your Style & Budget",
-    virtual: "Virtual 360°", physical: "Physical",
-  },
-  ar: {
-    open: "الملف الشخصي والإعدادات",
-    title: "الملف الشخصي والإعدادات",
-    desc: "إدارة حسابك وجولاتك وتفضيلاتك.",
-    signInTitle: "أنت غير مسجّل الدخول",
-    signInDesc: "سجّل الدخول لإدارة ملفك الشخصي والعقارات المحفوظة وحجوزات الجولات.",
-    login: "تسجيل الدخول", signup: "إنشاء حساب",
-    settings: "إعدادات الملف الشخصي",
-    fullName: "الاسم الكامل", email: "البريد الإلكتروني", phone: "رقم الهاتف", changePhoto: "تغيير الصورة",
-    save: "حفظ التغييرات", saving: "جارٍ الحفظ…",
-    prefs: "التفضيلات", theme: "المظهر", language: "اللغة", light: "فاتح", dark: "داكن",
-    consult: "متابعة الاستشارة", consultDesc: "استشارة خبير خلال 24 ساعة.",
-    noConsult: "لا توجد طلبات بعد.", bookConsult: "احجز استشارة مجانية →",
-    ai: "المطابقة الذكية", aiDesc: "تقييم ذكي حسب ميزانيتك وذوقك.",
-    noAi: "اضبط تفضيلاتك لعرض التوصيات.",
-    tours: "الجولات المجدولة", noTours: "لا توجد جولات مجدولة.", browse: "تصفح العقارات →",
-    saved: "العقارات المحفوظة", noSaved: "لا توجد عقارات محفوظة.",
-    signOut: "تسجيل الخروج",
-    pending: "قيد الانتظار", processing: "قيد المعالجة", assigned: "تم تعيين خبير",
-    left: "متبقٍ", due: "مستحق",
-    match: "مطابقة 100% لذوقك وميزانيتك",
-    virtual: "افتراضية 360°", physical: "حضورية",
-  },
-};
+type TFn = (key: string) => string;
 
 const profileSchema = z.object({
   full_name: z.string().trim().min(2).max(100),
@@ -74,11 +27,12 @@ const profileSchema = z.object({
 });
 
 export function ProfilePanel() {
+  const { t } = useTranslation("common");
   const { user, signOut } = useAuth();
   const { theme, toggle: toggleTheme } = useTheme();
   const { lang, toggle: toggleLang, dir } = useLanguage();
   const [openState, setOpenState] = useState(false);
-  const tr = t[lang];
+  const tp = (key: string) => t(`profilePanel.${key}`);
   const side = dir === "rtl" ? "left" : "right";
 
   return (
@@ -87,7 +41,7 @@ export function ProfilePanel() {
         <Button
           variant="brand"
           size="icon"
-          aria-label={tr.open}
+          aria-label={tp("open")}
           className={`fixed bottom-6 z-40 h-12 w-12 rounded-full shadow-lg ${dir === "rtl" ? "left-6" : "right-6"}`}
         >
           <Settings className="h-5 w-5" />
@@ -96,13 +50,13 @@ export function ProfilePanel() {
       <SheetContent side={side} className="w-full sm:max-w-md md:max-w-lg overflow-y-auto p-0">
         <div className="p-5 border-b sticky top-0 bg-background/95 backdrop-blur z-10">
           <SheetHeader className="text-start">
-            <SheetTitle className="flex items-center gap-2"><Settings2 className="h-5 w-5" />{tr.title}</SheetTitle>
-            <SheetDescription>{tr.desc}</SheetDescription>
+            <SheetTitle className="flex items-center gap-2"><Settings2 className="h-5 w-5" />{tp("title")}</SheetTitle>
+            <SheetDescription>{tp("desc")}</SheetDescription>
           </SheetHeader>
           <div className="mt-3 flex items-center gap-2">
             <Button variant="outline" size="sm" onClick={toggleTheme} className="gap-2">
               {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-              {theme === "dark" ? tr.light : tr.dark}
+              {theme === "dark" ? tp("light") : tp("dark")}
             </Button>
             <Button variant="outline" size="sm" onClick={toggleLang} className="gap-2">
               <Languages className="h-4 w-4" /> {lang === "en" ? "العربية" : "English"}
@@ -111,21 +65,21 @@ export function ProfilePanel() {
         </div>
 
         {!user ? (
-          <SignedOut tr={tr} onNav={() => setOpenState(false)} />
+          <SignedOut tp={tp} onNav={() => setOpenState(false)} />
         ) : (
           <div className="p-5 space-y-6">
-            <SettingsForm tr={tr} />
+            <SettingsForm tp={tp} />
             <Separator />
-            <ConsultationTracker tr={tr} userId={user.id} userEmail={user.email ?? ""} onNav={() => setOpenState(false)} />
+            <ConsultationTracker tp={tp} userId={user.id} userEmail={user.email ?? ""} onNav={() => setOpenState(false)} />
             <Separator />
-            <AIMatching tr={tr} userId={user.id} onNav={() => setOpenState(false)} />
+            <AIMatching tp={tp} userId={user.id} onNav={() => setOpenState(false)} />
             <Separator />
-            <ScheduledTours tr={tr} userId={user.id} onNav={() => setOpenState(false)} />
+            <ScheduledTours tp={tp} userId={user.id} onNav={() => setOpenState(false)} />
             <Separator />
-            <SavedListings tr={tr} userId={user.id} onNav={() => setOpenState(false)} />
+            <SavedListings tp={tp} userId={user.id} onNav={() => setOpenState(false)} />
             <Separator />
             <Button variant="outline" className="w-full gap-2" onClick={() => { signOut(); setOpenState(false); }}>
-              <LogOut className="h-4 w-4" /> {tr.signOut}
+              <LogOut className="h-4 w-4" /> {tp("signOut")}
             </Button>
           </div>
         )}
@@ -134,23 +88,23 @@ export function ProfilePanel() {
   );
 }
 
-function SignedOut({ tr, onNav }: { tr: typeof t.en; onNav: () => void }) {
+function SignedOut({ tp, onNav }: { tp: TFn; onNav: () => void }) {
   return (
     <div className="p-6 space-y-4">
       <div className="rounded-lg border border-dashed p-6 text-center">
         <UserIcon className="h-10 w-10 mx-auto text-muted-foreground" />
-        <h3 className="mt-3 font-semibold">{tr.signInTitle}</h3>
-        <p className="mt-1 text-sm text-muted-foreground">{tr.signInDesc}</p>
+        <h3 className="mt-3 font-semibold">{tp("signInTitle")}</h3>
+        <p className="mt-1 text-sm text-muted-foreground">{tp("signInDesc")}</p>
         <div className="mt-4 flex gap-2 justify-center">
-          <Button asChild variant="outline" onClick={onNav}><Link to="/auth"><LogIn className="h-4 w-4" /> {tr.login}</Link></Button>
-          <Button asChild variant="brand" onClick={onNav}><Link to="/auth" search={{ mode: "signup" }}>{tr.signup}</Link></Button>
+          <Button asChild variant="outline" onClick={onNav}><Link to="/auth"><LogIn className="h-4 w-4" /> {tp("login")}</Link></Button>
+          <Button asChild variant="brand" onClick={onNav}><Link to="/auth" search={{ mode: "signup" }}>{tp("signup")}</Link></Button>
         </div>
       </div>
     </div>
   );
 }
 
-function SettingsForm({ tr }: { tr: typeof t.en }) {
+function SettingsForm({ tp }: { tp: TFn }) {
   const { user } = useAuth();
   const [profile, setProfile] = useState<any>(null);
   const [form, setForm] = useState({ full_name: "", phone: "" });
@@ -205,7 +159,7 @@ function SettingsForm({ tr }: { tr: typeof t.en }) {
 
   return (
     <section>
-      <h3 className="font-semibold mb-3 flex items-center gap-2"><Settings2 className="h-4 w-4" /> {tr.settings}</h3>
+      <h3 className="font-semibold mb-3 flex items-center gap-2"><Settings2 className="h-4 w-4" /> {tp("settings")}</h3>
       <form onSubmit={onSave} className="space-y-4">
         <div className="flex items-center gap-4">
           <Avatar className="h-20 w-20 ring-2 ring-border">
@@ -215,48 +169,48 @@ function SettingsForm({ tr }: { tr: typeof t.en }) {
           <div>
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={onAvatar} />
             <Button type="button" variant="outline" size="sm" onClick={() => fileRef.current?.click()} disabled={uploading}>
-              {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />} {tr.changePhoto}
+              {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />} {tp("changePhoto")}
             </Button>
           </div>
         </div>
         <div>
-          <Label><UserIcon className="inline h-3.5 w-3.5 me-1" /> {tr.fullName}</Label>
+          <Label><UserIcon className="inline h-3.5 w-3.5 me-1" /> {tp("fullName")}</Label>
           <Input value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} />
         </div>
         <div>
-          <Label><Mail className="inline h-3.5 w-3.5 me-1" /> {tr.email}</Label>
+          <Label><Mail className="inline h-3.5 w-3.5 me-1" /> {tp("email")}</Label>
           <Input value={user.email ?? ""} disabled />
         </div>
         <div>
-          <Label><Phone className="inline h-3.5 w-3.5 me-1" /> {tr.phone}</Label>
+          <Label><Phone className="inline h-3.5 w-3.5 me-1" /> {tp("phone")}</Label>
           <Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="+20 111 639 205" />
         </div>
         <Button type="submit" variant="brand" className="w-full" disabled={saving}>
-          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null} {saving ? tr.saving : tr.save}
+          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null} {saving ? tp("saving") : tp("save")}
         </Button>
       </form>
     </section>
   );
 }
 
-function ConsultationTracker({ tr, userId, userEmail, onNav }: { tr: typeof t.en; userId: string; userEmail: string; onNav: () => void }) {
+function ConsultationTracker({ tp, userId, userEmail, onNav }: { tp: TFn; userId: string; userEmail: string; onNav: () => void }) {
   const [items, setItems] = useState<any[]>([]);
   useEffect(() => {
     supabase.from("consultations").select("*").or(`user_id.eq.${userId},email.eq.${userEmail}`)
       .order("created_at", { ascending: false }).limit(3).then(({ data }) => setItems(data ?? []));
   }, [userId, userEmail]);
   const badge = (s: string) => {
-    if (s === "assigned" || s === "expert_assigned") return <Badge className="bg-secondary text-secondary-foreground"><UserCheck className="h-3 w-3 me-1" />{tr.assigned}</Badge>;
-    if (s === "in_progress" || s === "processing") return <Badge className="bg-accent text-accent-foreground"><Settings2 className="h-3 w-3 me-1" />{tr.processing}</Badge>;
-    return <Badge variant="secondary"><Clock className="h-3 w-3 me-1" />{tr.pending}</Badge>;
+    if (s === "assigned" || s === "expert_assigned") return <Badge className="bg-secondary text-secondary-foreground"><UserCheck className="h-3 w-3 me-1" />{tp("assigned")}</Badge>;
+    if (s === "in_progress" || s === "processing") return <Badge className="bg-accent text-accent-foreground"><Settings2 className="h-3 w-3 me-1" />{tp("processing")}</Badge>;
+    return <Badge variant="secondary"><Clock className="h-3 w-3 me-1" />{tp("pending")}</Badge>;
   };
   return (
     <section>
-      <h3 className="font-semibold mb-1 flex items-center gap-2"><Clock className="h-4 w-4 text-secondary" /> {tr.consult}</h3>
-      <p className="text-xs text-muted-foreground mb-3">{tr.consultDesc}</p>
+      <h3 className="font-semibold mb-1 flex items-center gap-2"><Clock className="h-4 w-4 text-secondary" /> {tp("consult")}</h3>
+      <p className="text-xs text-muted-foreground mb-3">{tp("consultDesc")}</p>
       {items.length === 0 ? (
         <div className="rounded-lg border border-dashed p-4 text-center text-sm text-muted-foreground">
-          {tr.noConsult} <Link to="/consultation" onClick={onNav} className="text-secondary font-medium">{tr.bookConsult}</Link>
+          {tp("noConsult")} <Link to="/consultation" onClick={onNav} className="text-secondary font-medium">{tp("bookConsult")}</Link>
         </div>
       ) : items.map((c) => {
         const created = new Date(c.created_at).getTime();
@@ -265,13 +219,13 @@ function ConsultationTracker({ tr, userId, userEmail, onNav }: { tr: typeof t.en
         return (
           <div key={c.id} className="rounded-lg border p-3 mb-2 flex items-center justify-between gap-2">
             <div className="min-w-0">
-              <div className="text-sm font-medium truncate">{c.project_type || "Consultation"}</div>
+              <div className="text-sm font-medium truncate">{c.project_type || tp("consultationFallback")}</div>
               <div className="text-xs text-muted-foreground truncate">{c.message}</div>
             </div>
             <div className="flex flex-col items-end gap-1 shrink-0">
               {badge(c.status)}
               <span className="text-[10px] font-mono text-muted-foreground">
-                {rem > 0 ? `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")} ${tr.left}` : tr.due}
+                {rem > 0 ? `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")} ${tp("left")}` : tp("due")}
               </span>
             </div>
           </div>
@@ -281,7 +235,7 @@ function ConsultationTracker({ tr, userId, userEmail, onNav }: { tr: typeof t.en
   );
 }
 
-function AIMatching({ tr, userId, onNav }: { tr: typeof t.en; userId: string; onNav: () => void }) {
+function AIMatching({ tp, userId, onNav }: { tp: TFn; userId: string; onNav: () => void }) {
   const [items, setItems] = useState<any[]>([]);
   useEffect(() => {
     supabase.from("profiles").select("preferred_property_type,budget_min,budget_max").eq("id", userId).maybeSingle().then(({ data }: any) => {
@@ -294,10 +248,10 @@ function AIMatching({ tr, userId, onNav }: { tr: typeof t.en; userId: string; on
   }, [userId]);
   return (
     <section>
-      <h3 className="font-semibold mb-1 flex items-center gap-2"><Sparkles className="h-4 w-4 text-accent" /> {tr.ai}</h3>
-      <p className="text-xs text-muted-foreground mb-3">{tr.aiDesc}</p>
+      <h3 className="font-semibold mb-1 flex items-center gap-2"><Sparkles className="h-4 w-4 text-accent" /> {tp("ai")}</h3>
+      <p className="text-xs text-muted-foreground mb-3">{tp("aiDesc")}</p>
       {items.length === 0 ? (
-        <div className="rounded-lg border border-dashed p-4 text-center text-sm text-muted-foreground">{tr.noAi}</div>
+        <div className="rounded-lg border border-dashed p-4 text-center text-sm text-muted-foreground">{tp("noAi")}</div>
       ) : items.map((p) => (
         <Link key={p.id} to="/properties/$id" params={{ id: p.id }} onClick={onNav}
           className="flex items-center gap-3 rounded-lg border p-2 mb-2 hover:bg-muted/50">
@@ -305,7 +259,7 @@ function AIMatching({ tr, userId, onNav }: { tr: typeof t.en; userId: string; on
           <div className="min-w-0 flex-1">
             <div className="text-sm font-medium truncate">{p.title}</div>
             <Badge variant="outline" className="mt-0.5 text-[9px] border-secondary text-secondary">
-              <CheckCircle2 className="h-2.5 w-2.5 me-1" /> {tr.match}
+              <CheckCircle2 className="h-2.5 w-2.5 me-1" /> {tp("match")}
             </Badge>
           </div>
           <div className="text-xs font-semibold shrink-0">{p.currency} {Number(p.price).toLocaleString()}</div>
@@ -315,7 +269,7 @@ function AIMatching({ tr, userId, onNav }: { tr: typeof t.en; userId: string; on
   );
 }
 
-function ScheduledTours({ tr, userId, onNav }: { tr: typeof t.en; userId: string; onNav: () => void }) {
+function ScheduledTours({ tp, userId, onNav }: { tp: TFn; userId: string; onNav: () => void }) {
   const [items, setItems] = useState<any[]>([]);
   useEffect(() => {
     ((supabase as any).from("property_tours")).select("*").eq("user_id", userId)
@@ -324,10 +278,10 @@ function ScheduledTours({ tr, userId, onNav }: { tr: typeof t.en; userId: string
   }, [userId]);
   return (
     <section>
-      <h3 className="font-semibold mb-3 flex items-center gap-2"><Calendar className="h-4 w-4 text-secondary" /> {tr.tours}</h3>
+      <h3 className="font-semibold mb-3 flex items-center gap-2"><Calendar className="h-4 w-4 text-secondary" /> {tp("tours")}</h3>
       {items.length === 0 ? (
         <div className="rounded-lg border border-dashed p-4 text-center text-sm text-muted-foreground">
-          {tr.noTours} <Link to="/properties" onClick={onNav} className="text-secondary font-medium">{tr.browse}</Link>
+          {tp("noTours")} <Link to="/properties" onClick={onNav} className="text-secondary font-medium">{tp("browse")}</Link>
         </div>
       ) : items.map((t2) => {
         const d = new Date(t2.scheduled_at);
@@ -340,7 +294,7 @@ function ScheduledTours({ tr, userId, onNav }: { tr: typeof t.en; userId: string
               <div className="text-sm font-medium truncate">{t2.property_name}</div>
               <div className="text-xs text-muted-foreground">{d.toLocaleDateString()} • {d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</div>
             </div>
-            <Badge variant="outline" className="text-[10px]">{t2.tour_type === "virtual" ? tr.virtual : tr.physical}</Badge>
+            <Badge variant="outline" className="text-[10px]">{t2.tour_type === "virtual" ? tp("virtual") : tp("physical")}</Badge>
           </div>
         );
       })}
@@ -348,7 +302,7 @@ function ScheduledTours({ tr, userId, onNav }: { tr: typeof t.en; userId: string
   );
 }
 
-function SavedListings({ tr, userId, onNav }: { tr: typeof t.en; userId: string; onNav: () => void }) {
+function SavedListings({ tp, userId, onNav }: { tp: TFn; userId: string; onNav: () => void }) {
   const [items, setItems] = useState<any[]>([]);
   useEffect(() => {
     supabase.from("favorites").select("property_id, properties(*)").eq("user_id", userId).limit(4)
@@ -356,9 +310,9 @@ function SavedListings({ tr, userId, onNav }: { tr: typeof t.en; userId: string;
   }, [userId]);
   return (
     <section>
-      <h3 className="font-semibold mb-3 flex items-center gap-2"><Heart className="h-4 w-4 text-destructive" /> {tr.saved}</h3>
+      <h3 className="font-semibold mb-3 flex items-center gap-2"><Heart className="h-4 w-4 text-destructive" /> {tp("saved")}</h3>
       {items.length === 0 ? (
-        <div className="rounded-lg border border-dashed p-4 text-center text-sm text-muted-foreground">{tr.noSaved}</div>
+        <div className="rounded-lg border border-dashed p-4 text-center text-sm text-muted-foreground">{tp("noSaved")}</div>
       ) : (
         <div className="grid grid-cols-2 gap-2">
           {items.map((p) => (

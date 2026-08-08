@@ -6,6 +6,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { LogOut, Mail, Phone, User as UserIcon, Calendar, Shield } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
@@ -39,6 +40,7 @@ type ProfileRow = {
 };
 
 function DashboardPage() {
+  const { t } = useTranslation("account");
   const { user, signOut } = useAuth();
   const [profile, setProfile] = useState<ProfileRow | null>(null);
   const [loading, setLoading] = useState(true);
@@ -59,10 +61,10 @@ function DashboardPage() {
 
   const handleSignOut = async () => {
     await signOut();
-    toast.success("Signed out");
+    toast.success(t("dashboard.signedOutToast"));
   };
 
-  const name = profile?.full_name || profile?.display_name || user?.email?.split("@")[0] || "Guest";
+  const name = profile?.full_name || profile?.display_name || user?.email?.split("@")[0] || t("dashboard.guest");
   const image = profile?.profile_image || profile?.avatar_url;
   const initials = name.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase();
 
@@ -83,22 +85,22 @@ function DashboardPage() {
             )}
           </div>
           <Button variant="outline" onClick={handleSignOut} className="gap-2">
-            <LogOut className="h-4 w-4" /> Sign out
+            <LogOut className="h-4 w-4" /> {t("dashboard.signOut")}
           </Button>
         </div>
 
         <div className="grid gap-4 p-8 sm:grid-cols-2">
-          <InfoRow icon={<UserIcon className="h-4 w-4" />} label="Full name" value={profile?.full_name || "—"} loading={loading} />
-          <InfoRow icon={<Mail className="h-4 w-4" />} label="Email" value={profile?.email || user?.email || "—"} loading={loading} />
-          <InfoRow icon={<Phone className="h-4 w-4" />} label="Phone" value={profile?.phone || "—"} loading={loading} />
-          <InfoRow icon={<Shield className="h-4 w-4" />} label="Account type" value={profile?.account_type || "Customer"} loading={loading} />
-          <InfoRow icon={<Calendar className="h-4 w-4" />} label="Joined" value={profile?.created_at ? new Date(profile.created_at).toLocaleDateString() : "—"} loading={loading} />
-          <InfoRow icon={<UserIcon className="h-4 w-4" />} label="Location" value={[profile?.city, profile?.country].filter(Boolean).join(", ") || "—"} loading={loading} />
+          <InfoRow icon={<UserIcon className="h-4 w-4" />} label={t("dashboard.fullName")} value={profile?.full_name || t("dashboard.notAvailable")} loading={loading} />
+          <InfoRow icon={<Mail className="h-4 w-4" />} label={t("dashboard.email")} value={profile?.email || user?.email || t("dashboard.notAvailable")} loading={loading} />
+          <InfoRow icon={<Phone className="h-4 w-4" />} label={t("dashboard.phone")} value={profile?.phone || t("dashboard.notAvailable")} loading={loading} />
+          <InfoRow icon={<Shield className="h-4 w-4" />} label={t("dashboard.accountType")} value={profile?.account_type || t("dashboard.customer")} loading={loading} />
+          <InfoRow icon={<Calendar className="h-4 w-4" />} label={t("dashboard.joined")} value={profile?.created_at ? new Date(profile.created_at).toLocaleDateString() : t("dashboard.notAvailable")} loading={loading} />
+          <InfoRow icon={<UserIcon className="h-4 w-4" />} label={t("dashboard.location")} value={[profile?.city, profile?.country].filter(Boolean).join(", ") || t("dashboard.notAvailable")} loading={loading} />
         </div>
 
         {profile?.bio && (
           <div className="px-8 pb-8">
-            <h2 className="text-sm font-semibold text-muted-foreground mb-2">Bio</h2>
+            <h2 className="text-sm font-semibold text-muted-foreground mb-2">{t("dashboard.bio")}</h2>
             <p className="text-sm leading-relaxed">{profile.bio}</p>
           </div>
         )}

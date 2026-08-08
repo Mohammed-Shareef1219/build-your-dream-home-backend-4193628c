@@ -14,12 +14,17 @@ import {
   User as UserIcon, Mail, Phone, Camera, Loader2, Clock, CheckCircle2, UserCheck,
   Calendar, Video, MapPin, Heart, Sparkles, Settings2,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/profile")({ component: ProfilePage });
 
+const PROFILE_VALIDATION = {
+  minChars: "profile.validation.minChars",
+  phoneRequired: "profile.validation.phoneRequired",
+};
 const profileSchema = z.object({
-  full_name: z.string().trim().min(2, "Min 2 chars").max(100),
-  phone: z.string().trim().min(6, "Phone required").max(30),
+  full_name: z.string().trim().min(2, PROFILE_VALIDATION.minChars).max(100),
+  phone: z.string().trim().min(6, PROFILE_VALIDATION.phoneRequired).max(30),
   preferred_property_type: z.string().max(50).optional(),
   budget_min: z.number().min(0).optional().nullable(),
   budget_max: z.number().min(0).optional().nullable(),
@@ -37,6 +42,7 @@ type ProfileRow = {
 };
 
 function ProfilePage() {
+  const { t } = useTranslation("account");
   const { user, loading } = useAuth();
   const navigate = useNavigate();
 
@@ -83,7 +89,7 @@ function ProfilePage() {
       budget_min: form.budget_min ? Number(form.budget_min) : null,
       budget_max: form.budget_max ? Number(form.budget_max) : null,
     });
-    if (!parsed.success) return toast.error(parsed.error.issues[0].message);
+    if (!parsed.success) return toast.error(t(parsed.error.issues[0].message));
     setSaving(true);
     const { error } = await (supabase.from("profiles") as any)
       .update({
@@ -97,14 +103,14 @@ function ProfilePage() {
       .eq("id", user.id);
     setSaving(false);
     if (error) return toast.error(error.message);
-    toast.success("Profile saved");
+    toast.success(t("profile.toasts.profileSaved"));
     setProfile((p) => p ? { ...p, ...parsed.data, display_name: parsed.data.full_name } as ProfileRow : p);
   };
 
   const onAvatar = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !user) return;
-    if (file.size > 4 * 1024 * 1024) return toast.error("Max 4MB");
+    if (file.size > 4 * 1024 * 1024) return toast.error(t("profile.toasts.maxSize"));
     setUploading(true);
     const ext = file.name.split(".").pop() || "jpg";
     const path = `${user.id}/avatar-${Date.now()}.${ext}`;
@@ -115,10 +121,10 @@ function ProfilePage() {
     await supabase.from("profiles").update({ avatar_url: url }).eq("id", user.id);
     setProfile((p) => p ? { ...p, avatar_url: url } : p);
     setUploading(false);
-    toast.success("Photo updated");
+    toast.success(t("profile.toasts.photoUpdated"));
   };
 
-  if (loading || !user) return <div className="mx-auto max-w-7xl px-4 py-16">Loading…</div>;
+  if (loading || !user) return <div className="mx-auto max-w-7xl px-4 py-16">{t("profile.loading")}</div>;
 
   const initials = (form.full_name || user.email || "U")
     .split(/[\s@]+/).filter(Boolean).slice(0, 2).map((s) => s[0]?.toUpperCase()).join("");
@@ -128,15 +134,15 @@ function ProfilePage() {
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 space-y-10">
       <header className="space-y-2">
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight">My Profile</h1>
-        <p className="text-muted-foreground">Manage your account, tours, saved listings and preferences.</p>
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight">{t("profile.title")}</h1>
+        <p className="text-muted-foreground">{t("profile.subtitle")}</p>
       </header>
 
       {/* Profile Settings */}
       <Card className="overflow-hidden">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2"><Settings2 className="h-5 w-5" /> Profile Settings</CardTitle>
-          <CardDescription>Information used to contact you about tours, alerts and consultations.</CardDescription>
+          <CardTitle className="flex items-center gap-2"><Settings2 className="h-5 w-5" /> {t("profile.settings.heading")}</CardTitle>
+          <CardDescription>{t("profile.settings.description")}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={onSave} className="grid gap-8 md:grid-cols-[200px_1fr]">
@@ -148,48 +154,48 @@ function ProfilePage() {
               <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={onAvatar} />
               <Button type="button" variant="outline" size="sm" onClick={() => fileRef.current?.click()} disabled={uploading}>
                 {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
-                Change Photo
+                {t("profile.settings.changePhoto")}
               </Button>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="sm:col-span-2">
-                <Label htmlFor="full_name"><UserIcon className="inline h-3.5 w-3.5 mr-1" /> Full Name</Label>
-                <Input id="full_name" value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} placeholder="Your full name" />
+                <Label htmlFor="full_name"><UserIcon className="inline h-3.5 w-3.5 mr-1" /> {t("profile.settings.fullName")}</Label>
+                <Input id="full_name" value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} placeholder={t("profile.settings.fullNamePlaceholder")} />
               </div>
               <div>
-                <Label htmlFor="email"><Mail className="inline h-3.5 w-3.5 mr-1" /> Email <span className="text-xs text-muted-foreground">(locked)</span></Label>
+                <Label htmlFor="email"><Mail className="inline h-3.5 w-3.5 mr-1" /> {t("profile.settings.email")} <span className="text-xs text-muted-foreground">{t("profile.settings.emailLocked")}</span></Label>
                 <Input id="email" value={user.email ?? ""} disabled />
               </div>
               <div>
-                <Label htmlFor="phone"><Phone className="inline h-3.5 w-3.5 mr-1" /> Phone <span className="text-xs text-secondary">required</span></Label>
-                <Input id="phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="+20 111 639 205" />
+                <Label htmlFor="phone"><Phone className="inline h-3.5 w-3.5 mr-1" /> {t("profile.settings.phone")} <span className="text-xs text-secondary">{t("profile.settings.phoneRequired")}</span></Label>
+                <Input id="phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder={t("profile.settings.phonePlaceholder")} />
               </div>
               <div>
-                <Label htmlFor="ptype">Preferred Property Type</Label>
+                <Label htmlFor="ptype">{t("profile.settings.propertyType")}</Label>
                 <select id="ptype" className="flex h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
                   value={form.preferred_property_type}
                   onChange={(e) => setForm({ ...form, preferred_property_type: e.target.value })}>
-                  <option value="">Any</option>
-                  <option value="villa">Villa</option>
-                  <option value="apartment">Apartment</option>
-                  <option value="duplex">Duplex</option>
-                  <option value="commercial">Commercial</option>
+                  <option value="">{t("profile.settings.propertyTypeAny")}</option>
+                  <option value="villa">{t("profile.settings.propertyTypeVilla")}</option>
+                  <option value="apartment">{t("profile.settings.propertyTypeApartment")}</option>
+                  <option value="duplex">{t("profile.settings.propertyTypeDuplex")}</option>
+                  <option value="commercial">{t("profile.settings.propertyTypeCommercial")}</option>
                 </select>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <Label htmlFor="bmin">Budget Min</Label>
+                  <Label htmlFor="bmin">{t("profile.settings.budgetMin")}</Label>
                   <Input id="bmin" type="number" min="0" value={form.budget_min} onChange={(e) => setForm({ ...form, budget_min: e.target.value })} />
                 </div>
                 <div>
-                  <Label htmlFor="bmax">Budget Max</Label>
+                  <Label htmlFor="bmax">{t("profile.settings.budgetMax")}</Label>
                   <Input id="bmax" type="number" min="0" value={form.budget_max} onChange={(e) => setForm({ ...form, budget_max: e.target.value })} />
                 </div>
               </div>
               <div className="sm:col-span-2 flex justify-end">
                 <Button type="submit" variant="brand" disabled={saving}>
-                  {saving && <Loader2 className="h-4 w-4 animate-spin" />} Save Changes
+                  {saving && <Loader2 className="h-4 w-4 animate-spin" />} {t("profile.settings.saveChanges")}
                 </Button>
               </div>
             </div>
@@ -214,6 +220,7 @@ function ProfilePage() {
 
 /* -------- Consultation Tracker -------- */
 function ConsultationTracker({ userId, userEmail }: { userId: string; userEmail: string }) {
+  const { t } = useTranslation("account");
   const [items, setItems] = useState<any[]>([]);
   useEffect(() => {
     supabase.from("consultations").select("*").or(`user_id.eq.${userId},email.eq.${userEmail}`)
@@ -223,22 +230,22 @@ function ConsultationTracker({ userId, userEmail }: { userId: string; userEmail:
 
   const statusBadge = (s: string) => {
     if (s === "assigned" || s === "expert_assigned")
-      return <Badge className="bg-secondary text-secondary-foreground"><UserCheck className="h-3 w-3 mr-1" /> Expert Assigned</Badge>;
+      return <Badge className="bg-secondary text-secondary-foreground"><UserCheck className="h-3 w-3 mr-1" /> {t("profile.consultationTracker.expertAssigned")}</Badge>;
     if (s === "in_progress" || s === "processing")
-      return <Badge className="bg-accent text-accent-foreground"><Settings2 className="h-3 w-3 mr-1" /> Processing</Badge>;
-    return <Badge variant="secondary"><Clock className="h-3 w-3 mr-1" /> Pending</Badge>;
+      return <Badge className="bg-accent text-accent-foreground"><Settings2 className="h-3 w-3 mr-1" /> {t("profile.consultationTracker.processing")}</Badge>;
+    return <Badge variant="secondary"><Clock className="h-3 w-3 mr-1" /> {t("profile.consultationTracker.pending")}</Badge>;
   };
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2"><Clock className="h-5 w-5 text-secondary" /> Fast Consultation Tracker</CardTitle>
-        <CardDescription>Expert advice guaranteed within 24 hours.</CardDescription>
+        <CardTitle className="flex items-center gap-2"><Clock className="h-5 w-5 text-secondary" /> {t("profile.consultationTracker.heading")}</CardTitle>
+        <CardDescription>{t("profile.consultationTracker.description")}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
         {items.length === 0 && (
           <div className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
-            No requests yet. <Link to="/consultation" className="text-secondary font-medium">Book a free consultation →</Link>
+            {t("profile.consultationTracker.empty")} <Link to="/consultation" className="text-secondary font-medium">{t("profile.consultationTracker.bookCta")}</Link>
           </div>
         )}
         {items.map((c) => {
@@ -249,13 +256,13 @@ function ConsultationTracker({ userId, userEmail }: { userId: string; userEmail:
           return (
             <div key={c.id} className="rounded-lg border p-3 flex items-center justify-between gap-3">
               <div className="min-w-0">
-                <div className="font-medium truncate">{c.project_type || "General consultation"}</div>
+                <div className="font-medium truncate">{c.project_type || t("profile.consultationTracker.generalConsultation")}</div>
                 <div className="text-xs text-muted-foreground truncate">{c.message}</div>
               </div>
               <div className="flex flex-col items-end gap-1.5 shrink-0">
                 {statusBadge(c.status)}
                 <span className="text-xs font-mono text-muted-foreground">
-                  {remainingMs > 0 ? `${String(hh).padStart(2,"0")}:${String(mm).padStart(2,"0")} left` : "Due"}
+                  {remainingMs > 0 ? `${String(hh).padStart(2,"0")}:${String(mm).padStart(2,"0")} ${t("profile.consultationTracker.left")}` : t("profile.consultationTracker.due")}
                 </span>
               </div>
             </div>
@@ -268,6 +275,7 @@ function ConsultationTracker({ userId, userEmail }: { userId: string; userEmail:
 
 /* -------- AI Matching Feed -------- */
 function AIMatchingFeed({ budgetMin, budgetMax, type }: { budgetMin: number | null; budgetMax: number | null; type: string | null }) {
+  const { t } = useTranslation("account");
   const [items, setItems] = useState<any[]>([]);
   useEffect(() => {
     let q = supabase.from("properties").select("*").eq("status", "available").limit(4);
@@ -280,13 +288,13 @@ function AIMatchingFeed({ budgetMin, budgetMax, type }: { budgetMin: number | nu
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2"><Sparkles className="h-5 w-5 text-accent" /> AI Matching Feed</CardTitle>
-        <CardDescription>Smart valuation based on your style & budget.</CardDescription>
+        <CardTitle className="flex items-center gap-2"><Sparkles className="h-5 w-5 text-accent" /> {t("profile.aiMatching.heading")}</CardTitle>
+        <CardDescription>{t("profile.aiMatching.description")}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
         {items.length === 0 && (
           <div className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
-            Set your preferences above to see matched listings.
+            {t("profile.aiMatching.empty")}
           </div>
         )}
         {items.map((p) => (
@@ -297,7 +305,7 @@ function AIMatchingFeed({ budgetMin, budgetMax, type }: { budgetMin: number | nu
                 <div className="font-medium truncate">{p.title}</div>
                 <div className="text-xs text-muted-foreground flex items-center gap-1"><MapPin className="h-3 w-3" />{p.location}</div>
                 <Badge variant="outline" className="mt-1 text-[10px] border-secondary text-secondary">
-                  <CheckCircle2 className="h-3 w-3 mr-1" /> 100% Match for Your Style & Budget
+                  <CheckCircle2 className="h-3 w-3 mr-1" /> {t("profile.aiMatching.matchBadge")}
                 </Badge>
               </div>
               <div className="text-sm font-semibold shrink-0">{p.currency} {Number(p.price).toLocaleString()}</div>
@@ -311,6 +319,7 @@ function AIMatchingFeed({ budgetMin, budgetMax, type }: { budgetMin: number | nu
 
 /* -------- Scheduled Tours -------- */
 function ScheduledTours({ userId }: { userId: string }) {
+  const { t } = useTranslation("account");
   const [items, setItems] = useState<any[]>([]);
   useEffect(() => {
     ((supabase as any).from("property_tours")).select("*").eq("user_id", userId)
@@ -321,29 +330,29 @@ function ScheduledTours({ userId }: { userId: string }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2"><Calendar className="h-5 w-5 text-secondary" /> Scheduled Tours</CardTitle>
-        <CardDescription>Upcoming virtual and in-person property visits.</CardDescription>
+        <CardTitle className="flex items-center gap-2"><Calendar className="h-5 w-5 text-secondary" /> {t("profile.tours.heading")}</CardTitle>
+        <CardDescription>{t("profile.tours.description")}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
         {items.length === 0 && (
           <div className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
-            No tours scheduled. <Link to="/properties" className="text-secondary font-medium">Browse listings →</Link>
+            {t("profile.tours.empty")} <Link to="/properties" className="text-secondary font-medium">{t("profile.tours.browseCta")}</Link>
           </div>
         )}
-        {items.map((t) => {
-          const d = new Date(t.scheduled_at);
+        {items.map((tour) => {
+          const d = new Date(tour.scheduled_at);
           return (
-            <div key={t.id} className="rounded-lg border p-3 flex items-center gap-3">
+            <div key={tour.id} className="rounded-lg border p-3 flex items-center gap-3">
               <div className="rounded-md bg-muted p-2">
-                {t.tour_type === "virtual" ? <Video className="h-5 w-5 text-secondary" /> : <MapPin className="h-5 w-5 text-accent" />}
+                {tour.tour_type === "virtual" ? <Video className="h-5 w-5 text-secondary" /> : <MapPin className="h-5 w-5 text-accent" />}
               </div>
               <div className="min-w-0 flex-1">
-                <div className="font-medium truncate">{t.property_name}</div>
+                <div className="font-medium truncate">{tour.property_name}</div>
                 <div className="text-xs text-muted-foreground">
                   {d.toLocaleDateString()} • {d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                 </div>
               </div>
-              <Badge variant="outline">{t.tour_type === "virtual" ? "Virtual 360°" : "Physical"}</Badge>
+              <Badge variant="outline">{tour.tour_type === "virtual" ? t("profile.tours.virtual") : t("profile.tours.physical")}</Badge>
             </div>
           );
         })}
@@ -354,6 +363,7 @@ function ScheduledTours({ userId }: { userId: string }) {
 
 /* -------- Saved Listings -------- */
 function SavedListings({ userId }: { userId: string }) {
+  const { t } = useTranslation("account");
   const [items, setItems] = useState<any[]>([]);
   useEffect(() => {
     supabase.from("favorites").select("property_id, properties(*)").eq("user_id", userId).limit(6)
@@ -364,15 +374,15 @@ function SavedListings({ userId }: { userId: string }) {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
-          <CardTitle className="flex items-center gap-2"><Heart className="h-5 w-5 text-destructive" /> Saved Listings</CardTitle>
-          <CardDescription>Your shortlisted verified properties.</CardDescription>
+          <CardTitle className="flex items-center gap-2"><Heart className="h-5 w-5 text-destructive" /> {t("profile.savedListings.heading")}</CardTitle>
+          <CardDescription>{t("profile.savedListings.description")}</CardDescription>
         </div>
-        <Button variant="ghost" size="sm" asChild><Link to="/favorites">View all</Link></Button>
+        <Button variant="ghost" size="sm" asChild><Link to="/favorites">{t("profile.savedListings.viewAll")}</Link></Button>
       </CardHeader>
       <CardContent>
         {items.length === 0 ? (
           <div className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
-            No saved properties yet.
+            {t("profile.savedListings.empty")}
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-3">

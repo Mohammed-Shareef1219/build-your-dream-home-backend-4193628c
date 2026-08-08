@@ -222,3 +222,11 @@
     display: none;
   }
 }
+
+/* Arabic typography: Cairo is applied whenever the document is in RTL mode */
+html[dir="rtl"] body {
+  font-family: "Cairo", "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+html[dir="rtl"] .font-display {
+  font-family: "Cairo", ui-sans-serif, system-ui, sans-serif;
+}

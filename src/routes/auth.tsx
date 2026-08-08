@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 
 export const Route = createFileRoute("/auth")({
@@ -29,13 +30,18 @@ function AuthPage() {
 
 /* -------------------------- LOGIN -------------------------- */
 
-const loginSchema = z.object({
-  email: z.string().trim().email("Invalid email").max(255),
-  password: z.string().min(6, "Min 6 characters").max(72),
-});
+const useLoginSchema = () => {
+  const { t } = useTranslation("auth");
+  return z.object({
+    email: z.string().trim().email(t("validation.invalidEmail")).max(255),
+    password: z.string().min(6, t("validation.minPassword")).max(72),
+  });
+};
 
 function LoginForm() {
+  const { t } = useTranslation("auth");
   const navigate = useNavigate();
+  const loginSchema = useLoginSchema();
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ email: "", password: "" });
 
@@ -47,7 +53,7 @@ function LoginForm() {
     const { error } = await supabase.auth.signInWithPassword(parsed.data);
     setLoading(false);
     if (error) return toast.error(error.message);
-    toast.success("Welcome back!");
+    toast.success(t("login.welcomeBack"));
   };
 
   const onGoogle = async () => {
@@ -74,7 +80,7 @@ function LoginForm() {
       `}</style>
 
       <div className="w-[380px] max-w-[90%] rounded-xl bg-white/95 backdrop-blur-md border border-white/30 shadow-[0_4px_30px_rgba(0,0,0,0.1)] p-8 text-center">
-        <h1 className="mb-6 text-[28px] font-semibold text-[#2d3748]">Login</h1>
+        <h1 className="mb-6 text-[28px] font-semibold text-[#2d3748]">{t("login.title")}</h1>
 
         <button
           type="button"
@@ -86,18 +92,18 @@ function LoginForm() {
             <path d="M16 6.5L25 14v10.5a1.5 1.5 0 0 1-1.5 1.5h-5v-6h-5v6h-5A1.5 1.5 0 0 1 7 24.5V14l9-7.5z" fill="#f4b73d" />
             <path d="M16 6.5L25 14M16 6.5L7 14" stroke="#0f2740" strokeWidth="1.2" strokeLinecap="round" />
           </svg>
-          Sign in to BuildYourHome
+          {t("login.googleButton")}
         </button>
 
         <div className="my-5 flex items-center gap-4 text-sm text-[#a0aec0]">
           <div className="h-px flex-1 bg-[#e2e8f0]" />
-          <span>or</span>
+          <span>{t("login.or")}</span>
           <div className="h-px flex-1 bg-[#e2e8f0]" />
         </div>
 
         <form onSubmit={onSubmit} className="space-y-5 text-left">
           <div>
-            <label htmlFor="email" className="mb-2 block text-sm font-medium text-[#4a5568]">Email</label>
+            <label htmlFor="email" className="mb-2 block text-sm font-medium text-[#4a5568]">{t("login.emailLabel")}</label>
             <input
               id="email"
               type="email"
@@ -108,7 +114,7 @@ function LoginForm() {
             />
           </div>
           <div>
-            <label htmlFor="password" className="mb-2 block text-sm font-medium text-[#4a5568]">Password</label>
+            <label htmlFor="password" className="mb-2 block text-sm font-medium text-[#4a5568]">{t("login.passwordLabel")}</label>
             <input
               id="password"
               type="password"
@@ -122,9 +128,9 @@ function LoginForm() {
           <div className="flex items-center justify-between text-sm">
             <label className="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" className="h-4 w-4 accent-[#4299e1]" />
-              <span className="text-[#4a5568]">Remember me</span>
+              <span className="text-[#4a5568]">{t("login.rememberMe")}</span>
             </label>
-            <Link to="/forgot-password" className="text-[#4299e1] hover:text-[#3182ce] hover:underline">Forgot password?</Link>
+            <Link to="/forgot-password" className="text-[#4299e1] hover:text-[#3182ce] hover:underline">{t("login.forgotPassword")}</Link>
           </div>
 
           <button
@@ -132,18 +138,18 @@ function LoginForm() {
             disabled={loading}
             className="w-full rounded-lg bg-[#4299e1] px-4 py-3.5 text-base font-medium text-white shadow-[0_2px_5px_rgba(66,153,225,0.2)] transition-all hover:bg-[#3182ce] hover:-translate-y-0.5 hover:shadow-[0_4px_8px_rgba(66,153,225,0.3)] disabled:opacity-50 disabled:hover:transform-none"
           >
-            {loading ? "Please wait..." : "Login"}
+            {loading ? t("login.submitting") : t("login.submit")}
           </button>
         </form>
 
         <div className="mt-5 text-sm text-[#4a5568]">
-          Don't have an account?{" "}
+          {t("login.noAccount")}{" "}
           <button
             type="button"
             onClick={() => navigate({ to: "/auth", search: { mode: "signup" } })}
             className="font-medium text-[#4299e1] hover:text-[#3182ce] hover:underline"
           >
-            Register
+            {t("login.register")}
           </button>
         </div>
       </div>
@@ -197,11 +203,12 @@ const initialData: SignupData = {
 };
 
 function SignupWizard() {
+  const { t } = useTranslation("auth");
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [slide, setSlide] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [fileName, setFileName] = useState("No file chosen");
+  const [fileName, setFileName] = useState(t("signup.step4.noFileChosen"));
   const [data, setData] = useState<SignupData>(initialData);
 
   useEffect(() => {
@@ -214,17 +221,17 @@ function SignupWizard() {
 
   const validateStep = (s: number): string | null => {
     if (s === 1) {
-      if (!data.fullName.trim()) return "Full name is required";
-      if (!/^\S+@\S+\.\S+$/.test(data.email)) return "Valid email is required";
-      if (!data.phone.trim()) return "Phone is required";
+      if (!data.fullName.trim()) return t("signup.validation.fullNameRequired");
+      if (!/^\S+@\S+\.\S+$/.test(data.email)) return t("signup.validation.validEmailRequired");
+      if (!data.phone.trim()) return t("signup.validation.phoneRequired");
     }
     if (s === 2) {
-      if (!data.username.trim()) return "Username is required";
-      if (data.password.length < 6) return "Password must be at least 6 characters";
-      if (data.password !== data.confirmPassword) return "Passwords do not match";
+      if (!data.username.trim()) return t("signup.validation.usernameRequired");
+      if (data.password.length < 6) return t("signup.validation.passwordMinLength");
+      if (data.password !== data.confirmPassword) return t("signup.validation.passwordsDoNotMatch");
     }
     if (s === 3) {
-      if (!data.projectType) return "Select a project type";
+      if (!data.projectType) return t("signup.validation.selectProjectType");
     }
     return null;
   };
@@ -238,7 +245,7 @@ function SignupWizard() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!data.agreeTerms) return toast.error("You must agree to the Terms of Use");
+    if (!data.agreeTerms) return toast.error(t("signup.validation.agreeTermsRequired"));
     setLoading(true);
     const { data: signUpData, error } = await supabase.auth.signUp({
       email: data.email,
@@ -277,7 +284,7 @@ function SignupWizard() {
       }
     }
     setLoading(false);
-    toast.success("Account created successfully.");
+    toast.success(t("signup.accountCreated"));
     navigate({ to: "/" });
   };
 
@@ -309,18 +316,18 @@ function SignupWizard() {
               color: "#f49208",
             }}
           >
-            Welcome BuildYourHome
+            {t("signup.welcomeTitle")}
           </h1>
           <p className="text-lg md:text-xl text-white/90 max-w-md leading-relaxed">
-            We're here to help you build your dream home. Start your journey with us today.
+            {t("signup.welcomeSubtitle")}
           </p>
         </div>
 
         {/* Form card */}
         <div className="bg-white/97 backdrop-blur rounded-xl shadow-elegant border border-border p-6 md:p-8 lg:ml-auto w-full max-w-[650px] text-[#2c3e50]">
           <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-[#2c3e50]">Create New Account</h2>
-            <p className="mt-1 text-[#5a6b7a]">Fill out the form below to create your account</p>
+            <h2 className="text-2xl font-bold text-[#2c3e50]">{t("signup.cardTitle")}</h2>
+            <p className="mt-1 text-[#5a6b7a]">{t("signup.cardSubtitle")}</p>
           </div>
 
           {/* Progress bar */}
@@ -348,119 +355,119 @@ function SignupWizard() {
 
           <form onSubmit={onSubmit} className="space-y-5">
             {step === 1 && (
-              <Section title="Personal Information">
-                <Field label="Full Name">
-                  <Input value={data.fullName} onChange={(e) => update("fullName", e.target.value)} placeholder="Enter your full name" />
+              <Section title={t("signup.step1.title")}>
+                <Field label={t("signup.step1.fullName")}>
+                  <Input value={data.fullName} onChange={(e) => update("fullName", e.target.value)} placeholder={t("signup.step1.fullNamePlaceholder")} />
                 </Field>
-                <Field label="Email Address">
-                  <Input type="email" value={data.email} onChange={(e) => update("email", e.target.value)} placeholder="Enter your email" />
+                <Field label={t("signup.step1.email")}>
+                  <Input type="email" value={data.email} onChange={(e) => update("email", e.target.value)} placeholder={t("signup.step1.emailPlaceholder")} />
                 </Field>
-                <Field label="Phone Number">
-                  <Input type="tel" value={data.phone} onChange={(e) => update("phone", e.target.value)} placeholder="Enter your phone number" />
+                <Field label={t("signup.step1.phone")}>
+                  <Input type="tel" value={data.phone} onChange={(e) => update("phone", e.target.value)} placeholder={t("signup.step1.phonePlaceholder")} />
                 </Field>
                 <div className="flex justify-end pt-2">
-                  <NavBtn onClick={next}>Next</NavBtn>
+                  <NavBtn onClick={next}>{t("signup.step1.next")}</NavBtn>
                 </div>
               </Section>
             )}
 
             {step === 2 && (
-              <Section title="Account Details">
-                <Field label="Username">
-                  <Input value={data.username} onChange={(e) => update("username", e.target.value)} placeholder="Choose a username" />
+              <Section title={t("signup.step2.title")}>
+                <Field label={t("signup.step2.username")}>
+                  <Input value={data.username} onChange={(e) => update("username", e.target.value)} placeholder={t("signup.step2.usernamePlaceholder")} />
                 </Field>
-                <Field label="Password">
-                  <Input type="password" value={data.password} onChange={(e) => update("password", e.target.value)} placeholder="Create a password" />
+                <Field label={t("signup.step2.password")}>
+                  <Input type="password" value={data.password} onChange={(e) => update("password", e.target.value)} placeholder={t("signup.step2.passwordPlaceholder")} />
                 </Field>
-                <Field label="Confirm Password">
-                  <Input type="password" value={data.confirmPassword} onChange={(e) => update("confirmPassword", e.target.value)} placeholder="Confirm your password" />
+                <Field label={t("signup.step2.confirmPassword")}>
+                  <Input type="password" value={data.confirmPassword} onChange={(e) => update("confirmPassword", e.target.value)} placeholder={t("signup.step2.confirmPasswordPlaceholder")} />
                 </Field>
                 <div className="flex justify-between pt-2">
-                  <PrevBtn onClick={prev}>Previous</PrevBtn>
-                  <NavBtn onClick={next}>Next</NavBtn>
+                  <PrevBtn onClick={prev}>{t("signup.step2.previous")}</PrevBtn>
+                  <NavBtn onClick={next}>{t("signup.step2.next")}</NavBtn>
                 </div>
               </Section>
             )}
 
             {step === 3 && (
-              <Section title="Project Information">
-                <Field label="Project Type">
+              <Section title={t("signup.step3.title")}>
+                <Field label={t("signup.step3.projectType")}>
                   <select
                     className="w-full h-11 rounded-md border-2 border-[#ddd] bg-white px-3 text-base focus:border-[#3498db] focus:outline-none focus:ring-2 focus:ring-[#3498db]/20"
                     value={data.projectType}
                     onChange={(e) => update("projectType", e.target.value)}
                   >
-                    <option value="" disabled>Select project type</option>
-                    <option value="residential">Residential</option>
-                    <option value="commercial">Commercial</option>
-                    <option value="industrial">Industrial</option>
+                    <option value="" disabled>{t("signup.step3.selectProjectType")}</option>
+                    <option value="residential">{t("signup.step3.residential")}</option>
+                    <option value="commercial">{t("signup.step3.commercial")}</option>
+                    <option value="industrial">{t("signup.step3.industrial")}</option>
                   </select>
                 </Field>
-                <Field label="Estimated Budget ($)">
-                  <Input value={data.budget} onChange={(e) => update("budget", e.target.value)} placeholder="Enter your budget" />
+                <Field label={t("signup.step3.budget")}>
+                  <Input value={data.budget} onChange={(e) => update("budget", e.target.value)} placeholder={t("signup.step3.budgetPlaceholder")} />
                 </Field>
-                <Field label="Project Timeline (months)">
-                  <Input value={data.timeline} onChange={(e) => update("timeline", e.target.value)} placeholder="Enter your timeline" />
+                <Field label={t("signup.step3.timeline")}>
+                  <Input value={data.timeline} onChange={(e) => update("timeline", e.target.value)} placeholder={t("signup.step3.timelinePlaceholder")} />
                 </Field>
                 <div className="flex justify-between pt-2">
-                  <PrevBtn onClick={prev}>Previous</PrevBtn>
-                  <NavBtn onClick={next}>Next</NavBtn>
+                  <PrevBtn onClick={prev}>{t("signup.step3.previous")}</PrevBtn>
+                  <NavBtn onClick={next}>{t("signup.step3.next")}</NavBtn>
                 </div>
               </Section>
             )}
 
             {step === 4 && (
-              <Section title="Preferences and Agreements">
+              <Section title={t("signup.step4.title")}>
                 <div>
-                  <Label className="block mb-2 text-[#2c3e50]">Communication Preferences</Label>
-                  <Check id="receiveEmails" checked={data.receiveEmails} onChange={(v) => update("receiveEmails", v)} label="I agree to receive email messages" />
-                  <Check id="receiveSMS" checked={data.receiveSMS} onChange={(v) => update("receiveSMS", v)} label="I agree to receive SMS messages" />
+                  <Label className="block mb-2 text-[#2c3e50]">{t("signup.step4.communicationPreferences")}</Label>
+                  <Check id="receiveEmails" checked={data.receiveEmails} onChange={(v) => update("receiveEmails", v)} label={t("signup.step4.receiveEmails")} />
+                  <Check id="receiveSMS" checked={data.receiveSMS} onChange={(v) => update("receiveSMS", v)} label={t("signup.step4.receiveSMS")} />
                 </div>
 
-                <Field label="Required Service Type">
+                <Field label={t("signup.step4.requiredServiceType")}>
                   <select
                     className="w-full h-11 rounded-md border-2 border-[#ddd] bg-white px-3 text-base focus:border-[#3498db] focus:outline-none focus:ring-2 focus:ring-[#3498db]/20"
                     value={data.serviceType}
                     onChange={(e) => update("serviceType", e.target.value)}
                   >
-                    <option value="" disabled>Select service type</option>
-                    <option value="design">Architectural Design</option>
-                    <option value="construction">Construction</option>
-                    <option value="consultation">Engineering Consultation</option>
-                    <option value="investment">Investment</option>
+                    <option value="" disabled>{t("signup.step4.selectServiceType")}</option>
+                    <option value="design">{t("signup.step4.design")}</option>
+                    <option value="construction">{t("signup.step4.construction")}</option>
+                    <option value="consultation">{t("signup.step4.consultation")}</option>
+                    <option value="investment">{t("signup.step4.investment")}</option>
                   </select>
                 </Field>
 
-                <Check id="shareProjects" checked={data.shareProjects} onChange={(v) => update("shareProjects", v)} label="I want to share my projects in the gallery" />
+                <Check id="shareProjects" checked={data.shareProjects} onChange={(v) => update("shareProjects", v)} label={t("signup.step4.shareProjects")} />
 
                 <div>
-                  <Label className="block mb-2 text-[#2c3e50]">Upload Official Document (Optional)</Label>
+                  <Label className="block mb-2 text-[#2c3e50]">{t("signup.step4.uploadDocument")}</Label>
                   <label className="block cursor-pointer rounded-md border-2 border-dashed border-[#3498db] bg-[#f8f9fa] hover:bg-[#e9ecef] text-[#3498db] text-center py-3 font-medium transition-colors">
-                    Choose File
+                    {t("signup.step4.chooseFile")}
                     <input
                       type="file"
                       accept=".pdf,.jpg,.png"
                       className="hidden"
-                      onChange={(e) => setFileName(e.target.files?.[0]?.name ?? "No file chosen")}
+                      onChange={(e) => setFileName(e.target.files?.[0]?.name ?? t("signup.step4.noFileChosen"))}
                     />
                   </label>
                   <div className="mt-2 text-sm text-[#5a6b7a]">{fileName}</div>
                 </div>
 
                 <div>
-                  <Label className="block mb-2 text-[#2c3e50]">Agreements</Label>
-                  <Check id="agreeTerms" checked={data.agreeTerms} onChange={(v) => update("agreeTerms", v)} label="I agree to the Terms of Use and Privacy Policy" />
-                  <Check id="agreeDataUsage" checked={data.agreeDataUsage} onChange={(v) => update("agreeDataUsage", v)} label="I agree to use my data to improve services" />
+                  <Label className="block mb-2 text-[#2c3e50]">{t("signup.step4.agreements")}</Label>
+                  <Check id="agreeTerms" checked={data.agreeTerms} onChange={(v) => update("agreeTerms", v)} label={t("signup.step4.agreeTerms")} />
+                  <Check id="agreeDataUsage" checked={data.agreeDataUsage} onChange={(v) => update("agreeDataUsage", v)} label={t("signup.step4.agreeDataUsage")} />
                 </div>
 
                 <div className="flex justify-between pt-2 gap-3">
-                  <PrevBtn onClick={prev}>Previous</PrevBtn>
+                  <PrevBtn onClick={prev}>{t("signup.step4.previous")}</PrevBtn>
                   <button
                     type="submit"
                     disabled={loading}
                     className="flex-1 rounded-md bg-[#2ecc71] hover:bg-[#27ae60] text-white font-semibold py-3 px-6 transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:transform-none"
                   >
-                    {loading ? "Creating Account..." : "Create Account"}
+                    {loading ? t("signup.step4.creatingAccount") : t("signup.step4.createAccount")}
                   </button>
                 </div>
               </Section>
@@ -468,13 +475,13 @@ function SignupWizard() {
           </form>
 
           <div className="text-center text-sm text-[#5a6b7a] mt-6">
-            Already have an account?{" "}
+            {t("signup.alreadyHaveAccount")}{" "}
             <button
               type="button"
               className="text-[#3498db] font-medium hover:underline"
               onClick={() => navigate({ to: "/auth", search: { mode: "login" } })}
             >
-              Sign in
+              {t("signup.signIn")}
             </button>
           </div>
         </div>
