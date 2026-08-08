@@ -614,9 +614,9 @@ function FloorPlansSection() {
               </div>
               <div className="space-y-3">
                 {activeType.floorPlanZones.map((z) => (
-                  <div key={z.key}>
+                  <div key={z.label}>
                     <div className="flex justify-between text-sm mb-1.5">
-                      <span className="text-foreground/80">{t(`types.${activeType.slug}.zones.${z.key}`)}</span>
+                      <span className="text-foreground/80">{z.label}</span>
                       <span className="font-medium">{z.pct}%</span>
                     </div>
                     <div className="h-2 rounded-full bg-muted overflow-hidden">
